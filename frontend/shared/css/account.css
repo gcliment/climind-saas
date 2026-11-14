@@ -1,0 +1,11 @@
+/* Tu cuenta */
+.account-email { font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+.account-narrow { max-width: 420px; }
+.account-switch { display: flex; gap: .75rem; align-items: flex-start; padding-left: 0; }
+.account-switch .form-check-input { float: none; margin: .15rem 0 0; flex: none; width: 2.6em; height: 1.4em; }
+.account-switch .form-check-label { color: var(--text); }
+.danger-block { border-color: #F3C3C7; }
+.danger-block h2 { color: var(--danger); }
+.deletion-block { border-color: var(--warn); background: var(--warn-wash); }
+.deletion-block h2, .deletion-block p { color: var(--warn-deep); }
+

@@ -224,6 +224,31 @@ public class CalculatorService {
         return new CalculatorDtos.PublishResponse(detail(calculator, tenantId), created, versionNo);
     }
 
+    /**
+     * Crea y publica un cotizador a partir de una plantilla para un negocio dado, sin sesión. Lo usa solo el
+     * seeder de las demos públicas (negocio ficticio, sin dueño); los negocios reales publican desde el
+     * constructor. Idempotente: si ya existe un cotizador con esa dirección no hace nada.
+     *
+     * @return true si lo creó ahora
+     */
+    @Transactional
+    public boolean seedPublishedFromTemplate(UUID tenantId, String templateCode, String slug) {
+        if (calculators.findByTenantIdAndSlug(tenantId, slug).isPresent()) {
+            return false;
+        }
+        TemplateCatalog.Template template = templates.find(templateCode)
+                .orElseThrow(() -> new IllegalArgumentException("No existe la plantilla " + templateCode));
+        Calculator calculator = new Calculator(tenantId, template.calculatorName(), slug, template.code(),
+                json.write(template.config()), json.write(Appearance.defaults()));
+        calculator.setDescription(template.calculatorDescription());
+        calculators.save(calculator);
+        CalculatorVersion version = versions.save(
+                new CalculatorVersion(calculator, 1, draftHash(calculator), null, clock.instant()));
+        calculator.published(version.getId(), version.getPublishedAt());
+        calculators.saveAndFlush(calculator);
+        return true;
+    }
+
     @Transactional
     public CalculatorDetail pause(UUID id) {
         return transition(id, Status.PUBLICADO, Calculator::pause, AuditAction.CALCULATOR_PAUSED,

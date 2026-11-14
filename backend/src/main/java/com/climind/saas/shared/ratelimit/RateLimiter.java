@@ -29,7 +29,13 @@ public class RateLimiter {
         /** Cotizaciones del cotizador público por IP. */
         PUBLIC_QUOTE_IP,
         /** Consultas (datos de contacto) del cotizador público por IP. */
-        PUBLIC_LEAD_IP
+        PUBLIC_LEAD_IP,
+        /** Estimaciones en vivo de las demos públicas (landing) por IP. No guardan nada. */
+        PUBLIC_DEMO_IP,
+        /** Exportación completa de los datos de un negocio, por negocio. */
+        ACCOUNT_EXPORT,
+        /** Acciones de la cuenta que verifican la contraseña (cambio de clave, baja), por usuario. */
+        ACCOUNT_PASSWORD
     }
 
     private record Entry(Bucket bucket, long lastAccessNanos) {
@@ -58,6 +64,9 @@ public class RateLimiter {
             case API_IP -> builder.addLimit(limit(limits.getApiPerMinutePerIp(), Duration.ofMinutes(1)));
             case PUBLIC_QUOTE_IP -> builder.addLimit(limit(limits.getPublicQuotesPerMinutePerIp(), Duration.ofMinutes(1)));
             case PUBLIC_LEAD_IP -> builder.addLimit(limit(limits.getPublicLeadsPerHourPerIp(), Duration.ofHours(1)));
+            case PUBLIC_DEMO_IP -> builder.addLimit(limit(120, Duration.ofMinutes(1)));
+            case ACCOUNT_EXPORT -> builder.addLimit(limit(5, Duration.ofHours(1)));
+            case ACCOUNT_PASSWORD -> builder.addLimit(limit(10, Duration.ofMinutes(15)));
         }
         return builder.build();
     }

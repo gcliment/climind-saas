@@ -69,7 +69,8 @@ function markStale() {
   $('ticket').classList.toggle('is-stale', stale);
   $('actions').hidden = stale;
   $('calc-button').textContent = stale ? 'Recalcular precio' : 'Ver precio estimado';
-  if (state.calc.leadCapture === 'AFTER_ESTIMATE' && !state.quote.request.sent) $('lead-section').hidden = stale;
+  if (state.calc.demo) $('demo-lead').hidden = stale;
+  else if (state.calc.leadCapture === 'AFTER_ESTIMATE' && !state.quote.request.sent) $('lead-section').hidden = stale;
 }
 
 function placeholderTicket() {
@@ -97,7 +98,10 @@ function showQuote(quote, token) {
   $('permalink').href = permalink(quote, token);
   $('actions').hidden = false;
 
-  if (quote.request.sent) {
+  if (state.calc.demo) {
+    // Demo: negocio ficticio, no se piden datos personales.
+    $('demo-lead').hidden = false;
+  } else if (quote.request.sent) {
     $('lead-section').hidden = true;
     $('lead-done').hidden = false;
   } else if (state.calc.leadCapture === 'AFTER_ESTIMATE') {
@@ -188,6 +192,7 @@ async function init() {
   }
   state.calc = calc;
   document.querySelector('.pub-foot').hidden = !calc.branding;
+  $('demo-banner').hidden = !calc.demo;
   applyAccent(calc.accentColor);
   renderBusiness(calc.business);
   renderContact(calc.business);

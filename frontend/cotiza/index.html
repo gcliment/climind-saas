@@ -3,11 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Climind Cotiza — Cotizadores automáticos para tu negocio</title>
-  <meta name="description" content="Creá cotizadores automáticos para tu negocio y dejá que tus clientes calculen un presupuesto estimado en segundos.">
+  <title>Climind Cotiza — Dejá que tus clientes coticen solos</title>
+  <meta name="description" content="Creá un cotizador personalizado, compartí un enlace y recibí consultas de clientes interesados, sin programar. Planes en pesos, con plan gratuito.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Climind Cotiza — Dejá que tus clientes coticen solos">
+  <meta property="og:description" content="Creá un cotizador personalizado, compartí un enlace y recibí consultas de clientes interesados, sin programar.">
+  <meta name="twitter:card" content="summary">
   <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
   <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
   <link rel="stylesheet" href="/shared/css/landing.css">
 </head>
 <body>
@@ -20,7 +25,9 @@
       <span>Climind Cotiza</span>
     </a>
     <nav class="site-nav" aria-label="Principal">
-      <a class="nav-text optional" href="#como-funciona">Cómo funciona</a>
+      <a class="nav-text optional" href="#demos" data-needs-demos hidden>Demo</a>
+      <a class="nav-text optional" href="/precios">Precios</a>
+      <a class="nav-text optional" href="/ayuda">Ayuda</a>
       <a class="nav-text" href="/ingresar">Ingresar</a>
       <a class="btn btn-primary optional" href="/registro">Crear cuenta</a>
     </nav>
@@ -35,55 +42,53 @@
         <p class="lead">Creá un cotizador personalizado, compartí un enlace y recibí consultas de clientes interesados, sin programar.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" href="/registro">Crear mi cotizador gratis</a>
-          <a class="btn btn-quiet btn-lg" href="#como-funciona">Ver cómo funciona</a>
+          <a class="btn btn-quiet btn-lg" href="#demos" data-needs-demos hidden>Probar la demo</a>
         </div>
         <p class="hero-fineprint">Sin tarjeta de crédito. En español y en pesos argentinos.</p>
       </div>
 
-      <form class="demo" id="demo" aria-labelledby="demo-title" novalidate>
-        <div class="demo-caption">
-          <span id="demo-title">Así lo ve tu cliente. Probalo:</span>
-          <span class="tag">Precios de ejemplo</span>
+      <figure class="flow m-0">
+        <figcaption class="visually-hidden">Ejemplo: un cliente pregunta por WhatsApp cuánto sale el servicio, recibe el enlace del cotizador, ve un presupuesto estimado de 108.000 pesos y la consulta llega al panel del negocio.</figcaption>
+        <div class="flow-chat" aria-hidden="true">
+          <p class="bubble bubble-in">Hola, ¿cuánto me sale una limpieza profunda de un depto de 60 m²?</p>
+          <p class="bubble bubble-out">¡Hola! Calculalo acá en un minuto: <span class="link">/c/tu-negocio/limpieza</span></p>
         </div>
-        <div class="demo-fields">
-          <div>
-            <label class="form-label" for="demo-tipo">¿Qué tipo de limpieza necesitás?</label>
-            <select class="form-select" id="demo-tipo" name="tipo">
-              <option value="basica">Limpieza básica</option>
-              <option value="profunda" selected>Limpieza profunda</option>
-              <option value="obra">Después de obra</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label" for="demo-m2">¿Cuántos metros cuadrados tiene el lugar?</label>
-            <div class="range-row">
-              <input type="range" id="demo-m2" name="m2" min="20" max="300" step="5" value="60">
-              <output for="demo-m2" id="demo-m2-out" class="num">60 m²</output>
-            </div>
-          </div>
-          <fieldset>
-            <legend class="form-label">Servicios adicionales</legend>
-            <div class="chip-group">
-              <label class="chip"><input type="checkbox" name="extra" value="vidrios"><span>Vidrios</span></label>
-              <label class="chip"><input type="checkbox" name="extra" value="horno" checked><span>Horno</span></label>
-              <label class="chip"><input type="checkbox" name="extra" value="urgente"><span>Para mañana (+20%)</span></label>
-            </div>
-          </fieldset>
+        <div class="ticket flow-ticket" aria-hidden="true">
+          <div class="ticket-head"><strong>Tu negocio</strong><span>Estimación</span></div>
+          <ul class="ticket-lines">
+            <li><span class="ticket-line-name">Limpieza profunda<small>60 m² × $ 1.500</small></span><b>$ 90.000</b></li>
+            <li><span class="ticket-line-name">Ambientes<small>3 ambientes × $ 3.000</small></span><b>$ 9.000</b></li>
+            <li><span class="ticket-line-name">Horno y heladera</span><b>$ 9.000</b></li>
+          </ul>
+          <div class="ticket-total"><span>Total estimado</span><output class="num">$ 108.000</output></div>
         </div>
+        <div class="flow-lead" aria-hidden="true">
+          <span class="dot"></span>
+          <span><strong>Nueva consulta de Laura</strong>Limpieza profunda · $ 108.000 · por WhatsApp</span>
+        </div>
+        <p class="flow-caption" aria-hidden="true">Ejemplo con precios ilustrativos</p>
+      </figure>
+    </div>
+  </section>
 
-        <div class="ticket" aria-live="polite">
-          <div class="ticket-head">
-            <strong>Limpiezas Ejemplo</strong>
-            <span>Estimación</span>
-          </div>
-          <ul class="ticket-lines" id="demo-lines"></ul>
-          <div class="ticket-total">
-            <span>Total estimado</span>
-            <output id="demo-total" class="num">$ 0</output>
-          </div>
-          <p class="ticket-note">Este importe es una estimación. El precio final está sujeto a confirmación del negocio.</p>
+  <section class="section demo-band" id="demos" aria-labelledby="demos-title" data-needs-demos hidden>
+    <div class="container">
+      <p class="eyebrow">Demo en vivo</p>
+      <h2 id="demos-title">Probalo como lo ve tu cliente</h2>
+      <p class="intro">Elegí un rubro y cambiá las respuestas: el presupuesto se recalcula con el mismo motor que usan los cotizadores reales. El negocio es ficticio y los precios son de ejemplo.</p>
+      <div class="demo-tabs" role="tablist" aria-label="Rubros de ejemplo" id="demo-tabs"></div>
+      <div class="demo-stage" id="demo-stage" role="tabpanel">
+        <form class="demo-form" id="demo-form" novalidate aria-labelledby="demo-name">
+          <h3 id="demo-name">Cargando la demo…</h3>
+          <p class="demo-desc" id="demo-desc"></p>
+          <div class="demo-questions" id="demo-questions"></div>
+        </form>
+        <div class="demo-side">
+          <div class="ticket" id="demo-ticket" aria-live="polite"></div>
+          <a class="btn btn-quiet w-100 mt-3" id="demo-open" href="#demos">Abrir la demo completa</a>
+          <p class="demo-note">En la demo completa ves la página tal como la recibe tu cliente y podés descargar el presupuesto en PDF. No te pedimos datos: es un negocio de ejemplo.</p>
         </div>
-      </form>
+      </div>
     </div>
   </section>
 
@@ -94,11 +99,11 @@
       <ol class="steps">
         <li>
           <h3>Cargá tus precios</h3>
-          <p>Elegí una plantilla de tu rubro y ajustá los valores: precio base, por unidad, adicionales y mínimos.</p>
+          <p>Elegí una plantilla de tu rubro y ajustá los valores: precio base, por unidad, adicionales, descuentos y mínimos.</p>
         </li>
         <li>
           <h3>Compartí tu enlace</h3>
-          <p>Mandalo por WhatsApp, ponelo en Instagram o en tu web. Funciona desde cualquier celular.</p>
+          <p>Mandalo por WhatsApp, ponelo en Instagram o en tu web, o imprimí el código QR. Funciona desde cualquier celular.</p>
         </li>
         <li>
           <h3>Recibí consultas</h3>
@@ -137,13 +142,34 @@
         </div>
         <div>
           <h3>El mismo criterio siempre</h3>
-          <p>Tus precios y reglas se aplican igual en cada cotización, aunque cambies los valores el mes que viene.</p>
+          <p>Tus precios y reglas se aplican igual en cada cotización. Si cambiás los valores, las cotizaciones anteriores conservan su importe.</p>
+        </div>
+        <div>
+          <h3>Presupuesto con tu nombre</h3>
+          <p>Tu cliente puede descargar un PDF con el detalle y escribirte por WhatsApp con el código de la cotización.</p>
+        </div>
+        <div>
+          <h3>Sabés qué funciona</h3>
+          <p>Estadísticas simples: cuántas cotizaciones recibís, cuántas terminan en consulta y qué cotizador se usa más.</p>
+        </div>
+        <div>
+          <h3>Tus datos, separados</h3>
+          <p>Cada negocio ve solo su información. Podés descargar todos tus datos o dar de baja la cuenta cuando quieras.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="precios" aria-labelledby="precios-title">
+    <div class="container">
+      <h2 id="precios-title">Precios simples, en pesos</h2>
+      <p class="intro">Empezá gratis y pasá a un plan pago cuando lo necesites. Se paga con Mercado Pago y se cancela cuando quieras.</p>
+      <div class="pricing-grid" id="pricing-grid" aria-live="polite"><p class="pricing-error">Cargando planes…</p></div>
+      <p class="pricing-note">Creás tu cuenta gratis y elegís un plan pago desde tu panel cuando quieras. <a href="/precios">Comparar los planes en detalle</a>.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
     <div class="container">
       <h2>Preguntas frecuentes</h2>
       <div class="faq">
@@ -153,21 +179,30 @@
         </details>
         <details>
           <summary>¿El precio que ve mi cliente es definitivo?</summary>
-          <p>No: es una estimación según tus reglas. Cada cotización muestra que el precio final está sujeto a tu confirmación, y vos definís su vigencia.</p>
+          <p>No: es una estimación según tus reglas. Cada cotización aclara que el precio final está sujeto a tu confirmación, y vos definís su vigencia.</p>
         </details>
         <details>
           <summary>¿Cuánto cuesta?</summary>
-          <p>Podés empezar gratis, sin tarjeta. Si necesitás más cotizadores o más cotizaciones por mes, vas a poder pasar a un plan pago desde tu panel.</p>
+          <p>Podés empezar gratis, sin tarjeta. Si necesitás más cotizadores o más cotizaciones por mes, pasás a un plan pago desde tu panel. Mirá los <a href="/precios">precios vigentes</a>.</p>
+        </details>
+        <details>
+          <summary>¿Cómo pago y cómo cancelo?</summary>
+          <p>Los planes pagos se cobran por mes con Mercado Pago. Podés cancelar desde tu panel cuando quieras y conservás los beneficios hasta el final del período que ya pagaste.</p>
         </details>
         <details>
           <summary>¿Qué pasa si cambio mis precios?</summary>
           <p>Las cotizaciones que ya se hicieron conservan el importe original. Los precios nuevos se aplican desde que los publicás.</p>
         </details>
         <details>
+          <summary>¿Puedo ponerlo en mi página web?</summary>
+          <p>Sí: compartís un enlace propio de tu cotizador, que podés poner en un botón de tu web, en tu perfil de Instagram o en tu estado de WhatsApp. También tenés un código QR para imprimir.</p>
+        </details>
+        <details>
           <summary>¿Quién ve los datos de mis clientes?</summary>
           <p>Solo tu negocio. Cada cuenta tiene su espacio separado y los datos de contacto se usan únicamente para que puedas responder la consulta.</p>
         </details>
       </div>
+      <p class="mt-4 mb-0">¿Otra duda? Revisá la <a href="/ayuda">ayuda</a>.</p>
     </div>
   </section>
 
@@ -181,15 +216,41 @@
 </main>
 
 <footer class="site-footer">
-  <div class="container d-flex flex-column flex-md-row justify-content-between gap-3">
-    <span>Climind Cotiza es un producto de <a href="/saas/">Climind SaaS</a>, de <a href="https://climind-ia.com" rel="noopener">Climind-IA</a>.</span>
-    <nav class="links" aria-label="Legales">
-      <a href="/legal/terminos">Términos y condiciones</a>
-      <a href="/legal/privacidad">Política de privacidad</a>
-    </nav>
+  <div class="container">
+    <div class="site-footer-grid">
+      <div>
+        <a class="brand" href="/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span>Climind Cotiza</span></a>
+        <p class="mt-2">Un producto de <a href="/saas/">Climind SaaS</a>, de <a href="https://climind-ia.com" rel="noopener">Climind-IA</a>.</p>
+      </div>
+      <nav aria-labelledby="f-product">
+        <h2 id="f-product">Producto</h2>
+        <ul>
+          <li><a href="#demos" data-needs-demos hidden>Demo</a></li>
+          <li><a href="/precios">Precios</a></li>
+          <li><a href="/registro">Crear cuenta</a></li>
+          <li><a href="/ingresar">Ingresar</a></li>
+        </ul>
+      </nav>
+      <nav aria-labelledby="f-help">
+        <h2 id="f-help">Ayuda</h2>
+        <ul>
+          <li><a href="/ayuda">Centro de ayuda</a></li>
+          <li><a href="/ayuda/primeros-pasos">Primeros pasos</a></li>
+          <li data-support-only hidden>Soporte: <span data-support-email></span></li>
+        </ul>
+      </nav>
+      <nav aria-labelledby="f-legal">
+        <h2 id="f-legal">Legales</h2>
+        <ul>
+          <li><a href="/legal/terminos">Términos y condiciones</a></li>
+          <li><a href="/legal/privacidad">Política de privacidad</a></li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </footer>
 
+<script src="/site-config.js"></script>
 <script type="module" src="/shared/js/landing.js"></script>
 </body>
 </html>

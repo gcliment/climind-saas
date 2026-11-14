@@ -12,6 +12,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class FrontendConfig implements WebMvcConfigurer {
 
+    /** Artículos de la ayuda: /ayuda/{articulo} → /ayuda/{articulo}.html. */
+    static final String[] HELP_ARTICLES = {
+            "primeros-pasos", "crear-cotizador", "precios-y-reglas", "publicar-y-compartir", "consultas",
+            "planes-y-pagos", "cuenta-y-datos",
+    };
+
     /** Ruta pública → archivo HTML. */
     static final String[][] PAGES = {
             {"/ingresar", "/ingresar.html"},
@@ -27,6 +33,11 @@ public class FrontendConfig implements WebMvcConfigurer {
             {"/app/consultas", "/app/consultas.html"},
             {"/app/estadisticas", "/app/estadisticas.html"},
             {"/app/plan", "/app/plan.html"},
+            {"/app/cuenta", "/app/cuenta.html"},
+            {"/precios", "/precios.html"},
+            {"/ayuda", "/ayuda/index.html"},
+            // Baja de los emails de producto (enlace del pie de esos emails).
+            {"/emails/baja", "/emails-baja.html"},
             // Simulador del checkout (la página existe siempre, pero su API /api/dev solo existe en dev).
             {"/app/plan/simulador", "/app/plan-simulador.html"},
             // Cotización emitida (el token viaja en el fragmento #, que no llega al servidor).
@@ -42,7 +53,11 @@ public class FrontendConfig implements WebMvcConfigurer {
         for (String[] page : PAGES) {
             registry.addViewController(page[0]).setViewName("forward:" + page[1]);
         }
+        for (String article : HELP_ARTICLES) {
+            registry.addViewController("/ayuda/" + article).setViewName("forward:/ayuda/" + article + ".html");
+        }
         registry.addRedirectViewController("/app", "/app/");
+        registry.addRedirectViewController("/ayuda/", "/ayuda");
         registry.addRedirectViewController("/saas", "/saas/");
     }
 }

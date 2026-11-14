@@ -70,13 +70,24 @@ public class EmailService {
         }
     }
 
+    /**
+     * Variable opcional {@code unsubscribeToken} (emails de producto): agrega al pie el enlace "darme de baja" y
+     * el encabezado de baja en un clic. Los emails transaccionales no la llevan.
+     */
     EmailMessage render(MailTemplate template, String to, Map<String, Object> variables) {
         Map<String, Object> vars = new HashMap<>(variables);
-        vars.put("appUrl", properties.publicUrlWithoutTrailingSlash());
+        String appUrl = properties.publicUrlWithoutTrailingSlash();
+        vars.put("appUrl", appUrl);
         vars.put("subject", template.subject());
+        Object token = vars.remove("unsubscribeToken");
+        String oneClickUrl = null;
+        if (token != null) {
+            vars.put("unsubscribeUrl", appUrl + "/emails/baja?t=" + token);
+            oneClickUrl = appUrl + "/api/v1/public/emails/unsubscribe?t=" + token;
+        }
         Context context = new Context(ES_AR, vars);
         String html = templateEngine.process("email/" + template.file(), context);
-        return new EmailMessage(template.name(), to, template.subject(), html, toPlainText(html));
+        return new EmailMessage(template.name(), to, template.subject(), html, toPlainText(html), oneClickUrl);
     }
 
     private void deliver(EmailMessage message, UUID userId, UUID tenantId) {
@@ -94,7 +105,9 @@ public class EmailService {
                             INSERT INTO email_delivery_logs (id, template, recipient, user_id, tenant_id, status, error, created_at)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                             """,
-                    Ids.newId(), message.template(), message.to(), userId, tenantId, status, error,
+                    Ids.newId(), message.template(),
+                    MailTemplate.valueOf(message.template()).logRecipient() ? message.to() : "eliminado",
+                    userId, tenantId, status, error,
                     Timestamp.from(clock.instant()));
         } catch (RuntimeException e) {
             log.warn("No se pudo registrar la entrega del email {}", message.template(), e);

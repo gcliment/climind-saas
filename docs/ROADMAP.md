@@ -62,15 +62,38 @@
 
 **Pendiente:** probar el circuito completo con credenciales de prueba de Mercado Pago (cuenta y usuarios de prueba) y registrar la URL del webhook. Sin prorrateo al cambiar de plan: el plan nuevo empieza con su primer cobro.
 
-## Fase 5: Comercialización
+## Fase 5: Comercialización ✔ (completa en código; falta la configuración externa para salir a vender)
 
-- [ ] Landing y portal finales con precios desde la base y demos públicas
-- [ ] Textos legales revisados por un profesional
-- [ ] Ayuda, emails comerciales
-- [ ] Despliegue productivo en EasyPanel + Cloudflare
-- [ ] Backups automáticos fuera del VPS y **prueba de restore**
-- [ ] Baja de cuenta, exportación y anonimización de datos
-- [ ] Pruebas finales de los 12 escenarios de aceptación
+- [x] Landing de Cotiza con demo en vivo (mismo motor, sin guardar), casos de uso, beneficios, precios desde la base, preguntas frecuentes y llamado a registrarse
+- [x] Página de precios con tabla comparativa y preguntas de pagos; portal Climind SaaS con producto, planes y preguntas
+- [x] Demos públicas con un negocio ficticio (`/c/demo/...`): sin datos personales, fuera de métricas, cotizaciones de prueba borradas a las 48 h
+- [x] Centro de ayuda: 7 artículos con buscador; accesos desde el panel
+- [x] Emails: cambio de contraseña desde el panel, baja programada y baja ejecutada (transaccionales); recordatorio de activación y resumen mensual (de producto, con baja en un clic)
+- [x] Tu cuenta: nombre, contraseña, preferencias de email, **exportación completa** (ZIP), **baja de cuenta** con 30 días para arrepentirse y ejecución que conserva solo los pagos
+- [x] SEO básico: `robots.txt`, `sitemap.xml` y metadatos para compartir
+- [x] Servicio de backups (diario, fuera del VPS con rclone, prueba de restauración automática)
+- [x] Docker verificado: build, arranque, reinicio sin pérdida de datos, backup y **restauración completa desde cero**
+- [x] Pruebas finales: 198 tests backend; 28 recorridos E2E en Chromium (celular y escritorio), también en Safari de iPhone (WebKit) y Firefox
+- [ ] Despliegue productivo en EasyPanel + Cloudflare (guía paso a paso en DEPLOYMENT.md)
+- [ ] Mercado Pago con credenciales reales y webhook registrado
+- [ ] Textos legales revisados por un profesional (borradores actualizados con baja, exportación y emails)
+
+### Escenarios de aceptación del MVP
+
+| # | Escenario | Dónde se verifica |
+|---|---|---|
+| 1 | Registro, verificación, negocio y panel | `AuthFlowIT`, E2E alta completa y guía de configuración |
+| 2 | Plantilla, precios propios y publicación sin el administrador | `CalculatorIT`, E2E guía de configuración y constructor |
+| 3 | El cliente cotiza desde el celular con el cálculo correcto | `PublicQuoteIT`, `TemplateCatalogTest`, E2E cotizador público (celular) |
+| 4 | El cliente deja sus datos y el negocio ve la consulta | `PublicQuoteIT`, `LeadsIT`, E2E cotizador público |
+| 5 | La cotización conserva su importe aunque cambien los precios | `PublicQuoteIT`, `CalculatorIT` (trigger) |
+| 6 | Aislamiento entre negocios aun manipulando requests | `TenantIsolationIT`, IDOR en `CalculatorIT` y `LeadsIT`, exportación en `AccountIT` |
+| 7 | Límites comerciales en el backend | `BillingIT` (incluye 20 pedidos simultáneos) |
+| 8 | Plan pago activado solo con el pago confirmado | `BillingIT`, E2E contratación (simulador). **Falta con Mercado Pago real** |
+| 9 | Rechazo o cancelación sin perder datos | `BillingIT`, E2E contratación |
+| 10 | Despliegue y reinicio conservando datos | Docker local (DEPLOYMENT.md). **Falta en EasyPanel** |
+| 11 | El administrador ve clientes, planes, suscripciones y estado | `BillingIT`, `DemoIT`, E2E administración |
+| 12 | Funciona en celulares y navegadores modernos | E2E en Pixel 7, iPhone (WebKit), escritorio Chrome y Firefox; sin scroll horizontal |
 
 ## Riesgos y simplificaciones
 

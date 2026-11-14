@@ -30,7 +30,7 @@
 | 429 | `RATE_LIMITED`, `ACCOUNT_LOCKED` |
 | 500 | `INTERNAL_ERROR` (incluye `traceId`, que también se registra en el log) |
 
-## Endpoints implementados (Fases 1 a 4)
+## Endpoints implementados (Fases 1 a 5)
 
 ### Autenticación — públicos salvo `/me`
 
@@ -175,6 +175,34 @@ Errores por límites del plan: `PLAN_LIMIT_CALCULATORS` (409, al publicar o reac
 | GET | `/admin/payments?status=` | Pagos (p. ej. `REJECTED` para fallos de cobro) |
 | GET | `/admin/billing/health` | Proveedor, credenciales, última notificación, errores, última conciliación y correcciones |
 | POST | `/admin/billing/reconcile` | Ejecutar la conciliación ahora |
+
+### Demos públicas (sin sesión)
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/v1/public/demos` | Cotizadores de demostración (negocio ficticio): dirección, nombre, descripción y rubro. Vacío si `APP_DEMO_ENABLED=false` |
+| POST | `/api/v1/public/demos/{demo}/estimate` | `{answers}` → desglose calculado en el servidor en modo vista previa. **No guarda nada.** Solo para el negocio demo; 120 por minuto por IP |
+
+El cotizador público de una demo (`/api/v1/public/c/demo/{demo}`) responde `demo: true` y rechaza los datos de contacto con 409 `DEMO_NO_LEADS`.
+
+### Tu cuenta (con sesión; exportación y baja: rol OWNER)
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/v1/account` | Email, nombre, preferencia de emails, si es dueño, baja programada y plazo para arrepentirse |
+| PUT | `/api/v1/account/profile` | `{firstName, lastName}` |
+| PUT | `/api/v1/account/email-preferences` | `{productEmails}`: consejos y resumen mensual |
+| POST | `/api/v1/account/password` | `{currentPassword, password, passwordConfirmation}` → 204. Cierra las demás sesiones (la actual sigue) y avisa por email. 10 intentos cada 15 min |
+| GET | `/api/v1/account/export` | ZIP con `negocio.json`, `usuarios.json`, `cotizadores.json` (con versiones), `cotizaciones.json`, `consultas.json` (con historial), `plan-y-pagos.json`, logo y `LEEME.txt`. Auditado; 5 por hora |
+| POST | `/api/v1/account/deletion` | `{password, confirmation: "ELIMINAR"}` → `{scheduledFor, canceledPaidPlan}`. Cancela el plan en Mercado Pago (si falla: 502 y no se programa nada) y retira los cotizadores del público |
+| DELETE | `/api/v1/account/deletion` | Cancela la baja programada (409 si no hay una) |
+| POST | `/api/v1/public/emails/unsubscribe?t=…` | Baja de los emails de producto con el enlace del email, sin sesión. Solo POST; también para la baja en un clic de los clientes de correo. 404 si el enlace no es válido |
+
+`/api/v1/auth/me` incluye `tenant.deletionScheduledFor` para mostrar el aviso en todo el panel.
+
+### Sitio
+| Ruta | Descripción |
+|---|---|
+| `/robots.txt` | Excluye `/app/`, `/api/`, `/cotizacion/` y `/emails/`. Apunta al sitemap |
+| `/sitemap.xml` | Landing, precios, ayuda (índice y artículos), registro, legales y portal, con las URLs configuradas |
 
 ### Solo desarrollo (perfil `dev`)
 

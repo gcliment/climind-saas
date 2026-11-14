@@ -103,6 +103,7 @@ app:
   public-url: ${APP_PUBLIC_URL:http://localhost:8080}
   portal-url: ${APP_PORTAL_URL:http://localhost:8080/saas/}
   portal-host: ${APP_PORTAL_HOST:}
+  support-email: ${APP_SUPPORT_EMAIL:}
   storage:
     dir: ${STORAGE_DIR:./storage}
   security:
@@ -131,3 +132,7 @@ app:
   admin-bootstrap:
     email: ${ADMIN_BOOTSTRAP_EMAIL:}
     password: ${ADMIN_BOOTSTRAP_PASSWORD:}
+  demo:
+    enabled: ${APP_DEMO_ENABLED:true}
+  account:
+    deletion-grace: ${ACCOUNT_DELETION_GRACE:30d}

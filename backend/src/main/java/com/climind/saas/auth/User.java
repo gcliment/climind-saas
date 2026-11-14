@@ -63,6 +63,18 @@ public class User extends AssignedIdEntity {
     @Column(name = "terms_accepted_at", nullable = false, updatable = false)
     private Instant termsAcceptedAt;
 
+    /** Acepta emails de producto (consejos, resumen mensual). Los transaccionales se envían siempre. */
+    @Column(name = "product_emails", nullable = false)
+    private boolean productEmails = true;
+
+    /** Token del enlace "darme de baja" de los emails de producto (solo sirve para eso). */
+    @Column(name = "email_prefs_token", length = 64)
+    private String emailPrefsToken;
+
+    /** Usuario eliminado con la baja de su cuenta: datos personales reemplazados. */
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -132,6 +144,38 @@ public class User extends AssignedIdEntity {
         failedLoginCount = 0;
         lockedUntil = null;
         lastLoginAt = now;
+    }
+
+    public void rename(String firstName, String lastName) {
+        this.firstName = firstName.strip();
+        this.lastName = lastName.strip();
+    }
+
+    public void setProductEmails(boolean productEmails) {
+        this.productEmails = productEmails;
+    }
+
+    /** Token del enlace de baja de emails de producto (se crea la primera vez que se necesita). */
+    public String ensureEmailPrefsToken() {
+        if (emailPrefsToken == null) {
+            emailPrefsToken = com.climind.saas.shared.util.Tokens.newToken();
+        }
+        return emailPrefsToken;
+    }
+
+    /**
+     * Baja de la cuenta: se reemplazan los datos personales y la contraseña deja de servir. La fila se conserva
+     * porque la referencian registros que hay que mantener (pagos, auditoría).
+     */
+    public void anonymize(String placeholderEmail, String unusableHash, Instant now) {
+        this.email = placeholderEmail;
+        this.firstName = "Usuario";
+        this.lastName = "eliminado";
+        this.passwordHash = unusableHash;
+        this.status = Status.DISABLED;
+        this.productEmails = false;
+        this.emailPrefsToken = null;
+        this.deletedAt = now;
     }
 
     public void changePassword(String newHash, Instant now) {

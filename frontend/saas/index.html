@@ -4,7 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Climind SaaS — Aplicaciones para negocios</title>
-  <meta name="description" content="Climind SaaS: aplicaciones por suscripción de Climind-IA para que los negocios trabajen mejor.">
+  <meta name="description" content="Climind SaaS: aplicaciones por suscripción de Climind-IA, listas para usar. Primer producto: Climind Cotiza, cotizadores automáticos para tu negocio.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Climind SaaS — Aplicaciones para negocios">
+  <meta property="og:description" content="Herramientas por suscripción, listas para usar, sin instalaciones ni desarrollos a medida.">
   <link rel="icon" href="/shared/img/climind-c.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
   <link rel="stylesheet" href="/shared/css/climind.css">
@@ -20,6 +23,8 @@
     </a>
     <nav class="site-nav" aria-label="Principal">
       <a class="nav-text optional" href="#productos">Productos</a>
+      <a class="nav-text optional" href="#planes">Planes</a>
+      <a class="nav-text optional" href="#preguntas">Preguntas</a>
       <a class="btn btn-quiet" href="/ingresar" data-app-link="/ingresar">Ingresar</a>
     </nav>
   </div>
@@ -29,7 +34,11 @@
   <section class="hero portal-hero">
     <div class="container">
       <h1>Aplicaciones simples para negocios que quieren vender mejor</h1>
-      <p class="lead">Climind SaaS es la línea de productos por suscripción de Climind-IA: herramientas listas para usar, sin instalaciones ni desarrollos a medida.</p>
+      <p class="lead">Climind SaaS es la línea de productos por suscripción de Climind-IA: herramientas listas para usar, sin instalaciones ni desarrollos a medida, con un plan gratuito para empezar.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="/" data-app-link="/">Conocer Climind Cotiza</a>
+        <a class="btn btn-quiet btn-lg" href="/ingresar" data-app-link="/ingresar">Ingresar a mi cuenta</a>
+      </div>
     </div>
   </section>
 
@@ -40,14 +49,32 @@
         <img src="/shared/img/cotiza-mark.svg" alt="" width="64" height="64">
         <div>
           <h3>Climind Cotiza</h3>
-          <p>Creá cotizadores automáticos para tu negocio y dejá que tus clientes calculen un presupuesto estimado en segundos.</p>
+          <p>Creá cotizadores automáticos para tu negocio y dejá que tus clientes calculen un presupuesto estimado en segundos. Compartís un enlace, tus clientes cotizan solos y las consultas te llegan ordenadas.</p>
+          <ul class="product-points">
+            <li>Plantillas para limpieza, catering, instalaciones y más</li>
+            <li>Página para celular con PDF y botón de WhatsApp</li>
+            <li>Consultas, estados y estadísticas en un solo panel</li>
+          </ul>
         </div>
-        <a class="btn btn-primary" href="/" data-app-link="/">Conocer Climind Cotiza</a>
+        <div class="product-actions">
+          <a class="btn btn-primary" href="/" data-app-link="/">Ver Climind Cotiza</a>
+          <a class="btn btn-quiet" href="/#demos" data-app-link="/#demos">Probar la demo</a>
+        </div>
       </div>
+      <p class="mt-4 mb-0 text-secondary">Por ahora Climind Cotiza es el único producto. Vamos a sumar nuevas herramientas con la misma cuenta.</p>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="planes" aria-labelledby="planes-title">
+    <div class="container">
+      <h2 id="planes-title">Planes de Climind Cotiza</h2>
+      <p class="intro">En pesos argentinos, con cobro mensual por Mercado Pago. Empezás gratis y cambiás de plan cuando quieras.</p>
+      <div class="pricing-grid" id="pricing-grid" aria-live="polite"><p class="pricing-error">Cargando planes…</p></div>
+      <p class="pricing-note"><a href="/precios" data-app-link="/precios">Comparar los planes en detalle</a></p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
     <div class="container">
       <h2>Un ecosistema, tres formas de trabajar con nosotros</h2>
       <div class="lines-of-business">
@@ -66,12 +93,41 @@
       </div>
     </div>
   </section>
+
+  <section class="section" id="preguntas">
+    <div class="container">
+      <h2>Preguntas frecuentes</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Qué diferencia hay entre Climind SaaS y Climind-IA?</summary>
+          <p>Climind-IA hace desarrollos a medida. Climind SaaS ofrece productos listos para usar por una suscripción mensual: te registrás, lo configurás vos mismo y empezás a usarlo el mismo día.</p>
+        </details>
+        <details>
+          <summary>¿Tengo que instalar algo?</summary>
+          <p>No. Todo funciona desde el navegador, en la computadora o en el celular.</p>
+        </details>
+        <details>
+          <summary>¿Cómo se paga?</summary>
+          <p>Cada producto tiene un plan gratuito. Los planes pagos se cobran por mes con Mercado Pago y se pueden cancelar cuando quieras desde el panel.</p>
+        </details>
+        <details>
+          <summary>¿Mis datos están seguros?</summary>
+          <p>Cada negocio tiene su espacio separado y solo ve su información. Usamos conexiones cifradas y podés descargar todos tus datos o dar de baja la cuenta cuando quieras.</p>
+        </details>
+        <details>
+          <summary>¿Dónde consigo ayuda?</summary>
+          <p>En el <a href="/ayuda" data-app-link="/ayuda">centro de ayuda de Climind Cotiza</a> explicamos cada paso.<span data-support-only hidden> También podés escribirnos a <span data-support-email></span>.</span></p>
+        </details>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer class="site-footer">
   <div class="container d-flex flex-column flex-md-row justify-content-between gap-3">
     <span>Climind SaaS es una línea de <a href="https://climind-ia.com" rel="noopener">Climind-IA</a>.</span>
     <nav class="links" aria-label="Legales">
+      <a href="/ayuda" data-app-link="/ayuda">Ayuda</a>
       <a href="/legal/terminos" data-app-link="/legal/terminos">Términos y condiciones</a>
       <a href="/legal/privacidad" data-app-link="/legal/privacidad">Política de privacidad</a>
     </nav>

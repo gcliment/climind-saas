@@ -101,6 +101,7 @@ async function reactivate(tenant) {
   } catch (error) { showNotice(notice, error.message); }
 }
 
+const TENANT_LABEL = { ACTIVE: 'Activo', SUSPENDED: 'Suspendido', DELETED: 'Eliminado' };
 loaders.negocios = async () => {
   const q = new URLSearchParams({ q: $('tenant-q').value.trim(), status: $('tenant-status').value, size: '50' });
   const page = await api.get(`/api/v1/admin/tenants?${q}`);
@@ -110,10 +111,13 @@ loaders.negocios = async () => {
     h('td', {}, t.planName, t.paid ? null : h('small', { text: 'sin costo' })),
     h('td', { class: 'num', text: `${formatNumber(t.quotesUsed)} / ${formatNumber(t.quotesLimit)}` }),
     h('td', { class: 'num', text: `${formatNumber(t.publishedCalculators)} / ${formatNumber(t.publishedLimit)}` }),
-    h('td', {}, pill(t.status, t.status === 'ACTIVE' ? 'Activo' : 'Suspendido'), t.suspendedReason ? h('small', { text: t.suspendedReason }) : null),
+    h('td', {}, pill(t.status, TENANT_LABEL[t.status] || t.status), t.suspendedReason ? h('small', { text: t.suspendedReason }) : null,
+      t.deletionScheduledFor ? h('small', { text: `Baja pedida: se elimina el ${date(t.deletionScheduledFor)}` }) : null),
     h('td', {}, t.status === 'ACTIVE'
       ? h('button', { type: 'button', class: 'btn btn-link text-danger p-0', text: 'Suspender', on: { click: () => suspend(t) } })
-      : h('button', { type: 'button', class: 'btn btn-link p-0', text: 'Reactivar', on: { click: () => reactivate(t) } })))));
+      : t.status === 'SUSPENDED'
+        ? h('button', { type: 'button', class: 'btn btn-link p-0', text: 'Reactivar', on: { click: () => reactivate(t) } })
+        : null))));
   $('tenant-count').textContent = page.totalItems > page.items.length
     ? `Mostrando ${page.items.length} de ${page.totalItems}. Refiná la búsqueda para ver otros.` : `${formatNumber(page.totalItems)} negocios.`;
 };

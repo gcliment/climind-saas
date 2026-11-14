@@ -26,6 +26,7 @@ public class SiteConfigController {
         config.put("appUrl", properties.publicUrlWithoutTrailingSlash());
         config.put("portalUrl", properties.getPortalUrl());
         config.put("env", properties.getEnv());
+        config.put("supportEmail", properties.getSupportEmail() == null ? "" : properties.getSupportEmail().strip());
         this.body = "window.CLIMIND_CONFIG = Object.freeze(" + jsonMapper.writeValueAsString(config) + ");\n";
     }
 

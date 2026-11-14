@@ -13,4 +13,10 @@ public interface TenantRepository extends JpaRepository<Tenant, UUID> {
     boolean existsBySlug(String slug);
 
     java.util.Optional<Tenant> findBySlug(String slug);
+
+    @org.springframework.data.jpa.repository.Query("""
+            SELECT t.id FROM Tenant t
+            WHERE t.deletionScheduledFor IS NOT NULL AND t.deletionScheduledFor <= :now AND t.deletedAt IS NULL
+            ORDER BY t.deletionScheduledFor""")
+    java.util.List<UUID> findDeletionsDue(java.time.Instant now);
 }

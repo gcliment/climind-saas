@@ -45,16 +45,18 @@ public class AdminService {
         BillingAdminService.RevenueMetrics revenue = billing.revenue();
         return jdbc.queryForObject("""
                 SELECT
-                  (SELECT count(*) FROM tenants)                                   AS total_tenants,
-                  (SELECT count(*) FROM tenants t WHERE t.status = 'ACTIVE'
+                  (SELECT count(*) FROM tenants WHERE NOT demo AND status <> 'DELETED') AS total_tenants,
+                  (SELECT count(*) FROM tenants t WHERE NOT t.demo AND t.status = 'ACTIVE'
                      AND EXISTS (SELECT 1 FROM calculators c WHERE c.tenant_id = t.id AND c.status = 'PUBLICADO')) AS active_tenants,
-                  (SELECT count(*) FROM tenants WHERE status = 'SUSPENDED')        AS suspended_tenants,
-                  (SELECT count(*) FROM tenants WHERE status = 'ACTIVE')           AS not_suspended,
-                  (SELECT count(*) FROM users WHERE platform_role IS NULL)          AS total_users,
-                  (SELECT count(*) FROM users WHERE platform_role IS NULL AND email_verified_at IS NOT NULL) AS verified_users,
-                  (SELECT count(*) FROM tenants WHERE created_at >= ?)             AS new_tenants,
-                  (SELECT count(*) FROM quote_simulations WHERE created_at >= ?)    AS quotes_month,
-                  (SELECT count(*) FROM quote_requests WHERE created_at >= ?)       AS leads_month
+                  (SELECT count(*) FROM tenants WHERE NOT demo AND status = 'SUSPENDED') AS suspended_tenants,
+                  (SELECT count(*) FROM tenants WHERE NOT demo AND status = 'ACTIVE')    AS not_suspended,
+                  (SELECT count(*) FROM users WHERE platform_role IS NULL AND deleted_at IS NULL) AS total_users,
+                  (SELECT count(*) FROM users WHERE platform_role IS NULL AND deleted_at IS NULL
+                     AND email_verified_at IS NOT NULL)                                AS verified_users,
+                  (SELECT count(*) FROM tenants WHERE NOT demo AND created_at >= ?)    AS new_tenants,
+                  (SELECT count(*) FROM quote_simulations s JOIN tenants t ON t.id = s.tenant_id
+                     WHERE NOT t.demo AND s.created_at >= ?)                           AS quotes_month,
+                  (SELECT count(*) FROM quote_requests WHERE created_at >= ?)          AS leads_month
                 """, (rs, i) -> new PlatformSummary(rs.getLong("total_tenants"), rs.getLong("active_tenants"),
                         rs.getLong("suspended_tenants"),
                         Math.max(rs.getLong("not_suspended") - revenue.paidSubscribers(), 0),

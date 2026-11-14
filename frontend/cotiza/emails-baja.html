@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dejar de recibir emails — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/auth.css">
+</head>
+<body class="auth-page">
+<header class="auth-top">
+  <div class="container">
+    <a class="brand" href="/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+  </div>
+</header>
+<main class="auth-main">
+  <div class="auth-card" aria-live="polite">
+    <section class="result-state" id="unsub-ask">
+      <h1>¿Dejar de recibir consejos y resúmenes?</h1>
+      <p>No te vamos a mandar más el recordatorio para publicar tu cotizador ni el resumen mensual. Los avisos de tu cuenta (seguridad, pagos y consultas nuevas) siguen llegando.</p>
+      <div class="notice" id="unsub-notice" hidden></div>
+      <button class="btn btn-primary" type="button" id="unsub-button">Sí, no quiero recibirlos</button>
+    </section>
+    <section class="result-state" id="unsub-done" hidden tabindex="-1">
+      <div class="mark mark-ok" aria-hidden="true">✓</div>
+      <h1>Listo</h1>
+      <p id="unsub-done-text"></p>
+      <p>Podés volver a activarlos cuando quieras desde <a href="/app/cuenta">Tu cuenta</a>.</p>
+    </section>
+  </div>
+</main>
+<script type="module" src="/shared/js/emails-baja.js"></script>
+</body>
+</html>

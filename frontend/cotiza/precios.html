@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Precios — Climind Cotiza</title>
+  <meta name="description" content="Planes de Climind Cotiza en pesos argentinos: empezá gratis y pasá a un plan pago con Mercado Pago cuando lo necesites.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Precios — Climind Cotiza">
+  <meta property="og:description" content="Empezá gratis y pasá a un plan pago cuando lo necesites.">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/landing.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<header class="site-header">
+  <div class="container inner">
+    <a class="brand" href="/" aria-label="Climind Cotiza, inicio">
+      <img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34">
+      <span>Climind Cotiza</span>
+    </a>
+    <nav class="site-nav" aria-label="Principal">
+      <a class="nav-text optional" href="/#demos">Demo</a>
+      <a class="nav-text optional" href="/precios" aria-current="page">Precios</a>
+      <a class="nav-text optional" href="/ayuda">Ayuda</a>
+      <a class="nav-text" href="/ingresar">Ingresar</a>
+      <a class="btn btn-primary optional" href="/registro">Crear cuenta</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="hero pb-4">
+    <div class="container">
+      <p class="eyebrow">Precios</p>
+      <h1>Empezá gratis. Pagá cuando crezcas.</h1>
+      <p class="lead">Todos los planes incluyen el constructor de cotizadores, la página pública para celular, las consultas de tus clientes, el PDF y las estadísticas. Cambian la cantidad de cotizadores, las cotizaciones por mes y la personalización.</p>
+    </div>
+  </section>
+
+  <section class="pb-5" aria-labelledby="planes-title">
+    <div class="container">
+      <h2 class="visually-hidden" id="planes-title">Planes</h2>
+      <div class="pricing-grid" id="pricing-grid" aria-live="polite"><p class="pricing-error">Cargando planes…</p></div>
+      <p class="pricing-note">Precios en pesos argentinos. Creás tu cuenta gratis y elegís el plan pago desde tu panel; el cobro mensual lo hace Mercado Pago.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="comparar-title">
+    <div class="container">
+      <h2 id="comparar-title">Compará los planes</h2>
+      <div class="compare-wrap mt-4"><table class="compare" id="compare"></table></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Preguntas sobre planes y pagos</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Cómo se paga?</summary>
+          <p>Con Mercado Pago, como una suscripción mensual: elegís el medio de pago en Mercado Pago y el cobro se repite cada mes. Tu plan se activa cuando Mercado Pago confirma el primer pago.</p>
+        </details>
+        <details>
+          <summary>¿Puedo cancelar cuando quiera?</summary>
+          <p>Sí, desde “Tu plan” en el panel. No se te vuelve a cobrar y conservás los beneficios hasta el final del período que ya pagaste. Después seguís con el plan Gratis, sin perder tus cotizadores ni tus consultas.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa si llego al límite de cotizaciones del mes?</summary>
+          <p>Te avisamos por email al llegar al 80 % y al 100 %. Al llegar al límite, tu cotizador muestra tus datos de contacto en lugar del formulario hasta que empiece el período siguiente o pases a un plan con más capacidad. Recalcular las mismas respuestas no consume cupo.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa si falla un pago?</summary>
+          <p>Mantenés tu plan durante 7 días mientras Mercado Pago reintenta el cobro o actualizás tu medio de pago. Si no se resuelve, pasás al plan Gratis: no se borra nada.</p>
+        </details>
+        <details>
+          <summary>¿Puedo cambiar de plan?</summary>
+          <p>Sí. El plan nuevo empieza con su primer pago y reemplaza al anterior, que deja de cobrarse.</p>
+        </details>
+        <details>
+          <summary>¿Cuenta como cotización cada vez que alguien abre mi enlace?</summary>
+          <p>No. Cuenta cuando un cliente completa las preguntas y obtiene un precio. Abrir la página o recalcular con las mismas respuestas no suma.</p>
+        </details>
+      </div>
+      <p class="mt-4 mb-0">Más detalles en la ayuda: <a href="/ayuda/planes-y-pagos">Planes y pagos</a>.</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container">
+      <h2>Probalo gratis con tus propios precios</h2>
+      <p>Sin tarjeta de crédito. Cuando lo necesites, elegís un plan desde tu panel.</p>
+      <a class="btn btn-primary btn-lg" href="/registro">Crear cuenta gratis</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container d-flex flex-column flex-md-row justify-content-between gap-3">
+    <span>Climind Cotiza es un producto de <a href="/saas/">Climind SaaS</a>, de <a href="https://climind-ia.com" rel="noopener">Climind-IA</a>.</span>
+    <nav class="links" aria-label="Legales">
+      <a href="/ayuda">Ayuda</a>
+      <a href="/legal/terminos">Términos y condiciones</a>
+      <a href="/legal/privacidad">Política de privacidad</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/site-config.js"></script>
+<script type="module" src="/shared/js/precios.js"></script>
+</body>
+</html>

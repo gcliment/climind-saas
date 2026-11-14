@@ -55,7 +55,8 @@ public class PublicCalculators {
             CalculatorConfig config,
             Appearance appearance,
             String publicUrl,
-            boolean showBranding) {
+            boolean showBranding,
+            boolean demo) {
     }
 
     /**
@@ -64,7 +65,8 @@ public class PublicCalculators {
      * @param available si el cotizador sigue publicado hoy
      */
     public record QuoteContext(String tenantSlug, String country, ZoneId zone, boolean tenantActive, boolean available,
-                               String publicUrl, CalculatorConfig config, Appearance appearance, boolean showBranding) {
+                               String publicUrl, CalculatorConfig config, Appearance appearance, boolean showBranding,
+                               boolean demo) {
     }
 
     @Transactional(readOnly = true)
@@ -82,7 +84,8 @@ public class PublicCalculators {
                 c.getStatus() == Calculator.Status.PUBLICADO,
                 properties.publicUrlWithoutTrailingSlash() + "/c/" + t.getSlug() + "/" + c.getSlug(),
                 json.parse(version.get().getConfig()),
-                branded(json.read(version.get().getAppearance(), Appearance.class), plan), !plan.customBranding()));
+                branded(json.read(version.get().getAppearance(), Appearance.class), plan), !plan.customBranding(),
+                t.isDemo()));
     }
 
     @Transactional(readOnly = true)
@@ -105,7 +108,7 @@ public class PublicCalculators {
                             v.getDescription(), json.parse(v.getConfig()),
                             branded(json.read(v.getAppearance(), Appearance.class), plan),
                             properties.publicUrlWithoutTrailingSlash() + "/c/" + t.getSlug() + "/" + c.getSlug(),
-                            !plan.customBranding());
+                            !plan.customBranding(), t.isDemo());
                 }));
     }
 

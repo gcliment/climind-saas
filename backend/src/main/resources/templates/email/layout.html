@@ -21,7 +21,9 @@
     <tr>
       <td style="padding:18px 28px;border-top:1px solid #E8EDF6;font-size:12px;line-height:1.5;color:#7A879C;">
         Climind Cotiza es un producto de Climind SaaS, de Climind-IA.<br>
-        Recibiste este email por una acción realizada en tu cuenta. Si no fuiste vos, podés ignorarlo.
+        <th:block th:if="${unsubscribeUrl == null}">Recibiste este email por una acción realizada en tu cuenta. Si no fuiste vos, podés ignorarlo.</th:block>
+        <th:block th:if="${unsubscribeUrl != null}">Te escribimos porque tenés una cuenta en Climind Cotiza y aceptás recibir consejos y resúmenes.
+          <a th:href="${unsubscribeUrl}" href="#" style="color:#7A879C;">No quiero recibir más estos emails</a>.</th:block>
       </td>
     </tr>
   </table>

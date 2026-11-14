@@ -38,11 +38,18 @@ public class EntitlementService {
         this.clock = clock;
     }
 
+    /** Código del "plan" del negocio de las demos públicas (no es un plan contratable). */
+    public static final String DEMO_PLAN = "DEMO";
+
     @Transactional(readOnly = true)
     public Entitlements forTenant(UUID tenantId) {
         Instant now = clock.instant();
-        ZoneId zone = tenants.find(tenantId).map(Tenant::getTimezone).map(ZoneId::of)
+        java.util.Optional<Tenant> tenant = tenants.find(tenantId);
+        ZoneId zone = tenant.map(Tenant::getTimezone).map(ZoneId::of)
                 .orElse(ZoneId.of("America/Argentina/Buenos_Aires"));
+        if (tenant.map(Tenant::isDemo).orElse(false)) {
+            return demo(zone, now);
+        }
         return subscriptions.findByTenantIdAndStatusIn(tenantId, WITH_BENEFITS).stream()
                 .filter(s -> s.grantsBenefits(now))
                 .max(Comparator.comparing(s -> s.getCurrentPeriodEnd() == null ? now : s.getCurrentPeriodEnd()))
@@ -64,6 +71,16 @@ public class EntitlementService {
         return new Entitlements(s.getPlanCode(), s.getPlanName(), true, s.getMaxPublishedCalculators(),
                 s.getMaxMonthlyQuotes(), s.isCsvExport(), s.isCustomBranding(), s.isLeadEmailNotifications(), start,
                 end, s.getId());
+    }
+
+    /**
+     * Las demos públicas no se quedan sin cupo (el abuso lo frena el límite por IP) y muestran la marca de
+     * Climind Cotiza, como el plan gratuito. No reciben consultas ni envían avisos.
+     */
+    private static Entitlements demo(ZoneId zone, Instant now) {
+        LocalDate start = LocalDate.ofInstant(now, zone).withDayOfMonth(1);
+        return new Entitlements(DEMO_PLAN, "Demostración", false, 10, Integer.MAX_VALUE, false, false, false, start,
+                start.plusMonths(1), null);
     }
 
     private Entitlements free(ZoneId zone, Instant now) {

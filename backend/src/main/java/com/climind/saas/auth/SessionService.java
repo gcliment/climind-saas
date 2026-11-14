@@ -69,6 +69,19 @@ public class SessionService {
         return found.size();
     }
 
+    /** Cierra las demás sesiones del usuario y conserva la actual (cambio de contraseña desde el panel). */
+    public int invalidateOthers(UUID userId, String keepSessionId) {
+        var found = sessions.findByPrincipalName(userId.toString());
+        int closed = 0;
+        for (String id : found.keySet()) {
+            if (!id.equals(keepSessionId)) {
+                sessions.deleteById(id);
+                closed++;
+            }
+        }
+        return closed;
+    }
+
     static List<GrantedAuthority> authorities(AppPrincipal principal) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (principal.tenantRole() != null) {

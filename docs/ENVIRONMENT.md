@@ -22,6 +22,9 @@ Ejemplo completo: [`infra/.env.example`](../infra/.env.example). **Nunca** commi
 | `APP_PUBLIC_URL` | sí | `http://localhost:8080` | URL pública de Cotiza, sin barra final. Se usa en los links de los emails. Ej: `https://cotiza.climind-ia.com` |
 | `APP_PORTAL_URL` | sí | `http://localhost:8080/saas/` | URL del portal. Ej: `https://saas.climind-ia.com/` |
 | `APP_PORTAL_HOST` | no | vacío | Host que muestra el portal en `/`. Ej: `saas.climind-ia.com` |
+| `APP_SUPPORT_EMAIL` | recomendada | vacío | Email de soporte que se muestra en la ayuda, la landing y el portal. Vacío = no se muestra (se ofrecen las preguntas frecuentes) |
+| `APP_DEMO_ENABLED` | no | `true` (`false` en tests) | Crea al arrancar, si falta, el negocio ficticio de las demos públicas (`/c/demo/...`) |
+| `ACCOUNT_DELETION_GRACE` | no | `30d` | Plazo para arrepentirse de una baja de cuenta antes de eliminar los datos |
 | `COOKIE_SECURE` | — | `true` en prod | Cookie de sesión solo por HTTPS. Poner `false` únicamente para pruebas locales por http. |
 | `SESSION_TIMEOUT` | no | `7d` | Inactividad máxima de una sesión |
 | `APP_CLIENT_IP_HEADER` | no | vacío | Header con la IP real (`CF-Connecting-IP`), **solo** si todo el tráfico pasa por Cloudflare. Si no, la IP se falsificaría. |
@@ -47,3 +50,18 @@ Ejemplo completo: [`infra/.env.example`](../infra/.env.example). **Nunca** commi
 | `PAYMENT_PROVIDER` | no | `mercadopago` (prod) / `fake` (dev y test) | `fake` es el simulador: **en prod la app no arranca** con ese valor |
 | `MERCADOPAGO_ACCESS_TOKEN` | para vender | vacío | Access token de la aplicación (Tus integraciones → Credenciales). Solo backend, nunca se expone ni se registra. Sin él, la contratación responde "pagos no habilitados" y el panel de administración lo marca |
 | `MERCADOPAGO_WEBHOOK_SECRET` | para vender | vacío | Clave secreta de Webhooks (Tus integraciones → Webhooks) para validar `x-signature`. Sin ella, toda notificación se rechaza (401) |
+
+## Servicio de backups (`infra/backup`)
+
+Estas variables van en el servicio **backup**, no en la app.
+
+| Variable | Por defecto | Descripción |
+|---|---|---|
+| `PGHOST`, `PGDATABASE`, `PGUSER`, `PGPASSWORD` | — | Conexión a PostgreSQL (variables estándar de libpq) |
+| `BACKUP_HOUR` | `3` | Hora del backup diario (hora de Argentina) |
+| `BACKUP_RETENTION_DAYS` | `14` | Días que se conservan los backups, en el volumen local y en el remoto |
+| `BACKUP_VERIFY` | `1` | Después de cada backup, lo restaura en una base temporal y lo verifica |
+| `STORAGE_DIR` | `/data/storage` | Dónde está montado (solo lectura) el volumen de archivos de la app |
+| `RCLONE_REMOTE` | vacío | Destino fuera del VPS, p. ej. `r2:climind-backups/cotiza`. Vacío = solo local (**no recomendado**) |
+| `RCLONE_CONFIG_<REMOTO>_*` | — | Configuración de rclone por variables (tipo, proveedor, claves, endpoint). En Docker Compose van en `infra/backup.env`, que está ignorado por git |
+| `RESTORE_CONFIRM` | — | `si` para que `restore.sh` reemplace los datos. Sin esta variable solo verifica las sumas de control |

@@ -69,13 +69,27 @@ Las **plantillas no son una tabla**: son archivos JSON versionados con el códig
 
 **Funciones como columnas y no como tabla `plan_features`.** Son pocas, conocidas y con tipo (booleano o entero): las columnas dan validación (`CHECK`) y consultas simples. Si aparecieran funciones configurables sin cambiar código, se agrega la tabla.
 
-## Próximas migraciones (diseño aprobado)
+### V6: comercialización
+- `tenants.demo`: negocio ficticio de las demos públicas. No tiene dueño, no recibe consultas, no se queda sin cupo y queda fuera de las métricas.
+- `tenants.deletion_requested_at`, `deletion_scheduled_for`, `deletion_requested_by` y `deleted_at`: baja de cuenta pedida por el dueño.
+  - Estado nuevo `DELETED`.
+  - Checks de consistencia: la fecha programada va siempre con la fecha del pedido, y `DELETED` va siempre con `deleted_at`.
+  - Índice parcial para el job que ejecuta las bajas vencidas.
+- `users.product_emails`: acepta emails de producto (los transaccionales se envían siempre).
+- `users.email_prefs_token`: token del enlace de baja de esos emails; único y en claro, porque solo permite darse de baja.
+- `users.deleted_at`: usuario anonimizado.
+- `product_email_sends` (PK: usuario, campaña y período): garantiza un solo envío por usuario, campaña y período aunque el job corra dos veces.
+- `calculator_versions_immutable()` se reemplaza. Las versiones siguen siendo inmutables, con **una sola excepción**: se pueden borrar (nunca modificar) mientras se ejecuta la baja de su negocio.
 
-| Versión | Fase | Tablas |
+### Baja de cuenta: qué se elimina y qué se conserva
+
+| Se elimina | Se anonimiza | Se conserva |
 |---|---|---|
+| Cotizadores y versiones, cotizaciones, consultas e historial, perfil, configuración, logo (archivo y registro), contadores de uso, tokens del usuario, membresía | Usuario: email, nombre, contraseña inutilizable y estado `DISABLED`. Negocio: nombre "Cuenta eliminada", dirección `eliminado-…` y estado `DELETED`. Destinatarios en `email_delivery_logs` e IPs en `audit_logs` | Suscripciones y pagos (obligaciones contables), eventos del proveedor de pagos y auditoría sin IP |
+
 
 ## Operación
 
 - Las migraciones corren automáticamente al iniciar la app (Flyway, con bloqueo propio).
 - **Nunca editar una migración ya aplicada**: crear una nueva (`V3__...sql`).
-- Backups y restore: ver [DEPLOYMENT.md](DEPLOYMENT.md#backups).
+- Backups diarios con prueba de restauración automática, y procedimiento de restauración probado: ver [DEPLOYMENT.md](DEPLOYMENT.md#backups).

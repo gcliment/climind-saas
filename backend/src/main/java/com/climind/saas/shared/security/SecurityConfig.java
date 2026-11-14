@@ -77,6 +77,9 @@ public class SecurityConfig {
                             .requestMatchers("/api/v1/business/**", "/api/v1/calculators/**", "/api/v1/templates/**",
                                     "/api/v1/leads/**", "/api/v1/stats/**", "/api/v1/billing/**")
                             .hasRole("OWNER")
+                            // Exportar todos los datos y dar de baja la cuenta: solo el dueño del negocio.
+                            .requestMatchers("/api/v1/account/export", "/api/v1/account/deletion")
+                            .hasRole("OWNER")
                             // Documentación OpenAPI: solo existe si API_DOCS_ENABLED (deshabilitada en prod).
                             .requestMatchers("/api/docs", "/api/docs/**", "/api/swagger-ui/**", "/swagger-ui/**")
                             .permitAll();

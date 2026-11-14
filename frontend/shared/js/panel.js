@@ -9,6 +9,8 @@ const ICONS = {
   chart: '<path d="M4 20V4M4 20h16"/><path d="M8 16v-5M12 16V8M16 16v-3"/>',
   card: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
   shield: '<path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5h0"/>',
 };
 
 function icon(name) {
@@ -23,12 +25,14 @@ function navItems(me) {
     items.push({ href: '/app/consultas', label: 'Consultas', icon: 'inbox' });
     items.push({ href: '/app/estadisticas', label: 'Estadísticas', icon: 'chart' });
     items.push({ href: '/app/negocio', label: 'Mi negocio', icon: 'store' });
-    // En el celular la barra inferior tiene 5 accesos: el plan se abre desde el inicio.
+    // En el celular la barra inferior tiene 5 accesos: el plan, la cuenta y la ayuda van en el menú de arriba.
     items.push({ href: '/app/plan', label: 'Plan', icon: 'card', desktopOnly: true });
   }
   if (me.user.platformRole === 'SUPER_ADMIN') {
     items.push({ href: '/app/admin', label: 'Administración', icon: 'shield' });
   }
+  items.push({ href: '/app/cuenta', label: 'Tu cuenta', icon: 'user', desktopOnly: true });
+  items.push({ href: '/ayuda', label: 'Ayuda', icon: 'help', desktopOnly: true });
   return items;
 }
 
@@ -42,6 +46,63 @@ function renderNav(container, items, current) {
     if (item.href === current) a.setAttribute('aria-current', 'page');
     return a;
   }));
+}
+
+/**
+ * Celular: la barra inferior tiene 5 accesos; el resto (plan, cuenta, ayuda, salir) va en un menú de la barra
+ * superior.
+ */
+function renderTopbarMenu(items, current) {
+  const topbar = document.querySelector('.panel-topbar');
+  const logoutButton = topbar?.querySelector('[data-logout]');
+  if (!topbar || !logoutButton) return;
+  const extra = items.filter((i) => i.desktopOnly);
+  const menu = document.createElement('details');
+  menu.className = 'topbar-menu';
+  const summary = document.createElement('summary');
+  summary.textContent = 'Menú';
+  const list = document.createElement('div');
+  list.className = 'topbar-menu-list';
+  for (const item of extra) {
+    const a = document.createElement('a');
+    a.href = item.href;
+    a.textContent = item.label;
+    if (item.href === current) a.setAttribute('aria-current', 'page');
+    list.append(a);
+  }
+  logoutButton.textContent = 'Cerrar sesión';
+  list.append(logoutButton);
+  menu.append(summary, list);
+  topbar.append(menu);
+  document.addEventListener('click', (event) => {
+    if (menu.open && !menu.contains(event.target)) menu.open = false;
+  });
+  menu.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menu.open) {
+      menu.open = false;
+      summary.focus();
+    }
+  });
+}
+
+/** Aviso en todas las páginas mientras haya una baja de la cuenta programada. */
+function renderDeletionBanner(scheduledFor, current) {
+  const main = document.querySelector('.panel-main');
+  document.getElementById('deletion-banner')?.remove();
+  if (!main || !scheduledFor || current === '/app/cuenta') return;
+  const date = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', timeZone: 'America/Argentina/Buenos_Aires' })
+    .format(new Date(scheduledFor));
+  const banner = document.createElement('div');
+  banner.id = 'deletion-banner';
+  banner.className = 'notice notice-warn deletion-banner';
+  banner.setAttribute('role', 'status');
+  const text = document.createElement('span');
+  text.textContent = `La baja de tu cuenta está programada para el ${date}. Tus cotizadores no están disponibles para tus clientes.`;
+  const link = document.createElement('a');
+  link.href = '/app/cuenta';
+  link.textContent = 'Cancelar la baja';
+  banner.append(text, link);
+  main.prepend(banner);
 }
 
 async function logout() {
@@ -71,6 +132,8 @@ export async function initPanel({ current, requireTenant = true }) {
   const items = navItems(me);
   renderNav(document.getElementById('side-nav'), items, current);
   renderNav(document.getElementById('tabbar'), items.filter((i) => !i.desktopOnly), current);
+  renderTopbarMenu(items, current);
+  renderDeletionBanner(me.tenant?.deletionScheduledFor, current);
 
   const fullName = `${me.user.firstName} ${me.user.lastName}`;
   document.querySelectorAll('[data-user-name]').forEach((el) => { el.textContent = fullName; });

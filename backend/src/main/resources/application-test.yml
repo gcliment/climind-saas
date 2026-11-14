@@ -29,6 +29,9 @@ app:
   admin-bootstrap:
     email: ""
     password: ""
+  # Las demos se crean explícitamente en los tests que las usan (los demás parten de una base vacía).
+  demo:
+    enabled: false
 
 logging:
   level:

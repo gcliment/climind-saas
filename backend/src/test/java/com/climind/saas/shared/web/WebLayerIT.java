@@ -34,7 +34,10 @@ class WebLayerIT extends IntegrationTest {
     void paginasPublicasSeSirvenConRutasLimpias() throws Exception {
         for (String path : new String[]{"/", "/ingresar", "/registro", "/verificar", "/recuperar", "/restablecer",
                 "/app/", "/app/negocio", "/app/admin", "/app/cotizadores", "/app/editor", "/app/onboarding",
-                "/app/consultas", "/app/estadisticas", "/app/plan", "/app/plan/simulador", "/cotizacion/COT-ABC234", "/legal/terminos", "/legal/privacidad", "/saas/"}) {
+                "/app/consultas", "/app/estadisticas", "/app/plan", "/app/plan/simulador", "/app/cuenta", "/cotizacion/COT-ABC234", "/legal/terminos", "/legal/privacidad", "/saas/",
+                "/precios", "/ayuda", "/ayuda/primeros-pasos", "/ayuda/crear-cotizador", "/ayuda/precios-y-reglas",
+                "/ayuda/publicar-y-compartir", "/ayuda/consultas", "/ayuda/planes-y-pagos", "/ayuda/cuenta-y-datos",
+                "/emails/baja"}) {
             MvcResult result = page(path);
             assertThat(result.getResponse().getStatus()).as(path).isEqualTo(200);
             assertThat(result.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).as(path).contains("<!doctype html>");

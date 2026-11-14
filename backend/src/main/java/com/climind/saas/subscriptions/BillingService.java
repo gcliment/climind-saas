@@ -167,6 +167,42 @@ public class BillingService {
     }
 
     /**
+     * Baja de la cuenta: se cancelan en el proveedor la suscripción vigente y cualquier contratación pendiente,
+     * para que no haya más cobros. Si el proveedor falla se lanza un error y la baja no se programa (se puede
+     * reintentar sin riesgo de cobros dobles).
+     *
+     * @return true si había un plan pago vigente que se canceló
+     */
+    @Transactional
+    public boolean stopBillingForAccountDeletion(UUID tenantId, UUID actorUserId) {
+        Instant now = clock.instant();
+        boolean canceledPaid = false;
+        try {
+            for (TenantSubscription pending : subscriptions.findByTenantIdAndStatusIn(tenantId,
+                    EnumSet.of(TenantSubscription.Status.PENDING))) {
+                sync.cancelAtProvider(pending);
+                pending.end("ACCOUNT_DELETION", now);
+                subscriptions.saveAndFlush(pending);
+            }
+            for (TenantSubscription sub : subscriptions.findByTenantIdAndStatusIn(tenantId, CURRENT)) {
+                if (sub.getExternalId() != null) {
+                    provider.cancelSubscription(sub.getExternalId());
+                }
+                sub.canceled("ACCOUNT_DELETION", now);
+                subscriptions.saveAndFlush(sub);
+                audit.record(AuditAction.SUBSCRIPTION_CANCELED, actorUserId, tenantId, "tenant_subscription",
+                        sub.getId().toString(), Map.of("plan", sub.getPlanCode(), "reason", "ACCOUNT_DELETION"));
+                canceledPaid = true;
+            }
+        } catch (PaymentProviderException | org.springframework.web.client.RestClientException e) {
+            log.warn("No se pudo cancelar en el proveedor el plan del negocio {}: {}", tenantId, e.getMessage());
+            throw new ApiException(HttpStatus.BAD_GATEWAY, "PAYMENTS_ERROR",
+                    "No pudimos cancelar tu plan en Mercado Pago. Probá de nuevo en unos minutos.");
+        }
+        return canceledPaid;
+    }
+
+    /**
      * Cancela el plan pago: se da de baja en el proveedor (no hay más cobros) y conserva los beneficios hasta el
      * fin del período ya pagado. Después rige el plan gratuito. No se borra ningún dato.
      */

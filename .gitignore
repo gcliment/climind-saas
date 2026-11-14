@@ -13,6 +13,8 @@ tests/e2e/.cache/
 .env
 .env.*
 !.env.example
+# Credenciales del destino de backups (rclone)
+backup.env
 *.pem
 *.key
 

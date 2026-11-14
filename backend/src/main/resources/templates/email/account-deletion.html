@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${'Programaste la baja de tu cuenta'}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;">Hola <strong th:text="${firstName}">Nombre</strong>:</p>
+  <p style="margin:0 0 14px;">Recibimos tu pedido para eliminar la cuenta de <strong th:text="${businessName}">Negocio</strong>. Tus cotizadores ya no están disponibles para tus clientes.</p>
+  <p style="margin:0 0 14px;">El <strong th:text="${scheduledFor}">1 de enero</strong> vamos a eliminar los datos de tu negocio: cotizadores, cotizaciones y consultas de clientes. Hasta ese día podés descargar una copia o arrepentirte desde tu panel.</p>
+  <p style="margin:0 0 14px;" th:if="${canceledPaidPlan}">Cancelamos tu plan pago en Mercado Pago: no se te va a volver a cobrar.</p>
+  <p style="margin:0 0 20px;">Por obligaciones contables conservamos el registro de los pagos que hayas hecho.</p>
+  <p style="margin:6px 0 0;">
+    <a th:href="${link}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Ver mi cuenta</a>
+  </p>
+</div>
+</body>
+</html>

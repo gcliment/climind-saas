@@ -32,6 +32,9 @@ public class CurrentTenant {
         }
         Tenant tenant = tenants.findById(principal.tenantId())
                 .orElseThrow(() -> ApiException.forbidden("NO_TENANT", "Tu usuario no tiene un negocio asociado."));
+        if (tenant.getStatus() == Tenant.Status.DELETED) {
+            throw ApiException.forbidden("TENANT_DELETED", "Esta cuenta fue eliminada.");
+        }
         if (!tenant.isActive()) {
             throw ApiException.forbidden("TENANT_SUSPENDED",
                     "Tu cuenta está suspendida. Escribinos para resolverlo.");

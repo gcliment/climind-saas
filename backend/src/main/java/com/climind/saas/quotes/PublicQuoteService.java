@@ -93,13 +93,14 @@ public class PublicQuoteService {
         // muestran los datos de contacto del negocio en lugar del formulario (al visitante no le importa el motivo).
         if (!pc.available() || usage.quoteUsage(pc.tenantId()).exhausted()) {
             return new PublicCalculator(false, pc.name(), null, pc.appearance().accentColor(), card, null, null, null,
-                    null, null, null, pc.showBranding());
+                    null, null, null, pc.showBranding(), pc.demo());
         }
         CalculatorConfig config = pc.config();
         return new PublicCalculator(true, pc.name(), pc.description(), pc.appearance().accentColor(), card,
                 json.tree(json.write(config.questions())), config.currency(), config.pricing().rounding().scale(),
                 config.commercial().disclaimer(), config.commercial().validityDays(),
-                config.commercial().leadCapture().name(), pc.showBranding());
+                pc.demo() ? CalculatorConfig.LeadCapture.AFTER_ESTIMATE.name() : config.commercial().leadCapture().name(),
+                pc.showBranding(), pc.demo());
     }
 
     // ------------------------------------------------------------------ cotizar
@@ -115,7 +116,11 @@ public class PublicQuoteService {
             throw ApiException.conflict("CALCULATOR_UNAVAILABLE", "Este cotizador no está disponible por el momento.");
         }
         CalculatorConfig config = pc.config();
-        boolean contactFirst = config.commercial().leadCapture() == CalculatorConfig.LeadCapture.BEFORE_ESTIMATE;
+        if (pc.demo() && request.contact() != null) {
+            throw demoWithoutLeads();
+        }
+        boolean contactFirst = !pc.demo()
+                && config.commercial().leadCapture() == CalculatorConfig.LeadCapture.BEFORE_ESTIMATE;
         if (contactFirst && request.contact() == null) {
             throw ApiException.badRequest("CONTACT_REQUIRED", "Completá tus datos para ver el precio estimado.");
         }
@@ -178,6 +183,9 @@ public class PublicQuoteService {
                     "Ya enviaste tus datos para esta cotización. El negocio se va a comunicar con vos.");
         }
         QuoteContext context = context(simulation);
+        if (context.demo()) {
+            throw demoWithoutLeads();
+        }
         Contact contact = validate(request, context.country(), "");
         if (!rateLimiter.tryConsume(RateLimiter.Policy.PUBLIC_LEAD_IP, ip)) {
             throw ApiException.tooManyRequests();
@@ -248,9 +256,16 @@ public class PublicQuoteService {
                 simulation.getCreatedAt(), simulation.getValidUntil(), simulation.isExpired(today),
                 simulation.getCalculatorName(), context.publicUrl(), card, context.appearance().accentColor(),
                 json.tree(simulation.getResult()), (int) simulation.getPriceScale(), simulation.getCurrency(),
-                simulation.getDisclaimer(), whatsappUrl, commercial.leadCapture().name(),
+                simulation.getDisclaimer(), whatsappUrl,
+                context.demo() ? CalculatorConfig.LeadCapture.AFTER_ESTIMATE.name() : commercial.leadCapture().name(),
                 new PublicQuoteDtos.RequestStatus(lead != null, lead == null ? null : lead.getCreatedAt()),
-                context.showBranding());
+                context.showBranding(), context.demo());
+    }
+
+    /** Las demos públicas no reciben datos personales: no hay un negocio real que vaya a responder. */
+    private static ApiException demoWithoutLeads() {
+        return ApiException.conflict("DEMO_NO_LEADS",
+                "Esto es una demostración: en tu cotizador, acá tu cliente te deja sus datos y la consulta llega a tu panel.");
     }
 
     private BusinessCard card(java.util.UUID tenantId, Appearance appearance) {

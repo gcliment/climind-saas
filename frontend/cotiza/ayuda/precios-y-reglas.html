@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Precios y reglas — Ayuda de Climind Cotiza</title>
+  <meta name="description" content="Cómo se calcula el importe: conceptos, recargos, descuentos, mínimo, impuestos y redondeo.">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/landing.css">
+  <link rel="stylesheet" href="/shared/css/help.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header">
+  <div class="container inner">
+    <a class="brand" href="/" aria-label="Climind Cotiza, inicio">
+      <img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34">
+      <span>Climind Cotiza</span>
+    </a>
+    <nav class="site-nav" aria-label="Principal">
+      <a class="nav-text optional" href="/precios">Precios</a>
+      <a class="nav-text optional" href="/ayuda" aria-current="page">Ayuda</a>
+      <a class="nav-text" href="/ingresar">Ingresar</a>
+      <a class="btn btn-primary optional" href="/registro">Crear cuenta</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido" class="container">
+  <div class="help-layout">
+    <nav class="help-nav" aria-labelledby="help-nav-title">
+      <h2 id="help-nav-title">Ayuda</h2>
+      <ul>
+      <li><a href="/ayuda/primeros-pasos">Primeros pasos</a></li>
+      <li><a href="/ayuda/crear-cotizador">Crear y editar un cotizador</a></li>
+      <li><a href="/ayuda/precios-y-reglas" aria-current="page">Precios y reglas</a></li>
+      <li><a href="/ayuda/publicar-y-compartir">Publicar y compartir</a></li>
+      <li><a href="/ayuda/consultas">Consultas de clientes</a></li>
+      <li><a href="/ayuda/planes-y-pagos">Planes y pagos</a></li>
+      <li><a href="/ayuda/cuenta-y-datos">Tu cuenta y tus datos</a></li>
+      </ul>
+    </nav>
+    <article class="help-article">
+      <p class="help-breadcrumb"><a href="/ayuda">Ayuda</a> / Precios y reglas</p>
+      <h1>Precios y reglas</h1>
+      <p class="lead">El importe lo calcula siempre nuestro servidor con tus reglas, en el mismo orden para todas las cotizaciones. El navegador del cliente solo lo muestra.</p>
+
+      <h2>Tipos de reglas</h2>
+      <table>
+        <thead><tr><th>Regla</th><th>Cómo calcula</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>Precio según la opción</td><td>Cada opción de una pregunta tiene su precio.</td><td>Horno $ 9.000; vidrios $ 12.000</td></tr>
+          <tr><td>Precio por unidad</td><td>Cantidad o medida × precio. Admite precios por volumen.</td><td>$ 3.000 por ambiente</td></tr>
+          <tr><td>Precio por unidad según opción</td><td>Una cantidad × el precio de la opción elegida.</td><td>Invitados × precio del menú</td></tr>
+          <tr><td>Importe fijo</td><td>Un monto que se suma siempre o si se cumple algo.</td><td>Traslado $ 15.000</td></tr>
+          <tr><td>Recargo %</td><td>Suma un porcentaje.</td><td>Urgencia +20 %</td></tr>
+          <tr><td>Descuento %</td><td>Resta un porcentaje.</td><td>Servicio semanal −15 %</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Precios por volumen:</strong> en “precio por unidad” podés definir tramos (por ejemplo, desde 100 m² el metro cuesta menos). Se usa el precio del tramo que corresponde a la cantidad total, para todas las unidades.</p>
+      <p><strong>Condiciones:</strong> cualquier regla puede aplicarse solo si se cumplen una o más condiciones sobre las respuestas (por ejemplo, el recargo de urgencia solo si respondieron “Sí” a “¿Es urgente?”). Si ponés varias, se tienen que cumplir todas.</p>
+
+      <h2>El orden del cálculo</h2>
+      <ol>
+        <li>Se suman los conceptos (precio según opción, por unidad, por unidad según opción e importes fijos): es el <strong>subtotal</strong>.</li>
+        <li>Se aplican los <strong>recargos</strong> sobre el subtotal.</li>
+        <li>Se aplican los <strong>descuentos</strong> sobre el subtotal más los recargos.</li>
+        <li>Si el resultado es menor que tu <strong>precio mínimo</strong>, se agrega la línea “Ajuste a precio mínimo”.</li>
+        <li>Se aplican los <strong>impuestos</strong> según cómo los configuraste.</li>
+        <li>Se <strong>redondea</strong> el total (a pesos enteros o con centavos).</li>
+      </ol>
+
+      <h3>Un ejemplo</h3>
+      <p>Limpieza profunda de 60 m² a $ 1.500 el m² ($ 90.000), 3 ambientes a $ 3.000 ($ 9.000) y horno ($ 9.000): subtotal $ 108.000. Si además eligen servicio quincenal con 10 % de descuento, se restan $ 10.800 y el total estimado queda en $ 97.200.</p>
+
+      <h2>Impuestos</h2>
+      <ul>
+        <li><strong>Mis precios son finales:</strong> no se agrega nada.</li>
+        <li><strong>Mis precios no incluyen impuestos:</strong> el total no cambia, pero se le avisa al cliente.</li>
+        <li><strong>Sumar un impuesto al total:</strong> definís el nombre y el porcentaje (por ejemplo, IVA 21 %) y se suma al final.</li>
+      </ul>
+      <p>Climind Cotiza calcula presupuestos estimados: no emite facturas.</p>
+
+      <h2>Vigencia y aclaración</h2>
+      <p>En la pestaña Publicación definís cuántos días vale el presupuesto y el texto de aclaración (por ejemplo, “El precio final está sujeto a confirmación”). Ambos aparecen en la página, en el PDF y quedan guardados con cada cotización.</p>
+
+      <div class="help-tip"><p>Si cambiás tus precios y volvés a publicar, las cotizaciones anteriores conservan su importe original. Solo las nuevas usan los precios nuevos.</p></div>
+      <nav class="help-next" aria-label="Otros artículos">
+        <a href="/ayuda/crear-cotizador">← Crear y editar un cotizador</a>
+        <a href="/ayuda/publicar-y-compartir">Publicar y compartir →</a>
+      </nav>
+      <p class="help-contact">¿No encontrás lo que buscás?<span data-support-only hidden> Escribinos a <span data-support-email></span>.</span><span data-support-fallback> Revisá las <a href="/#precios">preguntas frecuentes</a> o los <a href="/legal/terminos">términos del servicio</a>.</span></p>
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container d-flex flex-column flex-md-row justify-content-between gap-3">
+    <span>Climind Cotiza es un producto de <a href="/saas/">Climind SaaS</a>, de <a href="https://climind-ia.com" rel="noopener">Climind-IA</a>.</span>
+    <nav class="links" aria-label="Legales">
+      <a href="/precios">Precios</a>
+      <a href="/legal/terminos">Términos y condiciones</a>
+      <a href="/legal/privacidad">Política de privacidad</a>
+    </nav>
+  </div>
+</footer>
+<script src="/site-config.js"></script>
+<script type="module" src="/shared/js/ayuda.js"></script>
+</body>
+</html>

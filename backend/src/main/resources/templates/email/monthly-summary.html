@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${title}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;">Hola <strong th:text="${firstName}">Nombre</strong>:</p>
+  <p style="margin:0 0 16px;">Así le fue a <strong th:text="${businessName}">Negocio</strong> en <span th:text="${monthName}">octubre</span>:</p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border-collapse:collapse;">
+    <tr>
+      <td style="padding:10px 12px;border:1px solid #E8EDF6;border-radius:8px 0 0 8px;">
+        <div style="font-size:12px;color:#7A879C;">Cotizaciones</div>
+        <div style="font-size:22px;font-weight:700;color:#0D141F;" th:text="${quotes}">0</div>
+      </td>
+      <td style="padding:10px 12px;border:1px solid #E8EDF6;">
+        <div style="font-size:12px;color:#7A879C;">Consultas</div>
+        <div style="font-size:22px;font-weight:700;color:#0D141F;" th:text="${leads}">0</div>
+      </td>
+      <td style="padding:10px 12px;border:1px solid #E8EDF6;border-radius:0 8px 8px 0;">
+        <div style="font-size:12px;color:#7A879C;">Sin responder</div>
+        <div style="font-size:22px;font-weight:700;color:#0D141F;" th:text="${pending}">0</div>
+      </td>
+    </tr>
+  </table>
+  <p style="margin:0 0 14px;" th:if="${pending > 0}">Tenés consultas que todavía figuran como nuevas. Responder rápido es lo que más ayuda a cerrar una venta.</p>
+  <p style="margin:0 0 14px;" th:if="${quotes == 0}">El mes pasado nadie usó tus cotizadores. Probá compartir el enlace en tu estado de WhatsApp o fijarlo en tu perfil de Instagram.</p>
+  <p style="margin:6px 0 0;">
+    <a th:href="${link}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Ver mis estadísticas</a>
+  </p>
+</div>
+</body>
+</html>

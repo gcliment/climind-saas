@@ -222,3 +222,46 @@ Gracia vencida → `EXPIRED` (baja en el proveedor y plan Gratis). Mercado Pago 
 - Nunca se usa el contenido de la notificación: se consulta el recurso en la API (independiente del orden de llegada).
 - Si el procesamiento falla se responde 500 (el proveedor reintenta) y queda registrado.
 - **Conciliación** cada hora: consulta las suscripciones abiertas y sus cobros; cada diferencia corregida queda registrada y se ve en el panel de administración.
+
+## Comercialización (Fase 5, implementado)
+
+### Demos públicas
+- **Un negocio ficticio** (`/c/demo/limpieza`, `catering` e `instalaciones`):
+  - se crea al arrancar desde las plantillas;
+  - es idempotente: no pisa lo que ya existe y nunca toma la dirección de un negocio real.
+- **Sin dueño:** nadie puede entrar a su panel.
+- **Sin consultas:** el formulario de contacto se reemplaza por una invitación a crear un cotizador, y la API rechaza los datos de contacto.
+- **Sin cupo que se agote.** El abuso lo frenan los límites por IP.
+- **Muestra "Creado con Climind Cotiza".**
+- **Queda fuera de las métricas** y del listado de negocios del administrador.
+- **Las cotizaciones de prueba se borran a las 48 h.**
+
+### Baja de cuenta
+- **Siempre a pedido del dueño.** Nunca es automática, ni por inactividad ni por falta de pago (un plan vencido solo vuelve al plan Gratis).
+- **Para pedirla:** contraseña + escribir ELIMINAR.
+- **Al pedirla:**
+  1. se cancela el plan pago y cualquier contratación pendiente en Mercado Pago (si el proveedor falla, no se programa nada);
+  2. los cotizadores dejan de atender al público;
+  3. se envía un email con la fecha.
+- **Plazo para arrepentirse:** 30 días (`ACCOUNT_DELETION_GRACE`).
+  - El panel sigue accesible para descargar los datos o cancelar la baja.
+  - Todas las páginas del panel muestran el aviso.
+  - Si cancela la baja, todo vuelve a funcionar salvo el plan pago, que hay que volver a contratar.
+- **Ejecución:** un job nocturno, en una transacción por negocio, elimina o anonimiza según la tabla de [DATABASE.md](DATABASE.md#baja-de-cuenta-qué-se-elimina-y-qué-se-conserva). Avisa por email a la dirección original; el registro de esa entrega no guarda la dirección.
+
+### Exportación de datos
+- **Disponible en todos los planes.** Solo para el dueño.
+- **Contenido:** un ZIP con todo el negocio en JSON legible.
+- **Sin secretos:** no incluye tokens de enlaces, hashes de visitantes ni contraseñas.
+- **Límites y registro:** auditada y limitada a 5 por hora.
+
+### Emails de producto
+| Email | A quién | Cuándo |
+|---|---|---|
+| Recordatorio de activación | Dueños con email verificado hace entre 2 y 14 días que nunca publicaron un cotizador | Una sola vez (10:00) |
+| Resumen mensual | Dueños con al menos un cotizador publicado antes del mes resumido | Una vez por mes, entre el día 1 y el 3 (09:00): cotizaciones, consultas y consultas sin responder |
+
+**Reglas comunes:**
+- Nunca a negocios suspendidos, de demostración o con una baja en curso, ni a quien se dio de baja.
+- Todos llevan el enlace "No quiero recibir más estos emails" y el encabezado `List-Unsubscribe`.
+- Los transaccionales (cuenta, seguridad, pagos, consultas) no llevan ese enlace y se envían siempre.

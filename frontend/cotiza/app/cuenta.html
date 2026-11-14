@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tu cuenta — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+  <link rel="stylesheet" href="/shared/css/account.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Tu cuenta</h1>
+          <p>Tus datos de acceso, los emails que recibís y la información de tu negocio.</p>
+        </div>
+      </div>
+
+      <div class="notice mb-3" id="account-notice" hidden tabindex="-1"></div>
+
+      <section class="panel-block deletion-block" aria-labelledby="deletion-pending-title" id="deletion-pending" hidden>
+        <h2 id="deletion-pending-title">La baja de tu cuenta está programada</h2>
+        <p id="deletion-pending-text"></p>
+        <button class="btn btn-primary" type="button" id="deletion-cancel">Cancelar la baja</button>
+      </section>
+
+      <section class="panel-block" aria-labelledby="profile-title">
+        <h2 id="profile-title">Tus datos</h2>
+        <form id="profile-form" novalidate>
+          <div class="form-grid">
+            <div>
+              <label class="form-label" for="firstName">Nombre</label>
+              <input class="form-control" id="firstName" name="firstName" autocomplete="given-name" maxlength="80" required>
+            </div>
+            <div>
+              <label class="form-label" for="lastName">Apellido</label>
+              <input class="form-control" id="lastName" name="lastName" autocomplete="family-name" maxlength="80" required>
+            </div>
+            <div class="span-2">
+              <span class="form-label d-block">Email</span>
+              <p class="account-email mb-0" id="account-email"></p>
+              <p class="form-text mb-0">Es el email con el que ingresás y donde te llegan los avisos.</p>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Guardar</button>
+            <span class="save-status" id="profile-status" role="status"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel-block" aria-labelledby="password-title">
+        <h2 id="password-title">Contraseña</h2>
+        <p>Al cambiarla se cierran las sesiones abiertas en otros dispositivos.</p>
+        <form id="password-form" novalidate>
+          <div class="form-grid">
+            <div class="span-2 account-narrow">
+              <label class="form-label" for="currentPassword">Contraseña actual</label>
+              <div class="password-field">
+                <input class="form-control" type="password" id="currentPassword" name="currentPassword" autocomplete="current-password" required>
+                <button type="button" class="toggle-password" aria-pressed="false" aria-controls="currentPassword">Mostrar</button>
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="password">Contraseña nueva</label>
+              <div class="password-field">
+                <input class="form-control" type="password" id="password" name="password" autocomplete="new-password" minlength="10" required aria-describedby="password-help">
+                <button type="button" class="toggle-password" aria-pressed="false" aria-controls="password">Mostrar</button>
+              </div>
+              <p class="form-text" id="password-help">Al menos 10 caracteres. Mejor una frase que sea fácil de recordar para vos.</p>
+            </div>
+            <div>
+              <label class="form-label" for="passwordConfirmation">Repetí la contraseña nueva</label>
+              <div class="password-field">
+                <input class="form-control" type="password" id="passwordConfirmation" name="passwordConfirmation" autocomplete="new-password" required>
+                <button type="button" class="toggle-password" aria-pressed="false" aria-controls="passwordConfirmation">Mostrar</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Cambiar la contraseña</button>
+            <span class="save-status" id="password-status" role="status"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel-block" aria-labelledby="emails-title">
+        <h2 id="emails-title">Emails que recibís</h2>
+        <p>Los avisos de tu cuenta (seguridad, pagos, consultas nuevas si las activaste) llegan siempre.</p>
+        <div class="form-check form-switch account-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="productEmails">
+          <label class="form-check-label" for="productEmails">Consejos para sacarle provecho y un resumen de la actividad de cada mes</label>
+        </div>
+        <span class="save-status d-block mt-2" id="emails-status" role="status"></span>
+      </section>
+
+      <section class="panel-block" aria-labelledby="data-title" id="owner-data" hidden>
+        <h2 id="data-title">Tus datos del negocio</h2>
+        <p>Descargá una copia de toda la información de tu negocio: cotizadores con todas sus versiones, cotizaciones, consultas con su historial, plan, pagos y logo. Es un archivo ZIP con archivos JSON.</p>
+        <p class="form-text">Incluye los datos de contacto de tus clientes: guardalo en un lugar seguro.</p>
+        <button class="btn btn-quiet" type="button" id="export-button">Descargar mis datos</button>
+        <span class="save-status ms-2" id="export-status" role="status"></span>
+      </section>
+
+      <section class="panel-block danger-block" aria-labelledby="delete-title" id="owner-delete" hidden>
+        <h2 id="delete-title">Dar de baja la cuenta</h2>
+        <p>Cancelamos tu plan pago (si tenés uno) y tus cotizadores dejan de estar disponibles. Tenés <strong id="grace-days">30 días</strong> para arrepentirte; después eliminamos los datos de tu negocio. Conservamos solo el registro de los pagos, por obligaciones contables. <a href="/ayuda/cuenta-y-datos">Cómo funciona la baja</a>.</p>
+        <button class="btn btn-outline-danger" type="button" id="delete-open">Dar de baja la cuenta</button>
+      </section>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+
+<dialog class="app-dialog" id="delete-dialog" aria-labelledby="delete-dialog-title">
+  <form id="delete-form" novalidate>
+    <h2 id="delete-dialog-title">¿Dar de baja la cuenta?</h2>
+    <p>Tus cotizadores dejan de estar disponibles hoy. El <strong id="delete-date"></strong> eliminamos los datos de tu negocio y no se pueden recuperar. Hasta entonces podés cancelar la baja desde esta página.</p>
+    <div class="notice" id="delete-notice" hidden></div>
+    <div>
+      <label class="form-label" for="delete-password">Tu contraseña</label>
+      <input class="form-control" type="password" id="delete-password" name="password" autocomplete="current-password" required>
+    </div>
+    <div>
+      <label class="form-label" for="delete-confirmation">Escribí ELIMINAR para confirmar</label>
+      <input class="form-control" id="delete-confirmation" name="confirmation" autocomplete="off" autocapitalize="characters" required>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn btn-quiet" type="button" id="delete-close">Volver</button>
+      <button class="btn btn-danger" type="submit">Dar de baja</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="/shared/js/cuenta.js"></script>
+</body>
+</html>

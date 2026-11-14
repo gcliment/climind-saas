@@ -1,8 +1,10 @@
-# Entorno local completo con Docker: PostgreSQL 17 + app (perfil prod) + Mailpit (bandeja de emails).
+# Entorno completo con Docker: PostgreSQL 17 + app (perfil prod) + Mailpit (bandeja de emails) + backups.
 #   cp infra/.env.example infra/.env   (y completar)
 #   docker compose -f infra/docker-compose.yml --env-file infra/.env up --build
 #   → App:     http://localhost:8080/
 #   → Emails:  http://localhost:8025/
+#   Backup inmediato:        docker compose -f infra/docker-compose.yml --env-file infra/.env run --rm backup now
+#   Probar la restauración:  docker compose -f infra/docker-compose.yml --env-file infra/.env run --rm backup restore-test.sh
 # En EasyPanel no se usa este archivo tal cual: ver docs/DEPLOYMENT.md.
 name: climind-saas
 
@@ -50,6 +52,31 @@ services:
       postgres:
         condition: service_healthy
 
+  # Backups diarios de la base y de los archivos, con prueba de restauración (ver docs/DEPLOYMENT.md#backups).
+  backup:
+    build:
+      context: backup
+    restart: unless-stopped
+    # Credenciales del destino remoto (RCLONE_CONFIG_*), separadas de las de la app. Opcional.
+    env_file:
+      - path: backup.env
+        required: false
+    environment:
+      PGHOST: postgres
+      PGDATABASE: climind_saas
+      PGUSER: climind
+      PGPASSWORD: ${DB_PASSWORD}
+      BACKUP_HOUR: ${BACKUP_HOUR:-3}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+      RCLONE_REMOTE: ${RCLONE_REMOTE:-}
+    volumes:
+      - storage:/data/storage:ro
+      - backups:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   pgdata:
   storage:
+  backups:

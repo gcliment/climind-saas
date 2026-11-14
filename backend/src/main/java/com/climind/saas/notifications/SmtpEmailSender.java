@@ -26,6 +26,11 @@ public class SmtpEmailSender implements EmailSender {
             helper.setTo(message.to());
             helper.setSubject(message.subject());
             helper.setText(message.text(), message.html());
+            if (message.unsubscribeUrl() != null) {
+                // Baja en un clic (RFC 8058): los clientes de correo muestran "Darse de baja".
+                mime.addHeader("List-Unsubscribe", "<" + message.unsubscribeUrl() + ">");
+                mime.addHeader("List-Unsubscribe-Post", "List-Unsubscribe=One-Click");
+            }
             mailSender.send(mime);
         } catch (MessagingException e) {
             throw new MailSendException("No se pudo construir el email", e);

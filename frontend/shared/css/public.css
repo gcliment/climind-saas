@@ -124,3 +124,16 @@
 @media (prefers-reduced-motion: reduce) {
   .pub-result .ticket { transition: none; }
 }
+
+/* Demos públicas (negocio ficticio) */
+.pub-demo-banner {
+  margin: 1rem 0 0;
+  max-width: none;
+  padding: .7rem .9rem;
+  border-radius: var(--r-sm);
+  background: var(--blue-wash);
+  border: 1px solid #B9DAFB;
+  color: var(--ink);
+  font-size: .92rem;
+}
+.pub-demo-banner a { font-weight: 600; }

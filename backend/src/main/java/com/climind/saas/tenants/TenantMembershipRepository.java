@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface TenantMembershipRepository extends JpaRepository<TenantMembership, UUID> {
 
     List<TenantMembership> findByUserIdOrderByCreatedAtAsc(UUID userId);
+
+    List<TenantMembership> findByTenantIdOrderByCreatedAtAsc(UUID tenantId);
 }

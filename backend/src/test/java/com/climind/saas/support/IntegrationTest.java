@@ -87,7 +87,7 @@ public abstract class IntegrationTest {
     @BeforeEach
     void resetState() {
         jdbc.execute("""
-                TRUNCATE usage_counters, payment_provider_events, payment_transactions, tenant_subscriptions,
+                TRUNCATE product_email_sends, usage_counters, payment_provider_events, payment_transactions, tenant_subscriptions,
                          quote_status_history, quote_requests, quote_simulations, calculators, calculator_versions,
                          spring_session, spring_session_attributes, audit_logs, email_delivery_logs,
                          email_verification_tokens, password_reset_tokens, business_profiles, business_settings,

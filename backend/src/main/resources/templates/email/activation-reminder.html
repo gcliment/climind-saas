@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${'Tu primer cotizador está a unos minutos'}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;">Hola <strong th:text="${firstName}">Nombre</strong>:</p>
+  <p style="margin:0 0 14px;">Creaste tu cuenta en Climind Cotiza, pero todavía no publicaste un cotizador. Con una plantilla de tu rubro se hace en pocos minutos:</p>
+  <ol style="margin:0 0 16px;padding-left:20px;">
+    <li style="margin-bottom:6px;">Elegí la plantilla más parecida a tu negocio.</li>
+    <li style="margin-bottom:6px;">Cambiá los precios de ejemplo por los tuyos y probá el resultado en la vista previa.</li>
+    <li>Publicalo y compartí el enlace por WhatsApp o en tus redes.</li>
+  </ol>
+  <p style="margin:0 0 20px;">Si querés ver antes cómo lo vive tu cliente, probá las <a th:href="${demosLink}" href="#" style="color:#0071DB;">demos con precios de ejemplo</a>.</p>
+  <p style="margin:6px 0 0;">
+    <a th:href="${link}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Crear mi cotizador</a>
+  </p>
+  <p style="margin:18px 0 0;font-size:13px;">¿Dudas? En la <a th:href="${helpLink}" href="#" style="color:#0071DB;">ayuda</a> explicamos cada paso.</p>
+</div>
+</body>
+</html>

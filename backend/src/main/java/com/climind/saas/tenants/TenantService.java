@@ -79,18 +79,71 @@ public class TenantService {
         return tenant;
     }
 
+    /** Integrantes del negocio (MVP: solo el dueño). */
+    @Transactional(readOnly = true)
+    public java.util.List<TenantMembership> members(UUID tenantId) {
+        return memberships.findByTenantIdOrderByCreatedAtAsc(tenantId);
+    }
+
+    @Transactional
+    public Tenant scheduleDeletion(UUID tenantId, UUID requestedBy, java.time.Instant now, java.time.Instant scheduledFor) {
+        Tenant tenant = tenants.findById(tenantId).orElseThrow();
+        tenant.scheduleDeletion(requestedBy, now, scheduledFor);
+        return tenants.saveAndFlush(tenant);
+    }
+
+    @Transactional
+    public Tenant cancelDeletion(UUID tenantId) {
+        Tenant tenant = tenants.findById(tenantId).orElseThrow();
+        tenant.cancelDeletion();
+        return tenants.saveAndFlush(tenant);
+    }
+
+    /** Negocios con la baja vencida que todavía no se ejecutó. */
+    @Transactional(readOnly = true)
+    public java.util.List<UUID> deletionsDue(java.time.Instant now) {
+        return tenants.findDeletionsDue(now);
+    }
+
+    /** Cierra la baja: el registro del negocio queda anonimizado (lo referencian pagos y auditoría). */
+    @Transactional
+    public void markDeleted(UUID tenantId, java.time.Instant now) {
+        Tenant tenant = tenants.findById(tenantId).orElseThrow();
+        String suffix = tenantId.toString().replace("-", "").substring(0, 16);
+        tenant.markDeleted("eliminado-" + suffix, now);
+        tenants.saveAndFlush(tenant);
+        memberships.deleteAll(memberships.findByTenantIdOrderByCreatedAtAsc(tenantId));
+    }
+
     @Transactional(readOnly = true)
     public Optional<Tenant> find(UUID tenantId) {
         return tenants.findById(tenantId);
     }
 
-    /** Negocio activo por su dirección pública (los suspendidos no existen para el público). */
+    /**
+     * Negocio visible por su dirección pública. Los suspendidos, eliminados o con una baja en curso no existen
+     * para el público.
+     */
     @Transactional(readOnly = true)
     public Optional<Tenant> findActiveBySlug(String slug) {
         if (slug == null || slug.length() > 60) {
             return Optional.empty();
         }
-        return tenants.findBySlug(slug.toLowerCase(java.util.Locale.ROOT)).filter(Tenant::isActive);
+        return tenants.findBySlug(slug.toLowerCase(java.util.Locale.ROOT)).filter(Tenant::isPubliclyVisible);
+    }
+
+    /** Negocio de las demos públicas por su dirección (solo si está marcado como demo). */
+    @Transactional(readOnly = true)
+    public Optional<Tenant> findDemo(String slug) {
+        return tenants.findBySlug(slug).filter(Tenant::isDemo);
+    }
+
+    /** Crea el negocio de demostración (sin dueño: nadie puede ingresar a su panel). */
+    @Transactional
+    public Tenant createDemo(String name, String slug) {
+        Tenant tenant = Tenant.demo(name, slug);
+        tenant.setOnboardingCompletedAt(java.time.Instant.now());
+        return tenants.save(tenant);
     }
 
     /**

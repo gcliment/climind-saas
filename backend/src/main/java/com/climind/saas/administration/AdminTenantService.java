@@ -51,7 +51,8 @@ public class AdminTenantService {
     @JsonInclude(JsonInclude.Include.ALWAYS)
     public record AdminTenant(UUID id, String businessName, String slug, String ownerEmail, String status,
                               String suspendedReason, Instant createdAt, String planCode, String planName, boolean paid,
-                              int quotesUsed, int quotesLimit, long publishedCalculators, int publishedLimit) {
+                              int quotesUsed, int quotesLimit, long publishedCalculators, int publishedLimit,
+                              Instant deletionScheduledFor) {
     }
 
     public record SuspendRequest(
@@ -72,14 +73,15 @@ public class AdminTenantService {
                 LEFT JOIN business_profiles p ON p.tenant_id = t.id
                 LEFT JOIN LATERAL (SELECT u.email FROM tenant_memberships m JOIN users u ON u.id = m.user_id
                                    WHERE m.tenant_id = t.id AND m.role = 'OWNER' ORDER BY m.created_at LIMIT 1) o ON true
-                WHERE (? = '' OR lower(coalesce(p.business_name, t.name)) LIKE ? OR t.slug LIKE ? OR lower(o.email) LIKE ?)
+                WHERE NOT t.demo
+                  AND (? = '' OR lower(coalesce(p.business_name, t.name)) LIKE ? OR t.slug LIKE ? OR lower(o.email) LIKE ?)
                   AND (? = '' OR t.status = ?)
                 """;
         Long total = jdbc.queryForObject("SELECT count(*) " + where, Long.class, text, like, like, like, st, st);
         List<AdminTenant> rows = new ArrayList<>();
         jdbc.query("""
                         SELECT t.id, coalesce(p.business_name, t.name) AS name, t.slug, o.email, t.status, t.suspended_reason,
-                               t.created_at
+                               t.created_at, t.deletion_scheduled_for
                         """ + where + " ORDER BY t.created_at DESC LIMIT ? OFFSET ?",
                 rs -> {
                     UUID id = rs.getObject("id", UUID.class);
@@ -88,7 +90,9 @@ public class AdminTenantService {
                     rows.add(new AdminTenant(id, rs.getString("name"), rs.getString("slug"), rs.getString("email"),
                             rs.getString("status"), rs.getString("suspended_reason"),
                             rs.getTimestamp("created_at").toInstant(), e.planCode(), e.planName(), e.paid(),
-                            quotes.used(), quotes.limit(), usage.publishedCalculators(id), e.maxPublishedCalculators()));
+                            quotes.used(), quotes.limit(), usage.publishedCalculators(id), e.maxPublishedCalculators(),
+                            rs.getTimestamp("deletion_scheduled_for") == null ? null
+                                    : rs.getTimestamp("deletion_scheduled_for").toInstant()));
                 }, text, like, like, like, st, st, limit, offset);
         long count = total == null ? 0 : total;
         return new PageResponse<>(rows, Math.max(page, 0), limit, count, (int) Math.ceil(count / (double) limit));

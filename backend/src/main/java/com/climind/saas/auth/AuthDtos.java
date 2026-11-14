@@ -103,7 +103,9 @@ public final class AuthDtos {
     public record UserView(UUID id, String email, String firstName, String lastName, String platformRole) {
     }
 
-    public record TenantView(UUID id, String name, String slug, String role, String status, boolean onboardingCompleted) {
+    /** @param deletionScheduledFor baja de la cuenta programada (null si no hay una en curso) */
+    public record TenantView(UUID id, String name, String slug, String role, String status, boolean onboardingCompleted,
+                             java.time.Instant deletionScheduledFor) {
     }
 
     @JsonInclude(JsonInclude.Include.ALWAYS)

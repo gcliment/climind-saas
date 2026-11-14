@@ -175,3 +175,49 @@
 .stat { padding: 1rem 0; border-top: 2px solid var(--ink); }
 .stat dt { font-weight: 500; color: var(--text-mid); font-size: .92rem; min-height: 2.8em; }
 .stat dd { margin: .2rem 0 0; font-family: var(--f-display); font-size: 2rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Menú de la barra superior (celular): plan, cuenta, ayuda y salir. */
+.topbar-menu { position: relative; }
+.topbar-menu summary {
+  list-style: none;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: var(--r-sm);
+  min-height: 40px;
+  padding: .45rem .8rem;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+.topbar-menu summary::-webkit-details-marker { display: none; }
+.topbar-menu[open] summary { background: var(--surface-2); color: var(--ink); }
+.topbar-menu-list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 200px;
+  display: grid;
+  padding: .35rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: 0 12px 32px -12px rgba(8, 19, 31, .35);
+  z-index: 30;
+}
+.topbar-menu-list a, .topbar-menu-list button {
+  display: block;
+  text-align: left;
+  padding: .65rem .75rem;
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+  text-decoration: none;
+}
+.topbar-menu-list a:hover, .topbar-menu-list button:hover { background: var(--surface-2); }
+.topbar-menu-list a[aria-current="page"] { color: var(--blue-deep); font-weight: 650; }
+.topbar-menu-list button { color: var(--danger); border-top: 1px solid var(--line-soft); border-radius: 0 0 var(--r-sm) var(--r-sm); }
+.deletion-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; margin-bottom: 1.25rem; }
+.deletion-banner a { font-weight: 600; }

@@ -25,6 +25,12 @@ module.exports = defineConfig({
   projects: [
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1366, height: 860 } } },
+    // Otros navegadores (E2E_BROWSERS=all): Safari en iPhone (WebKit) y Firefox de escritorio.
+    // Requieren `npx playwright install firefox webkit`.
+    ...(process.env.E2E_BROWSERS === 'all' ? [
+      { name: 'iphone-webkit', use: { ...devices['iPhone 14'] } },
+      { name: 'firefox', use: { ...devices['Desktop Firefox'], viewport: { width: 1366, height: 860 } } },
+    ] : []),
   ],
   webServer: process.env.E2E_BASE_URL ? undefined : {
     command: 'mvn -q -B spring-boot:test-run -Dspring-boot.run.main-class=com.climind.saas.LocalDevApplication',

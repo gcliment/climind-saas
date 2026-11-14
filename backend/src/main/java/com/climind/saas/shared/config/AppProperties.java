@@ -20,6 +20,8 @@ public class AppProperties {
     private String portalUrl = "http://localhost:8080/saas/";
     /** Host que debe mostrar el portal en "/" (p. ej. saas.climind-ia.com). Vacío = deshabilitado. */
     private String portalHost = "";
+    /** Email de soporte que se muestra en la ayuda y la landing. Vacío = no se muestra. */
+    private String supportEmail = "";
 
     private Security security = new Security();
     private Storage storage = new Storage();
@@ -27,6 +29,8 @@ public class AppProperties {
     private Mail mail = new Mail();
     private AdminBootstrap adminBootstrap = new AdminBootstrap();
     private Payments payments = new Payments();
+    private Demo demo = new Demo();
+    private Account account = new Account();
 
     public String publicUrlWithoutTrailingSlash() {
         return publicUrl.endsWith("/") ? publicUrl.substring(0, publicUrl.length() - 1) : publicUrl;
@@ -104,5 +108,23 @@ public class AppProperties {
         private String apiUrl = "https://api.mercadopago.com";
         /** Tolerancia de antigüedad de una notificación firmada. */
         private Duration webhookTolerance = Duration.ofMinutes(15);
+    }
+
+    @Getter
+    @Setter
+    public static class Demo {
+        /** Crea (si falta) el negocio ficticio de las demos públicas al arrancar. */
+        private boolean enabled = true;
+        /** Dirección pública del negocio de demostración: /c/{slug}/... */
+        private String slug = "demo";
+        /** Las cotizaciones de las demos se borran pasado este plazo (son datos ficticios). */
+        private Duration retention = Duration.ofHours(48);
+    }
+
+    @Getter
+    @Setter
+    public static class Account {
+        /** Plazo para arrepentirse de una baja de cuenta antes de eliminar los datos. */
+        private Duration deletionGrace = Duration.ofDays(30);
     }
 }

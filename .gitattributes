@@ -1,0 +1,25 @@
+# Finales de línea: LF en el repositorio y en el checkout (el contenedor es Linux; un mvnw o un script
+# con CRLF falla al construir la imagen desde Windows). Solo los scripts de Windows usan CRLF.
+* text=auto eol=lf
+
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+*.ps1  text eol=crlf
+
+# Scripts que se ejecutan dentro de contenedores Linux.
+mvnw   text eol=lf
+*.sh   text eol=lf
+
+# Binarios
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.ico  binary
+*.pdf  binary
+*.ttf  binary
+*.woff binary
+*.woff2 binary
+*.jar  binary
+*.zip  binary
+*.dump binary

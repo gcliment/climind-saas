@@ -27,6 +27,9 @@ Microservicios, colas o caches distribuidas no aportan valor en esta etapa. El d
 | `analytics` | Estadísticas (agregados SQL acotados) | Fase 3 ✔ |
 | `subscriptions` | Planes, plan vigente, cupos, suscripciones, Mercado Pago (y simulador de dev/test), webhooks, conciliación | Fase 4 ✔ |
 | `storage` | Abstracción de archivos (volumen local; preparada para S3) y detección de imágenes por magic bytes | Fase 2 ✔ |
+| `demo` | Demos públicas: siembra del negocio ficticio, listado, estimación en vivo sin guardar y limpieza de cotizaciones de prueba | Fase 5 ✔ |
+| `account` | Tu cuenta: resumen, exportación de datos (ZIP con JSON), baja programada y su ejecución, baja de emails por enlace | Fase 5 ✔ |
+| `engagement` | Emails de producto: recordatorio de activación y resumen mensual (idempotentes, con baja en un clic) | Fase 5 ✔ |
 
 Reglas verificadas por `ArchitectureTest` (ArchUnit):
 - Sin dependencias circulares entre módulos.
@@ -103,6 +106,13 @@ frontend/vendor/   bootstrap-5.3.8 (fijo)
 | Proveedor de pagos detrás de una interfaz | `MercadoPagoProvider` en producción y `FakePaymentProvider` solo en dev y test (bean con `@Profile`, y la app no arranca en prod con `PAYMENT_PROVIDER=fake`). El simulador firma sus notificaciones con el mismo esquema, así que el camino del webhook se prueba completo. |
 | Estado de pagos siempre consultado al proveedor | Las notificaciones solo avisan "algo cambió": el estado se lee de la API. Así un webhook falso, repetido o fuera de orden no puede habilitar beneficios. |
 | Cupo con `INSERT … ON CONFLICT … WHERE count < límite` | Atómico sin locks explícitos y dentro de la transacción de la cotización (si falla, el consumo se revierte). |
+| Demos con un negocio ficticio real (no un simulador en JS) | Lo que prueba el visitante es exactamente el producto: la misma página pública y el mismo motor sobre versiones publicadas. El negocio demo está aislado: no tiene dueño, no recibe datos personales y sus cotizaciones se borran a las 48 h. |
+| Estimación en vivo solo para las demos | La landing recalcula con cada cambio sin guardar cotizaciones (`/api/v1/public/demos/{demo}/estimate`, en modo vista previa y con un límite por IP). Los cotizadores reales siguen calculando con el botón, porque cada cálculo es una cotización que cuenta. |
+| Baja de cuenta con plazo y ejecución en el servidor | El dueño la pide con su contraseña. Se cancela el plan en Mercado Pago **antes** de programarla, para que no haya cobros. A los 30 días un job borra los datos en una transacción: los archivos se borran recién después del commit y los pagos se conservan. |
+| Exportación como ZIP de JSON armado por SQL (`json_agg`) | Formato portable y legible, con columnas explícitas: nunca incluye tokens, hashes ni contraseñas. Está disponible en todos los planes, a diferencia del CSV, porque es un derecho del titular de los datos. |
+| Emails de producto separados de los transaccionales | Solo para quien los acepta, con `List-Unsubscribe` (baja en un clic, RFC 8058) y un enlace que da de baja por POST, para que los antivirus que abren enlaces no den de baja a nadie. Cada envío se registra antes de mandarse (clave única por usuario, campaña y período). |
+| Precios de la landing desde la API | La landing, la página de precios y el portal leen `/api/v1/catalog/plans`: lo que edita el administrador se publica solo, sin precios escritos en el HTML. |
+| Backups con un contenedor propio | `pg_dump` + archivos + sumas de control, copia fuera del VPS con rclone y prueba de restauración en una base temporal después de cada backup. No depende de funciones pagas del hosting. |
 | Gráficos SVG propios | Dos tipos de gráfico no justifican una librería: cumplen la CSP estricta, tienen tooltip con teclado y vista de tabla. |
 
 ## Constructor de cotizadores (frontend)

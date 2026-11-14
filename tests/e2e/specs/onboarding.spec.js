@@ -3,16 +3,6 @@ const { test, expect, uniqueEmail, lastEmailLink } = require('./fixtures');
 
 const PASSWORD = 'Cotizar-Facil-2026';
 
-test('landing: la demo recalcula el total al cambiar opciones', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Dejá que tus clientes coticen solos');
-  const total = page.locator('#demo-total');
-  const before = await total.textContent();
-  await page.getByLabel('¿Qué tipo de limpieza necesitás?').selectOption('obra');
-  await expect(total).not.toHaveText(before ?? '');
-  await expect(total).toHaveText(/^\$ [\d.]+$/);
-});
-
 test('registro → verificación → ingreso → datos del negocio → salir', async ({ page, request }) => {
   const email = uniqueEmail('ana');
 
@@ -69,7 +59,9 @@ test('registro → verificación → ingreso → datos del negocio → salir', a
   await page.goto('/app/');
   await expect(page.locator('#step-profile')).toHaveClass(/done/);
 
-  // Salir: la sesión deja de valer.
+  // Salir: la sesión deja de valer. En el celular "Cerrar sesión" está en el menú de la barra superior.
+  const menu = page.locator('.topbar-menu summary');
+  if (await menu.isVisible()) await menu.click();
   await page.locator('[data-logout]:visible').first().click();
   await expect(page).toHaveURL(/\/ingresar$/);
   await page.goto('/app/negocio');

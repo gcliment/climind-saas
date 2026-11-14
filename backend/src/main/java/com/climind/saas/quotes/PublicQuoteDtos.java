@@ -48,7 +48,9 @@ public final class PublicQuoteDtos {
             Integer validityDays,
             String leadCapture,
             /** Mostrar "Creado con Climind Cotiza" (planes sin personalización visual). */
-            boolean branding) {
+            boolean branding,
+            /** Cotizador de demostración: precios de ejemplo y sin formulario de contacto. */
+            boolean demo) {
     }
 
     /** Datos que deja el cliente. El consentimiento es obligatorio. */
@@ -114,6 +116,7 @@ public final class PublicQuoteDtos {
             String whatsappUrl,
             String leadCapture,
             RequestStatus request,
-            boolean branding) {
+            boolean branding,
+            boolean demo) {
     }
 }

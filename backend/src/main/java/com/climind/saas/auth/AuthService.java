@@ -282,7 +282,8 @@ public class AuthService {
         AuthDtos.TenantView tenant = principal.tenantId() == null ? null
                 : tenantService.find(principal.tenantId())
                 .map(t -> new AuthDtos.TenantView(t.getId(), t.getName(), t.getSlug(), principal.tenantRole(),
-                        t.getStatus().name(), t.getOnboardingCompletedAt() != null))
+                        t.getStatus().name(), t.getOnboardingCompletedAt() != null,
+                        t.isDeletionScheduled() ? t.getDeletionScheduledFor() : null))
                 .orElse(null);
         return new AuthDtos.MeResponse(new AuthDtos.UserView(user.getId(), user.getEmail(), user.getFirstName(),
                 user.getLastName(), user.getPlatformRole()), tenant);

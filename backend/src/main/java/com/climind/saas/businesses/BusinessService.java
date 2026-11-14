@@ -46,6 +46,18 @@ public class BusinessService {
         settings.save(new BusinessSettings(tenantId));
     }
 
+    /** Perfil del negocio ficticio de las demos públicas (sin datos de contacto: nadie responde consultas). */
+    @Transactional
+    public void initializeDemo(UUID tenantId, String businessName, String description) {
+        if (profiles.existsById(tenantId)) {
+            return;
+        }
+        BusinessProfile profile = new BusinessProfile(tenantId, businessName);
+        profile.setDescription(description);
+        profiles.save(profile);
+        settings.save(new BusinessSettings(tenantId));
+    }
+
     @Transactional(readOnly = true)
     public BusinessDtos.BusinessProfileResponse getProfile() {
         UUID tenantId = currentTenant.requireId();

@@ -35,7 +35,8 @@ function render(quote) {
   $('consent-text').textContent = `Acepto que ${quote.business.name} use estos datos para responder mi consulta.`;
   $('lead-text').textContent = `Dejá tus datos y ${quote.business.name} te escribe para confirmar el presupuesto.`;
   $('lead-done-text').textContent = `${quote.business.name} ya tiene tus datos y se va a comunicar con vos.`;
-  $('lead-section').hidden = quote.request.sent;
+  $('demo-banner').hidden = !quote.demo;
+  $('lead-section').hidden = quote.request.sent || quote.demo;
   $('lead-done').hidden = !quote.request.sent;
   $('quote').hidden = false;
   document.body.removeAttribute('data-state');

@@ -21,7 +21,7 @@ La especificación prefiere Testcontainers, pero el entorno de desarrollo no sie
 
 Se inicia **una vez por JVM** (`support/EmbeddedPostgres`) y cada test vacía las tablas en `@BeforeEach`.
 
-## Qué cubren (estado de la Fase 4: 182 tests backend + 22 E2E, todos en verde)
+## Qué cubren (estado de la Fase 5: 198 tests backend + 28 E2E en Chromium, todos en verde)
 
 ### Unitarios
 | Clase | Cubre |
@@ -52,12 +52,14 @@ Se inicia **una vez por JVM** (`support/EmbeddedPostgres`) y cada test vacía la
 | `StatsIT` | Totales, conversión, ventas confirmadas, serie diaria completa, ranking de cotizadores, distribución; período por defecto, mensual a 12 meses, límites (400) y sin sesión (401); otro negocio no suma |
 | `BillingIT` | **Escenarios 7, 8 y 9**. Plan gratuito por defecto y catálogo público. Límite de cotizadores publicados (publicar, reactivar, republicar). Cupo de cotizaciones con avisos al 80 % y 100 %, sin contar inválidas ni recálculos, nuevo período. Cupo con 20 pedidos simultáneos (no se supera). Funciones por plan (marca, color, CSV). Activación **solo** con pago aprobado (volver del checkout, medio autorizado y pago en proceso no activan). Webhook duplicado, firma inválida, ausente o vieja (401), tipos ignorados. Pago rechazado → gracia → vencimiento al plan Gratis sin borrar datos (el cotizador excedente queda no disponible). Rechazo viejo fuera de orden. Cancelación por el negocio y por el proveedor. Cambio de plan. Conciliación que corrige una notificación perdida. Checkout abandonado. Editar un plan no cambia contratos vigentes. Panel de administración: permisos, negocios, métricas (MRR estimado vs. cobrado), suspensión y reactivación. |
 | `PaymentsUnitTest` | Firma de Mercado Pago (manifest de la documentación, minúsculas, partes faltantes, segundos o milisegundos, alteraciones, antigüedad, sin clave). Cliente HTTP contra un servidor simulado (creación con pago pendiente, lectura de cuotas y suscripciones, 404, 5xx sin filtrar el token, sin credenciales). El simulador impide arrancar en producción. |
+| `DemoIT` | Las demos se crean una sola vez, publicadas y sin dueño. El formulario público no expone precios. La estimación en vivo calcula en el servidor ($ 108.000, el ejemplo de la landing) sin guardar nada y solo para el negocio demo. Rechazo de datos de contacto (409) en la cotización y en la consulta posterior. Cupo que no se agota y borrado de las cotizaciones de prueba a las 48 h. El negocio demo no aparece en la administración ni en sus métricas. |
+| `AccountIT` | Nombre y preferencias de email. Cambio de contraseña: exige la actual, valida la política, cierra las otras sesiones y mantiene la actual, avisa por email. Exportación: ZIP con todos los archivos, datos del propio negocio y **nada** de otro negocio ni secretos (tokens, hashes, contraseñas), auditada. Sin negocio no hay exportación ni baja (403); sin sesión, 401. Baja: contraseña y ELIMINAR obligatorios, cancela el plan pago, email con la fecha, cotizadores fuera del público, panel accesible, cancelación de la baja. Ejecución a los 30 días: borra o anonimiza todo lo del negocio, conserva los pagos, anonimiza al usuario (no puede ingresar), no deja el email en los registros, no toca a otro negocio; las versiones siguen siendo inmutables para el resto; idempotente. |
+| `ProductEmailsIT` | Recordatorio de activación solo a quien no publicó, entre el día 2 y el 14, una sola vez y respetando la baja; enlace y encabezado de baja. Los transaccionales no llevan enlace de baja. El enlace da de baja por POST sin sesión (un GET no da de baja; un token inválido da 404). Resumen mensual con los números del mes anterior, solo los primeros días del mes y una vez por mes. |
 | `ArchitectureTest` | Sin ciclos entre módulos; `shared` independiente; motor de precios puro; controllers sin repositorios ni entidades |
 
 ### E2E (`tests/e2e`, Playwright: móvil Pixel 7 + escritorio 1366×860)
 | Recorrido | Verifica |
 |---|---|
-| Landing | La demo recalcula el total al cambiar opciones |
 | Alta completa | Registro → aviso de email sin confirmar → link desde la bandeja de dev (el token se quita de la URL) → ingreso → panel → datos del negocio (WhatsApp normalizado, slug actualizado) → paso 1 completo → salir → panel protegido |
 | Validación | Errores accesibles (`aria-invalid` y foco en el primer error) y mensaje genérico ante credenciales inválidas |
 | Guía de configuración | Primer ingreso → guía → negocio → objetivo → plantilla recomendada para el rubro → precios propios → publicar → enlace → vista previa con el precio nuevo. Sin scroll horizontal. |
@@ -68,6 +70,14 @@ Se inicia **una vez por JVM** (`support/EmbeddedPostgres`) y cada test vacía la
 | Contratación de un plan | Plan Gratis y consumo en el inicio → "Pasar a Pro" → simulador → volver sin pagar no activa → pago rechazado (se informa) → pago aprobado (plan Pro, límites y pago) → cancelar (conserva hasta fin del período). |
 | Límite del plan Gratis | Publicar un segundo cotizador muestra el límite y el enlace a los planes. |
 | Administración | Métricas con MRR estimado y cobrado, negocios, planes, integración y conciliación manual. |
+| Landing | Demo en vivo calculada por el servidor ($ 108.000 inicial; recalcula al cambiar los m²), cambio de rubro con las pestañas, precios leídos de la base. Sin scroll horizontal. |
+| Demo completa | La página pública de la demo muestra el aviso, calcula ($ 99.000) y, en lugar del formulario de contacto, invita a crear un cotizador. |
+| Precios, ayuda y portal | Tabla comparativa con los planes de la base, búsqueda en la ayuda que lleva al artículo correcto, portal con los planes. |
+| Tu cuenta | Acceso desde el menú (celular) o la barra lateral, nombre, emails de producto, contraseña (error con la actual incorrecta), descarga del ZIP, baja con validación de ELIMINAR, aviso en el inicio y cancelación de la baja. |
+
+**Otros navegadores (Escenario 12):** `E2E_BROWSERS=all npx playwright test` suma Safari de iPhone (WebKit) y Firefox de escritorio (requiere `npx playwright install firefox webkit`). El 14/11/2026 pasaron los 28 recorridos en ambos.
+
+En WebKit, la consola registra "Refused to apply a stylesheet…" **al cerrar** la página de prueba. Se verificó que no aparece mientras la página está abierta (con una espera de 2,5 s antes de terminar): es un mensaje de WebKit al cerrar, no de la app.
 
 Todo test E2E **falla si aparece un error de consola o de JavaScript**, incluidas las violaciones de la CSP. Las respuestas 4xx de la API que forman parte del flujo son la única excepción.
 
@@ -82,7 +92,19 @@ Toda la suite E2E entra desde la misma IP. Por eso la app de pruebas se levanta 
   - CSRF exigido;
   - una caída del SMTP no rompe el registro (se registra enmascarado);
   - la app **no arranca** con `MAIL_PROVIDER=log`.
-- **No verificado aún**: `docker build` y `docker compose up`, porque el daemon de Docker no estaba disponible. Se verifica en el próximo entorno con Docker o directamente en EasyPanel.
+- `docker build` y `docker compose up`: verificados en la Fase 5 (ver abajo).
+
+## Verificaciones con Docker (Fase 5, 14/11/2026)
+
+Con el stack de `infra/docker-compose.yml` (perfil `prod`, Mailpit y servicio de backups). El detalle está en [DEPLOYMENT.md](DEPLOYMENT.md#estado-14112026).
+
+- Build de las dos imágenes.
+- Arranque en limpio (V1–V6, demos y super admin).
+- Recorrido real por la API: registro, verificación con el email entregado por SMTP, cotizador, consulta y logo.
+- Reinicio y recreación de contenedores sin pérdida de datos.
+- Backup con prueba de restauración automática.
+- Restauración completa desde volúmenes vacíos.
+- Smoke test de las páginas nuevas servidas desde la imagen.
 
 ## Pendientes por fase
 

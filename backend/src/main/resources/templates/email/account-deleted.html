@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${'Tu cuenta fue eliminada'}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;">Hola <strong th:text="${firstName}">Nombre</strong>:</p>
+  <p style="margin:0 0 14px;">Como pediste, eliminamos la cuenta de <strong th:text="${businessName}">Negocio</strong> en Climind Cotiza: tus datos de acceso, los datos del negocio, los cotizadores, las cotizaciones y las consultas de tus clientes.</p>
+  <p style="margin:0 0 14px;">Conservamos solamente el registro de los pagos, por obligaciones contables.</p>
+  <p style="margin:0;">Gracias por haber usado Climind Cotiza. Si algún día querés volver, podés crear una cuenta nueva cuando quieras.</p>
+</div>
+</body>
+</html>
