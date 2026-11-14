@@ -1,0 +1,129 @@
+{
+  "code": "limpieza",
+  "name": "Servicios de limpieza",
+  "industry": "LIMPIEZA",
+  "description": "Limpieza de hogares, oficinas y final de obra: precio por metro cuadrado según el tipo de limpieza, ambientes, adicionales y descuento por frecuencia. Los precios son ejemplos: reemplazalos por los tuyos.",
+  "objectives": ["SERVICIOS", "CANTIDAD"],
+  "order": 1,
+  "calculatorName": "Presupuesto de limpieza",
+  "calculatorDescription": "Calculá en segundos cuánto cuesta la limpieza que necesitás.",
+  "config": {
+    "schemaVersion": 1,
+    "currency": "ARS",
+    "questions": [
+      {
+        "key": "tipo",
+        "type": "SINGLE_CHOICE",
+        "label": "¿Qué tipo de limpieza necesitás?",
+        "required": true,
+        "options": [
+          { "key": "basica", "label": "Limpieza básica" },
+          { "key": "profunda", "label": "Limpieza profunda" },
+          { "key": "final_obra", "label": "Limpieza final de obra" }
+        ]
+      },
+      {
+        "key": "m2",
+        "type": "NUMBER",
+        "label": "¿Cuántos metros cuadrados tiene el lugar?",
+        "help": "Si no sabés la medida exacta, poné un aproximado.",
+        "required": true,
+        "min": 10,
+        "max": 2000,
+        "unit": "m²"
+      },
+      {
+        "key": "ambientes",
+        "type": "QUANTITY",
+        "label": "¿Cuántos ambientes hay que limpiar?",
+        "required": true,
+        "min": 1,
+        "max": 30,
+        "unit": "ambientes"
+      },
+      {
+        "key": "frecuencia",
+        "type": "SINGLE_CHOICE",
+        "label": "¿Con qué frecuencia?",
+        "required": true,
+        "options": [
+          { "key": "unica", "label": "Una sola vez" },
+          { "key": "semanal", "label": "Semanal" },
+          { "key": "quincenal", "label": "Quincenal" },
+          { "key": "mensual", "label": "Mensual" }
+        ]
+      },
+      {
+        "key": "extras",
+        "type": "MULTI_CHOICE",
+        "label": "¿Necesitás algún servicio adicional?",
+        "options": [
+          { "key": "vidrios", "label": "Limpieza de vidrios" },
+          { "key": "horno", "label": "Horno y heladera" },
+          { "key": "alfombras", "label": "Alfombras" },
+          { "key": "balcon", "label": "Balcón o terraza" }
+        ]
+      },
+      {
+        "key": "detalle",
+        "type": "TEXT",
+        "label": "¿Algo más que debamos saber?",
+        "help": "Por ejemplo: mascotas, piso por escalera, horarios.",
+        "maxLength": 500
+      }
+    ],
+    "pricing": {
+      "rules": [
+        {
+          "type": "OPTION_PER_UNIT",
+          "id": "precio_m2",
+          "label": "Limpieza por m²",
+          "question": "tipo",
+          "quantityQuestion": "m2",
+          "prices": { "basica": "900", "profunda": "1500", "final_obra": "2200" }
+        },
+        {
+          "type": "PER_UNIT",
+          "id": "por_ambiente",
+          "label": "Ambientes",
+          "question": "ambientes",
+          "unitPrice": "3000"
+        },
+        {
+          "type": "OPTION_PRICE",
+          "id": "adicionales",
+          "label": "Adicionales",
+          "question": "extras",
+          "prices": { "vidrios": "12000", "horno": "9000", "alfombras": "15000", "balcon": "8000" }
+        },
+        {
+          "type": "DISCOUNT_PERCENT",
+          "id": "desc_semanal",
+          "label": "Descuento por servicio semanal",
+          "percent": "15",
+          "when": [{ "question": "frecuencia", "op": "EQUALS", "value": "semanal" }]
+        },
+        {
+          "type": "DISCOUNT_PERCENT",
+          "id": "desc_quincenal",
+          "label": "Descuento por servicio quincenal",
+          "percent": "10",
+          "when": [{ "question": "frecuencia", "op": "EQUALS", "value": "quincenal" }]
+        },
+        {
+          "type": "DISCOUNT_PERCENT",
+          "id": "desc_mensual",
+          "label": "Descuento por servicio mensual",
+          "percent": "5",
+          "when": [{ "question": "frecuencia", "op": "EQUALS", "value": "mensual" }]
+        }
+      ],
+      "minimumTotal": "35000",
+      "tax": { "mode": "FINAL" },
+      "rounding": { "scale": 0 }
+    },
+    "commercial": {
+      "validityDays": 15
+    }
+  }
+}

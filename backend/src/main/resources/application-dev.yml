@@ -1,0 +1,36 @@
+# Desarrollo local. El frontend se sirve directo desde ../frontend (los cambios se ven al recargar).
+spring:
+  web:
+    resources:
+      static-locations: ${APP_FRONTEND_LOCATION:file:../frontend/cotiza/,file:../frontend/}
+
+server:
+  # En localhost el navegador manda las cookies de TODOS los proyectos locales (las cookies no distinguen
+  # puerto) y suelen superar los 8 KB por defecto de Tomcat → "400 Request header is too large".
+  max-http-request-header-size: 64KB
+  servlet:
+    session:
+      cookie:
+        secure: ${COOKIE_SECURE:false}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+app:
+  env: dev
+  # Simulador de pagos (solo dev y test): permite probar planes sin credenciales de Mercado Pago.
+  payments:
+    provider: ${PAYMENT_PROVIDER:fake}
+  mail:
+    provider: ${MAIL_PROVIDER:log}
+  # Super admin de desarrollo (solo perfil dev). En producción se define por variables de entorno.
+  admin-bootstrap:
+    email: ${ADMIN_BOOTSTRAP_EMAIL:admin@cotiza.local}
+    password: ${ADMIN_BOOTSTRAP_PASSWORD:Climind-dev-2026}
+
+logging:
+  level:
+    com.climind.saas: DEBUG

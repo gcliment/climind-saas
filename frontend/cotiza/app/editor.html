@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editar cotizador — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main panel-main-wide" id="contenido">
+      <p class="mb-2"><a href="/app/cotizadores">Volver a mis cotizadores</a></p>
+      <div class="builder-head">
+        <div>
+          <h1 id="calc-title">Cotizador</h1>
+          <div class="meta">
+            <span class="status-badge" id="calc-status"></span>
+            <span class="save-state" id="save-state" role="status"></span>
+          </div>
+        </div>
+        <div class="builder-actions">
+          <button class="btn btn-quiet" type="button" id="save-button" disabled>Guardar cambios</button>
+          <button class="btn btn-primary" type="button" id="publish-button">Publicar</button>
+        </div>
+      </div>
+      <div class="notice mb-3" id="editor-notice" hidden tabindex="-1"></div>
+
+      <div class="view-toggle" role="group" aria-label="Modo de vista">
+        <button type="button" data-view="edit" aria-pressed="true">Editar</button>
+        <button type="button" data-view="preview" aria-pressed="false">Vista previa</button>
+      </div>
+
+      <div class="builder" id="builder" data-view="edit">
+        <section class="builder-editor" aria-label="Editor">
+          <div class="builder-tabs" role="tablist" aria-label="Secciones del cotizador">
+            <button type="button" role="tab" id="tab-info" aria-controls="panel-info" aria-selected="true">Información</button>
+            <button type="button" role="tab" id="tab-preguntas" aria-controls="panel-preguntas" aria-selected="false" tabindex="-1">Preguntas</button>
+            <button type="button" role="tab" id="tab-precios" aria-controls="panel-precios" aria-selected="false" tabindex="-1">Precios</button>
+            <button type="button" role="tab" id="tab-apariencia" aria-controls="panel-apariencia" aria-selected="false" tabindex="-1">Apariencia</button>
+            <button type="button" role="tab" id="tab-publicacion" aria-controls="panel-publicacion" aria-selected="false" tabindex="-1">Publicación</button>
+          </div>
+          <div class="tab-panel" role="tabpanel" id="panel-info" aria-labelledby="tab-info"></div>
+          <div class="tab-panel" role="tabpanel" id="panel-preguntas" aria-labelledby="tab-preguntas" hidden></div>
+          <div class="tab-panel" role="tabpanel" id="panel-precios" aria-labelledby="tab-precios" hidden></div>
+          <div class="tab-panel" role="tabpanel" id="panel-apariencia" aria-labelledby="tab-apariencia" hidden></div>
+          <div class="tab-panel" role="tabpanel" id="panel-publicacion" aria-labelledby="tab-publicacion" hidden></div>
+        </section>
+
+        <aside class="builder-preview" aria-label="Vista previa">
+          <div class="preview-label"><span>Así lo ve tu cliente</span><button type="button" class="btn btn-link btn-sm p-0" id="reset-answers">Borrar respuestas</button></div>
+          <div class="quote-surface" id="preview-surface">
+            <div class="qs-head" id="preview-head"></div>
+            <div class="notice notice-warn preview-issues" id="preview-issues" hidden></div>
+            <form class="quote-form" id="preview-form" novalidate></form>
+            <div class="ticket" id="preview-ticket" aria-live="polite"></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+
+<dialog class="app-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+  <form method="dialog">
+    <h2 id="confirm-title">¿Confirmás?</h2>
+    <p id="confirm-text"></p>
+    <div class="dialog-actions">
+      <button class="btn btn-quiet" value="cancel">Cancelar</button>
+      <button class="btn btn-primary" value="ok" id="confirm-ok">Confirmar</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/site-config.js"></script>
+<script type="module" src="/shared/js/editor.js"></script>
+</body>
+</html>

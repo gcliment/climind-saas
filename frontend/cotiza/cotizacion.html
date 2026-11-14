@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tu cotización — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+  <link rel="stylesheet" href="/shared/css/public.css">
+</head>
+<body class="pub" data-state="loading">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="pub-top">
+  <div class="pub-wrap pub-brand">
+    <img id="biz-logo" alt="" width="44" height="44" hidden>
+    <span id="biz-name" class="pub-biz">Cargando…</span>
+  </div>
+</header>
+
+<main class="pub-wrap" id="contenido">
+  <div class="notice notice-error mt-4" id="page-error" hidden></div>
+
+  <div class="pub-quote" id="quote" hidden>
+    <div class="pub-quote-head">
+      <h1 id="quote-title">Tu cotización</h1>
+      <p>Guardá esta página: es la constancia de tu precio estimado.</p>
+    </div>
+    <p class="pub-expired" id="expired" hidden></p>
+    <div class="ticket" id="ticket"></div>
+    <div class="pub-actions">
+      <a class="btn btn-whatsapp" id="whatsapp-link" href="#" target="_blank" rel="noopener" hidden>Consultar por WhatsApp</a>
+      <button class="btn btn-quiet" type="button" id="pdf-button">Descargar PDF</button>
+      <a class="pub-permalink" id="again-link" href="/">Hacer otra cotización</a>
+    </div>
+
+    <section class="pub-card pub-lead" id="lead-section" hidden>
+      <h2>¿Querés que te contacten?</h2>
+      <p class="pub-lead-text" id="lead-text">Dejá tus datos y el negocio te escribe para confirmar el presupuesto.</p>
+      <form id="lead-form" novalidate>
+        <fieldset class="pub-contact-fields" id="contact-fields">
+          <legend class="visually-hidden">Tus datos de contacto</legend>
+          <div>
+            <label class="form-label" for="c-name">Nombre</label>
+            <input class="form-control" id="c-name" name="name" autocomplete="name" maxlength="120" required>
+          </div>
+          <div>
+            <label class="form-label" for="c-whatsapp">WhatsApp</label>
+            <input class="form-control" id="c-whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" maxlength="30" required aria-describedby="c-whatsapp-help">
+            <div class="form-text" id="c-whatsapp-help">Con código de área, por ejemplo 11 2345-6789.</div>
+          </div>
+          <div>
+            <label class="form-label" for="c-email">Email <span class="text-body-secondary fw-normal">(opcional)</span></label>
+            <input class="form-control" id="c-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254">
+          </div>
+          <div>
+            <label class="form-label" for="c-comments">Comentarios <span class="text-body-secondary fw-normal">(opcional)</span></label>
+            <textarea class="form-control" id="c-comments" name="comments" rows="3" maxlength="1000"></textarea>
+          </div>
+          <div class="pub-hp" aria-hidden="true">
+            <label for="c-website">No completar</label>
+            <input id="c-website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="c-consent" name="consent" required>
+            <label class="form-check-label" for="c-consent"><span id="consent-text">Acepto que el negocio use estos datos para responder mi consulta.</span>
+              <a href="/legal/privacidad" target="_blank" rel="noopener">Privacidad</a></label>
+          </div>
+        </fieldset>
+        <div class="notice" id="lead-notice" hidden></div>
+        <button class="btn btn-accent w-100" type="submit">Enviar mis datos</button>
+      </form>
+    </section>
+
+    <section class="pub-card pub-done" id="lead-done" hidden tabindex="-1">
+      <div class="pub-done-mark" aria-hidden="true">✓</div>
+      <h2>Ya enviaste tus datos</h2>
+      <p id="lead-done-text">El negocio se va a comunicar con vos.</p>
+    </section>
+  </div>
+
+  <section class="pub-contact mx-auto" id="contact" hidden>
+    <h2>Contacto</h2>
+    <ul id="contact-list"></ul>
+  </section>
+</main>
+
+<footer class="pub-foot">
+  <a href="/" target="_blank" rel="noopener"><img src="/shared/img/cotiza-mark.svg" alt="" width="18" height="18"> Creado con Climind Cotiza</a>
+</footer>
+<script type="module" src="/shared/js/cotizacion.js"></script>
+</body>
+</html>

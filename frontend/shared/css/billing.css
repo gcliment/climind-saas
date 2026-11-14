@@ -1,0 +1,75 @@
+/* Plan y facturación del negocio, y panel de administración. */
+
+.current-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: .5rem 1.5rem; }
+.current-eyebrow { margin: 0; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-soft); font-weight: 700; }
+.current-plan h2 { font-size: 1.5rem; margin: .15rem 0 .2rem; }
+.current-status { margin: 0; color: var(--text-mid); }
+.current-price { margin: 0; font-family: var(--f-display); font-size: 1.35rem; font-weight: 700; color: var(--ink); }
+.meters { display: grid; gap: 1.1rem; margin-top: 1.25rem; }
+@media (min-width: 768px) { .meters { grid-template-columns: 1fr 1fr; gap: 1.5rem; } }
+.meter-label { display: flex; justify-content: space-between; gap: 1rem; font-size: .92rem; color: var(--text-mid); margin-bottom: .4rem; }
+.meter-label strong { color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.meter { height: 8px; border-radius: 4px; background: var(--blue-wash); overflow: hidden; }
+.meter span { display: block; height: 100%; border-radius: 4px; background: var(--blue-btn); width: 0; transition: width .3s var(--ease); }
+.meter.is-warn { background: var(--warn-wash); }
+.meter.is-warn span { background: var(--warn); }
+.meter.is-full { background: var(--danger-wash); }
+.meter.is-full span { background: var(--danger); }
+.meter-caption { margin: .4rem 0 0; font-size: .82rem; color: var(--text-soft); }
+.current-actions { margin-top: 1.1rem; }
+.current-actions:empty { display: none; }
+
+.pending-block { border-color: var(--warn); background: var(--warn-wash); }
+.pending-block p { color: var(--warn-deep); }
+
+.plan-grid { display: grid; gap: 1rem; }
+@media (min-width: 768px) { .plan-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+.plan-card {
+  display: flex; flex-direction: column; gap: .5rem;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--r-md); padding: 1.25rem;
+}
+.plan-card.is-current { border-color: var(--blue-btn); box-shadow: inset 0 0 0 1px var(--blue-btn); }
+.plan-card h3 { font-size: 1.15rem; margin: 0; }
+.plan-price { font-family: var(--f-display); font-size: 1.4rem; font-weight: 700; color: var(--ink); margin: 0; }
+.plan-desc { color: var(--text-mid); font-size: .9rem; margin: 0; }
+.plan-features { list-style: none; padding: 0; margin: .25rem 0 .75rem; display: grid; gap: .35rem; font-size: .92rem; flex: 1; }
+.plan-features li { padding-left: 1.4rem; position: relative; color: var(--text); }
+.plan-features li::before { content: "✓"; position: absolute; left: 0; color: var(--ok-deep); font-weight: 700; }
+.plan-features li.is-off { color: var(--text-soft); }
+.plan-features li.is-off::before { content: "–"; color: var(--text-soft); }
+
+.payments-table { font-size: .92rem; margin: 0; }
+.payments-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.pay-status { font-size: .8rem; font-weight: 650; padding: .1rem .55rem; border-radius: 999px; background: var(--surface-2); color: var(--text-mid); white-space: nowrap; }
+.pay-APPROVED { background: var(--ok-wash); color: var(--ok-deep); }
+.pay-REJECTED { background: var(--danger-wash); color: var(--danger); }
+.pay-PENDING { background: var(--warn-wash); color: var(--warn-deep); }
+
+/* Tarjeta del plan en el inicio */
+.plan-summary { display: grid; gap: .9rem; }
+@media (min-width: 768px) { .plan-summary { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); align-items: center; } }
+.plan-summary h2 { margin: 0; }
+.plan-summary p { margin: .2rem 0 0; color: var(--text-mid); }
+
+/* Administración */
+.admin-tabs { display: flex; gap: .25rem; overflow-x: auto; border-bottom: 1px solid var(--line); margin-bottom: 1.25rem; }
+.admin-tabs button { border: 0; background: none; padding: .6rem .9rem; font-weight: 600; color: var(--text-mid); border-bottom: 2px solid transparent; white-space: nowrap; }
+.admin-tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--blue-btn); }
+.admin-toolbar { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.admin-toolbar .form-control { max-width: 320px; }
+.admin-toolbar .form-select { width: auto; }
+.admin-table { font-size: .88rem; }
+.admin-table td, .admin-table th { vertical-align: middle; }
+.admin-table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.admin-table small { display: block; color: var(--text-soft); }
+.state-pill { font-size: .78rem; font-weight: 650; padding: .1rem .55rem; border-radius: 999px; background: var(--surface-2); color: var(--text-mid); white-space: nowrap; }
+.state-ACTIVE { background: var(--ok-wash); color: var(--ok-deep); }
+.state-SUSPENDED, .state-PAST_DUE, .state-REJECTED, .state-FAILED { background: var(--danger-wash); color: var(--danger); }
+.state-PENDING, .state-PAUSED, .state-CORRECTED { background: var(--warn-wash); color: var(--warn-deep); }
+.plan-form { display: grid; gap: .9rem; }
+@media (min-width: 768px) { .plan-form { grid-template-columns: repeat(3, minmax(0, 1fr)); } .plan-form .span-3 { grid-column: span 3; } }
+.money-pair { display: grid; gap: .25rem; }
+/* Métricas con texto (fechas, estados): sin la tipografía grande de los números. */
+.stats .stat dd { overflow-wrap: anywhere; }
+.stats-text .stat dd { font-family: var(--f-body); font-size: 1rem; font-weight: 600; line-height: 1.4; }
+.stats-text .stat dt { min-height: 0; }

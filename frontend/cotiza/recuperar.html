@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recuperar contraseña — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/auth.css">
+</head>
+<body class="auth-page" data-page="recuperar">
+<header class="auth-top">
+  <div class="container">
+    <a class="brand" href="/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+  </div>
+</header>
+<main class="auth-main">
+  <div class="auth-card">
+    <section id="forgot-step">
+      <h1>Recuperá tu contraseña</h1>
+      <p class="subtitle">Ingresá el email de tu cuenta y te enviamos un enlace para elegir una nueva.</p>
+      <form id="forgot-form" novalidate>
+        <div class="notice" id="forgot-notice" hidden></div>
+        <div>
+          <label class="form-label" for="email">Email</label>
+          <input class="form-control" id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Enviar enlace</button>
+      </form>
+      <p class="auth-alt"><a href="/ingresar">Volver a ingresar</a></p>
+    </section>
+    <section class="result-state" id="forgot-done" hidden tabindex="-1">
+      <div class="mark mark-wait" aria-hidden="true">@</div>
+      <h1>Revisá tu email</h1>
+      <p>Si hay una cuenta con <strong id="forgot-sent-to"></strong>, en unos minutos vas a recibir un enlace. Vence en 1 hora.</p>
+      <a class="btn btn-quiet" href="/ingresar">Volver a ingresar</a>
+    </section>
+  </div>
+</main>
+<script type="module" src="/shared/js/auth.js"></script>
+</body>
+</html>

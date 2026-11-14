@@ -1,0 +1,55 @@
+# Entorno local completo con Docker: PostgreSQL 17 + app (perfil prod) + Mailpit (bandeja de emails).
+#   cp infra/.env.example infra/.env   (y completar)
+#   docker compose -f infra/docker-compose.yml --env-file infra/.env up --build
+#   → App:     http://localhost:8080/
+#   → Emails:  http://localhost:8025/
+# En EasyPanel no se usa este archivo tal cual: ver docs/DEPLOYMENT.md.
+name: climind-saas
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: climind_saas
+      POSTGRES_USER: climind
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Definí DB_PASSWORD en infra/.env}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U climind -d climind_saas"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.33.1
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"
+
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/climind_saas
+      DB_USERNAME: climind
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      MAIL_PROVIDER: smtp
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  storage:

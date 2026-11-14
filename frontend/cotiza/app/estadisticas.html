@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estadísticas — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+  <link rel="stylesheet" href="/shared/css/leads.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Estadísticas</h1>
+          <p>Cuántos clientes cotizan, cuántos te dejan sus datos y cuántas ventas cerrás.</p>
+        </div>
+      </div>
+
+      <div class="period-filter" role="group" aria-label="Período">
+        <label class="visually-hidden" for="period">Período</label>
+        <select class="form-select w-auto" id="period">
+          <option value="7">Últimos 7 días</option>
+          <option value="30" selected>Últimos 30 días</option>
+          <option value="90">Últimos 90 días</option>
+          <option value="month">Este mes</option>
+          <option value="365">Últimos 12 meses</option>
+          <option value="custom">Elegir fechas…</option>
+        </select>
+        <form class="period-custom" id="custom-range" hidden>
+          <label class="visually-hidden" for="from">Desde</label>
+          <input class="form-control" type="date" id="from" required>
+          <span aria-hidden="true">a</span>
+          <label class="visually-hidden" for="to">Hasta</label>
+          <input class="form-control" type="date" id="to" required>
+          <button class="btn btn-quiet" type="submit">Aplicar</button>
+        </form>
+      </div>
+
+      <div class="notice mb-3" id="stats-notice" hidden></div>
+
+      <dl class="kpis" id="kpis" aria-live="polite">
+        <div class="kpi"><dt>Cotizaciones</dt><dd id="k-sims">—<small>Precios calculados por clientes</small></dd></div>
+        <div class="kpi"><dt>Consultas</dt><dd id="k-leads">—<small>Dejaron sus datos</small></dd></div>
+        <div class="kpi"><dt>Conversión</dt><dd id="k-rate">—<small>Cotizaciones con consulta</small></dd></div>
+        <div class="kpi"><dt>Ventas confirmadas</dt><dd id="k-sold">—<small>Consultas marcadas como convertidas</small></dd></div>
+        <div class="kpi"><dt>Abrieron WhatsApp</dt><dd id="k-wa">—<small>Desde la cotización</small></dd></div>
+        <div class="kpi"><dt>Importe mediano</dt><dd id="k-median">—<small>La mitad cotizó menos que esto</small></dd></div>
+      </dl>
+
+      <section class="chart-card" id="activity-card" aria-labelledby="activity-title">
+        <div class="chart-head">
+          <div>
+            <h2 id="activity-title">Actividad</h2>
+            <p class="chart-sub" id="activity-sub">Cotizaciones y consultas por día</p>
+          </div>
+          <ul class="chart-legend" id="activity-legend"></ul>
+        </div>
+        <div class="chart-box" id="activity-chart"></div>
+        <div id="activity-table"></div>
+      </section>
+
+      <div class="chart-grid-2">
+        <section class="chart-card" aria-labelledby="calcs-title">
+          <h2 id="calcs-title">Cotizadores más usados</h2>
+          <p class="chart-sub">Conversión: qué parte de sus cotizaciones terminó en consulta.</p>
+          <div id="calc-perf"></div>
+        </section>
+        <section class="chart-card" id="dist-card" aria-labelledby="dist-title">
+          <h2 id="dist-title">Importes cotizados</h2>
+          <p class="chart-sub">Cuántas cotizaciones cayeron en cada rango de precio.</p>
+          <div class="chart-box" id="dist-chart"></div>
+          <div id="dist-table"></div>
+        </section>
+      </div>
+      <p class="form-text">Una cotización se cuenta una vez aunque el cliente recalcule con las mismas respuestas. Las consultas se convierten en ventas solo cuando vos las marcás así.</p>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+<script type="module" src="/shared/js/estadisticas.js"></script>
+</body>
+</html>

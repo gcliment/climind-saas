@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cotizadores — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Cotizadores</h1>
+          <p>Cada cotizador tiene su enlace y sus precios.</p>
+        </div>
+        <button class="btn btn-primary" type="button" id="new-button">Nuevo cotizador</button>
+      </div>
+      <div class="notice mb-3" id="list-notice" hidden></div>
+      <div class="calc-list" id="calc-list" aria-live="polite"></div>
+      <p class="mt-3"><button type="button" class="btn btn-link p-0" id="toggle-archived" aria-pressed="false">Ver archivados</button></p>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+
+<dialog class="app-dialog" id="new-dialog" aria-labelledby="new-title">
+  <form id="new-form" novalidate>
+    <h2 id="new-title">Nuevo cotizador</h2>
+    <div class="notice" id="new-notice" hidden></div>
+    <fieldset class="border-0 p-0 m-0">
+      <legend class="form-label">¿Cómo querés empezar?</legend>
+      <div class="choice-cards" id="template-choices"></div>
+    </fieldset>
+    <div>
+      <label class="form-label" for="new-name">Nombre del cotizador</label>
+      <input class="form-control" id="new-name" name="name" maxlength="120" required>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn btn-quiet" type="button" id="new-cancel">Cancelar</button>
+      <button class="btn btn-primary" type="submit">Crear y editar</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="/shared/js/cotizadores.js"></script>
+</body>
+</html>

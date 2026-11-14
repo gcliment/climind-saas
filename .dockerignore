@@ -1,0 +1,13 @@
+# Solo backend/ y frontend/ llegan al build. Nada de secretos, git, tests E2E ni dependencias locales.
+.git
+.gitignore
+.env
+.env.*
+**/node_modules
+backend/target
+backend/src/main/resources/static
+tests
+docs
+database
+infra
+*.md

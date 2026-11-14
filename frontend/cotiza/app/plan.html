@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tu plan — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+  <link rel="stylesheet" href="/shared/css/leads.css">
+  <link rel="stylesheet" href="/shared/css/billing.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Tu plan</h1>
+          <p>Elegí el plan que mejor se adapte a tu negocio. Podés cambiarlo o cancelarlo cuando quieras.</p>
+        </div>
+      </div>
+
+      <div class="notice mb-3" id="plan-notice" hidden tabindex="-1"></div>
+      <p class="notice notice-warn mb-3" id="simulator-banner" hidden>Modo de prueba: los pagos se simulan y no se cobra nada.</p>
+
+      <section class="panel-block current-plan" aria-labelledby="current-title" id="current-block" hidden>
+        <div class="current-head">
+          <div>
+            <p class="current-eyebrow">Plan actual</p>
+            <h2 id="current-title"></h2>
+            <p class="current-status" id="current-status"></p>
+          </div>
+          <p class="current-price" id="current-price"></p>
+        </div>
+        <div class="meters">
+          <div class="meter-row">
+            <div class="meter-label"><span>Cotizaciones del período</span><strong id="quotes-text"></strong></div>
+            <div class="meter" id="quotes-meter" role="progressbar" aria-labelledby="quotes-caption" aria-valuemin="0"><span></span></div>
+            <p class="meter-caption" id="quotes-caption"></p>
+          </div>
+          <div class="meter-row">
+            <div class="meter-label"><span>Cotizadores publicados</span><strong id="calcs-text"></strong></div>
+            <div class="meter" id="calcs-meter" role="progressbar" aria-labelledby="calcs-caption" aria-valuemin="0"><span></span></div>
+            <p class="meter-caption" id="calcs-caption"></p>
+          </div>
+        </div>
+        <div class="current-actions" id="current-actions"></div>
+      </section>
+
+      <section class="panel-block pending-block" aria-labelledby="pending-title" id="pending-block" hidden>
+        <h2 id="pending-title">Contratación sin completar</h2>
+        <p id="pending-text"></p>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary" id="pending-continue" href="#">Continuar con el pago</a>
+          <button class="btn btn-quiet" type="button" id="pending-discard">Descartar</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="plans-title">
+        <h2 class="h5 mb-3" id="plans-title">Planes</h2>
+        <div class="plan-grid" id="plan-grid"></div>
+        <p class="form-text mt-3">Precios en pesos argentinos por mes. El cobro lo procesa Mercado Pago y se renueva solo cada mes. Al cambiar de plan, el nuevo empieza cuando se aprueba su primer pago.</p>
+      </section>
+
+      <section class="panel-block mt-4" aria-labelledby="payments-title" id="payments-block" hidden>
+        <h2 id="payments-title">Pagos</h2>
+        <div class="table-responsive">
+          <table class="table payments-table">
+            <thead><tr><th scope="col">Fecha</th><th scope="col">Plan</th><th scope="col" class="num">Importe</th><th scope="col">Estado</th></tr></thead>
+            <tbody id="payments-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+
+<dialog class="app-dialog" id="cancel-dialog" aria-labelledby="cancel-title">
+  <form method="dialog">
+    <h2 id="cancel-title">Cancelar el plan</h2>
+    <p id="cancel-text"></p>
+    <div class="dialog-actions">
+      <button class="btn btn-quiet" value="cancel">Mantener mi plan</button>
+      <button class="btn btn-danger" value="ok">Cancelar el plan</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="/shared/js/plan.js"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+/* Landing de Climind Cotiza y portal Climind SaaS. */
+
+.hero {
+  padding: clamp(2.5rem, 7vw, 5.5rem) 0 clamp(3rem, 8vw, 6rem);
+}
+.hero-grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+@media (min-width: 992px) {
+  .hero-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); }
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6.4vw, 4.4rem);
+  font-weight: 760;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  margin: 0 0 1.25rem;
+  max-width: 13ch;
+}
+.hero .lead {
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  color: var(--text-mid);
+  max-width: 46ch;
+  margin-bottom: 1.75rem;
+}
+.hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+@media (max-width: 575.98px) {
+  .hero-actions .btn { width: 100%; }
+}
+.hero-fineprint { margin-top: 1rem; font-size: .9rem; color: var(--text-soft); }
+
+/* Demo: formulario + ticket en una sola pieza. */
+.demo {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+.demo-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 1rem;
+  font-size: .88rem;
+  color: var(--text-mid);
+}
+.demo-caption .tag {
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  font-weight: 600;
+  color: var(--text-mid);
+  white-space: nowrap;
+}
+.demo-fields { display: grid; gap: .9rem; margin-bottom: 1.25rem; }
+.demo-fields .form-label { font-size: .9rem; }
+.range-row { display: flex; align-items: center; gap: .9rem; }
+.range-row input[type="range"] { flex: 1; accent-color: var(--blue-btn); min-height: 32px; }
+.range-row output {
+  min-width: 4.5rem;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.chip-group { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.chip input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+.chip span {
+  display: inline-block;
+  padding: .55rem .9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  font-size: .92rem;
+  font-weight: 500;
+  min-height: 40px;
+  transition: background-color .15s var(--ease), border-color .15s var(--ease);
+}
+.chip input:checked + span { background: var(--blue-wash); border-color: var(--blue); color: var(--blue-deep); }
+.chip input:focus-visible + span { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.ticket-total output.bump { animation: bump .35s var(--ease); }
+@keyframes bump {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-3px); color: var(--blue-deep); }
+  100% { transform: translateY(0); }
+}
+
+/* Secciones */
+.section { padding: clamp(3.5rem, 8vw, 6rem) 0; }
+.section-alt { background: var(--white); border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+.section h2 { font-size: clamp(1.75rem, 4vw, 2.6rem); margin-bottom: 1rem; max-width: 22ch; }
+.section .intro { color: var(--text-mid); font-size: 1.08rem; margin-bottom: 2.5rem; }
+
+/* Pasos: es una secuencia real, por eso va numerada. */
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.5rem; counter-reset: step; }
+@media (min-width: 768px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+.steps li { counter-increment: step; padding-top: 1.25rem; border-top: 2px solid var(--ink); }
+.steps li::before {
+  content: counter(step);
+  display: block;
+  font-family: var(--f-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--blue);
+  margin-bottom: .75rem;
+}
+.steps h3 { font-size: 1.2rem; margin-bottom: .5rem; }
+.steps p { color: var(--text-mid); margin: 0; }
+
+/* Rubros: preguntas reales que hace cada negocio. */
+.uses { display: grid; gap: 0; border-top: 1px solid var(--line); }
+@media (min-width: 768px) { .uses { grid-template-columns: 1fr 1fr; column-gap: 3rem; } }
+.use {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.use strong { font-family: var(--f-display); color: var(--ink); font-size: 1.05rem; }
+.use span { color: var(--text-mid); }
+@media (max-width: 575.98px) { .use { grid-template-columns: 1fr; gap: .25rem; } }
+
+.benefits { display: grid; gap: 2rem; }
+@media (min-width: 768px) { .benefits { grid-template-columns: repeat(3, 1fr); } }
+.benefits h3 { font-size: 1.15rem; margin-bottom: .4rem; }
+.benefits p { color: var(--text-mid); margin: 0; }
+
+/* Preguntas frecuentes */
+.faq { max-width: 760px; }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1.1rem 2.5rem 1.1rem 0;
+  position: relative;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+";
+  position: absolute;
+  right: .25rem;
+  top: .85rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--blue-deep);
+  transition: transform .2s var(--ease);
+}
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { color: var(--text-mid); padding-bottom: 1.1rem; margin: 0; }
+
+/* Cierre */
+.cta-band { background: var(--ink); color: #C9D5E6; padding: clamp(3rem, 7vw, 5rem) 0; }
+.cta-band h2 { color: var(--white); font-size: clamp(1.8rem, 4.5vw, 2.8rem); margin-bottom: .75rem; }
+.cta-band p { margin-bottom: 1.75rem; }
+
+/* Portal Climind SaaS */
+.portal-hero h1 { max-width: 16ch; }
+.product-row {
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+@media (min-width: 768px) { .product-row { grid-template-columns: auto minmax(0, 1fr) auto; } }
+.product-row img { width: 64px; height: 64px; }
+.product-row h3 { font-size: 1.5rem; margin-bottom: .35rem; }
+.product-row p { color: var(--text-mid); margin: 0; }
+.lines-of-business { display: grid; gap: 1.5rem; }
+@media (min-width: 768px) { .lines-of-business { grid-template-columns: repeat(3, 1fr); } }
+.lines-of-business div { padding-top: 1rem; border-top: 1px solid var(--line); }
+.lines-of-business h3 { font-size: 1.1rem; margin-bottom: .35rem; }
+.lines-of-business p { color: var(--text-mid); margin: 0; font-size: .95rem; }
+.lines-of-business .current { border-top: 2px solid var(--blue); }

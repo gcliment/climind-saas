@@ -1,0 +1,177 @@
+/* Panel del negocio: barra lateral en escritorio, barra de pestañas inferior en móvil. */
+
+.panel {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.panel[data-state="loading"] .panel-main > * { visibility: hidden; }
+
+.panel-sidebar {
+  display: none;
+  background: var(--ink);
+  color: #C9D5E6;
+}
+@media (min-width: 992px) {
+  .panel { display: grid; grid-template-columns: 252px minmax(0, 1fr); }
+  .panel-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 1.25rem 1rem;
+  }
+}
+.panel-sidebar .brand { margin: 0 .5rem 1.75rem; }
+.side-nav { display: grid; gap: .2rem; }
+.side-nav a {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .65rem .75rem;
+  border-radius: var(--r-sm);
+  color: #C9D5E6;
+  text-decoration: none;
+  font-weight: 500;
+}
+.side-nav a:hover { background: var(--ink-3); color: var(--white); }
+.side-nav a[aria-current="page"] { background: var(--ink-3); color: var(--white); box-shadow: inset 3px 0 0 var(--blue); }
+.side-nav svg { width: 20px; height: 20px; flex: none; }
+.side-foot { margin-top: auto; border-top: 1px solid var(--ink-line); padding: 1rem .5rem 0; font-size: .9rem; }
+.side-foot .who { color: var(--white); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-foot .biz { color: #8FA3BD; margin-bottom: .75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-foot button {
+  background: transparent;
+  border: 1px solid var(--ink-line);
+  color: #C9D5E6;
+  border-radius: var(--r-sm);
+  padding: .45rem .8rem;
+  min-height: 40px;
+}
+.side-foot button:hover { color: var(--white); border-color: #3A5373; }
+
+/* Barra superior móvil */
+.panel-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .75rem 16px;
+  background: var(--white);
+  border-bottom: 1px solid var(--line-soft);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.panel-topbar .brand img { width: 30px; height: 30px; }
+.panel-topbar button {
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: var(--r-sm);
+  min-height: 40px;
+  padding: 0 .8rem;
+  font-weight: 600;
+  color: var(--text-mid);
+}
+@media (min-width: 992px) { .panel-topbar { display: none; } }
+
+/* Pestañas inferiores móvil */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  background: var(--white);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tabbar a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .15rem;
+  padding: .55rem .25rem .5rem;
+  min-height: 56px;
+  min-width: 0;
+  font-size: .7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-decoration: none;
+}
+.tabbar a[aria-current="page"] { color: var(--blue-deep); }
+.tabbar svg { width: 22px; height: 22px; flex: none; }
+.tabbar a span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+@media (min-width: 992px) { .tabbar { display: none; } }
+
+.panel-main {
+  padding: clamp(1.25rem, 3vw, 2.5rem) 16px calc(88px + env(safe-area-inset-bottom));
+  max-width: 1080px;
+  width: 100%;
+}
+@media (min-width: 576px) { .panel-main { padding-left: clamp(1.25rem, 3vw, 2.5rem); padding-right: clamp(1.25rem, 3vw, 2.5rem); } }
+@media (min-width: 992px) { .panel-main { padding-bottom: 3rem; } }
+
+.page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.75rem; }
+.page-head h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0; }
+.page-head p { color: var(--text-mid); margin: .35rem 0 0; }
+
+.panel-block {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: clamp(1.1rem, 3vw, 1.75rem);
+  margin-bottom: 1.5rem;
+}
+.panel-block h2 { font-size: 1.2rem; margin-bottom: .35rem; }
+.panel-block > p { color: var(--text-mid); }
+
+/* Lista de puesta en marcha: es una secuencia, por eso va numerada. */
+.setup { list-style: none; padding: 0; margin: 1.25rem 0 0; counter-reset: setup; }
+.setup li {
+  counter-increment: setup;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: .25rem 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--line-soft);
+}
+.setup li::before {
+  content: counter(setup);
+  grid-row: span 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--f-display);
+  font-weight: 700;
+  background: var(--surface-2);
+  color: var(--text-mid);
+}
+.setup li.done::before { content: "✓"; background: var(--ok-wash); color: var(--ok-deep); }
+.setup li.current::before { background: var(--blue-btn); color: var(--white); }
+.setup strong { color: var(--ink); }
+.setup .detail { color: var(--text-mid); font-size: .95rem; }
+.setup .detail .btn { margin-top: .6rem; }
+.setup li.later strong { color: var(--text-mid); }
+.setup .soon { font-size: .85rem; color: var(--text-soft); }
+
+/* Formulario del perfil */
+.form-grid { display: grid; gap: 1.1rem; }
+@media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } .form-grid .span-2 { grid-column: span 2; } }
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 1.5rem; }
+.save-status { color: var(--ok-deep); font-weight: 600; }
+.public-link { font-weight: 600; color: var(--ink); word-break: break-all; }
+
+/* Métricas de administración */
+.stats { display: grid; gap: .5rem 1.5rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 1.25rem 0 0; }
+@media (min-width: 768px) { .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.stat { padding: 1rem 0; border-top: 2px solid var(--ink); }
+.stat dt { font-weight: 500; color: var(--text-mid); font-size: .92rem; min-height: 2.8em; }
+.stat dd { margin: .2rem 0 0; font-family: var(--f-display); font-size: 2rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }

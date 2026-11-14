@@ -1,0 +1,366 @@
+/* =========================================================================
+   Climind SaaS / Climind Cotiza — estilos compartidos
+   Se carga DESPUÉS de Bootstrap 5.3 y redefine sus variables con la
+   identidad de Climind-IA (tinta azulada + azul de marca #007EE8).
+   El color fuera de la marca tiene un solo significado por tono:
+   verde = confirmado, ámbar = requiere atención, rojo = error.
+   Pieza memorable del sistema: el "ticket" de presupuesto (.ticket).
+   ========================================================================= */
+
+/* ---------------------------------------------------------------- FUENTES */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("../fonts/bricolage-grotesque-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/instrument-sans-latin-wght-normal.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------- TOKENS */
+:root {
+  --ink: #08131F;
+  --ink-2: #0F1D2D;
+  --ink-3: #17293E;
+  --ink-line: #213751;
+
+  --blue: #007EE8;        /* marca: no se toca */
+  --blue-btn: #0071DB;    /* relleno de botones (AA con blanco) */
+  --blue-deep: #0063C7;   /* enlaces sobre claro */
+  --blue-soft: #6FB4FF;   /* texto azul sobre oscuro */
+  --blue-wash: #E5F2FF;
+
+  --paper: #F6F8FC;
+  --white: #FFFFFF;
+  --surface-2: #EEF2F9;
+  --text: #0D141F;
+  --text-mid: #4C5A72;
+  --text-soft: #6B788E;   /* AA sobre --paper */
+  --line: #DCE3EF;
+  --line-soft: #E8EDF6;
+
+  --ok: #0FA97F;
+  --ok-deep: #0A7A5C;
+  --ok-wash: #E4F7F1;
+  --warn: #B26A0B;
+  --warn-deep: #9A5B0A;
+  --warn-wash: #FDF3E2;
+  --danger: #C8333F;
+  --danger-wash: #FCEBEC;
+
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --shadow-ticket: 0 1px 2px rgba(8, 19, 31, .06), 0 24px 48px -24px rgba(8, 19, 31, .28);
+  --ease: cubic-bezier(.22, .61, .36, 1);
+
+  /* Bootstrap */
+  --bs-body-font-family: var(--f-body);
+  --bs-body-color: var(--text);
+  --bs-body-bg: var(--paper);
+  --bs-primary: var(--blue-btn);
+  --bs-primary-rgb: 0, 113, 219;
+  --bs-link-color: var(--blue-deep);
+  --bs-link-color-rgb: 0, 99, 199;
+  --bs-link-hover-color: var(--ink);
+  --bs-border-color: var(--line);
+  --bs-border-radius: var(--r-sm);
+  --bs-focus-ring-color: rgba(0, 126, 232, .35);
+}
+
+/* ------------------------------------------------------------------ BASE */
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--f-body);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--paper);
+  font-feature-settings: "ss01";
+}
+h1, h2, h3, h4, .display-font {
+  font-family: var(--f-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: var(--ink);
+}
+p { max-width: 68ch; }
+.num { font-variant-numeric: tabular-nums; }
+
+a { text-underline-offset: 3px; }
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 1000;
+  padding: 10px 14px;
+  background: var(--ink);
+  color: var(--white);
+  border-radius: var(--r-sm);
+}
+.skip-link:focus { top: 12px; }
+
+.visually-hidden-focusable:not(:focus):not(:focus-within) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+/* ---------------------------------------------------------------- BOTONES */
+.btn {
+  --bs-btn-padding-y: .7rem;
+  --bs-btn-padding-x: 1.15rem;
+  --bs-btn-font-weight: 600;
+  --bs-btn-border-radius: var(--r-sm);
+  min-height: 44px;
+}
+.btn-primary {
+  --bs-btn-bg: var(--blue-btn);
+  --bs-btn-border-color: var(--blue-btn);
+  --bs-btn-hover-bg: var(--blue-deep);
+  --bs-btn-hover-border-color: var(--blue-deep);
+  --bs-btn-active-bg: #00539F;
+  --bs-btn-active-border-color: #00539F;
+  --bs-btn-disabled-bg: var(--blue-btn);
+  --bs-btn-disabled-border-color: var(--blue-btn);
+}
+.btn-ink {
+  --bs-btn-color: var(--white);
+  --bs-btn-bg: var(--ink);
+  --bs-btn-border-color: var(--ink);
+  --bs-btn-hover-color: var(--white);
+  --bs-btn-hover-bg: var(--ink-3);
+  --bs-btn-hover-border-color: var(--ink-3);
+  --bs-btn-active-color: var(--white);
+  --bs-btn-active-bg: var(--ink-2);
+}
+.btn-quiet {
+  --bs-btn-color: var(--text);
+  --bs-btn-bg: var(--white);
+  --bs-btn-border-color: var(--line);
+  --bs-btn-hover-color: var(--ink);
+  --bs-btn-hover-bg: var(--surface-2);
+  --bs-btn-hover-border-color: var(--line);
+  --bs-btn-active-bg: var(--line-soft);
+}
+.btn[aria-busy="true"] { pointer-events: none; opacity: .75; }
+.btn[aria-busy="true"]::after {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-left: .5rem;
+  vertical-align: -0.15em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------------------------------------------- FORMULARIOS */
+.form-label { font-weight: 600; font-size: .95rem; margin-bottom: .35rem; color: var(--ink); }
+.form-control, .form-select {
+  min-height: 46px;
+  border-color: var(--line);
+  border-radius: var(--r-sm);
+  background-color: var(--white);
+  font-size: 1rem; /* 16px: evita el zoom automático de iOS */
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0, 126, 232, .2);
+}
+.form-text { color: var(--text-soft); }
+.invalid-feedback { color: var(--danger); font-weight: 500; }
+.form-control.is-invalid, .form-select.is-invalid { border-color: var(--danger); }
+.form-check-input { width: 1.2em; height: 1.2em; margin-top: .2em; }
+.form-check-input:checked { background-color: var(--blue-btn); border-color: var(--blue-btn); }
+
+.password-field { position: relative; }
+.password-field .form-control { padding-right: 5.5rem; }
+.password-field .toggle-password {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  min-height: 34px;
+  padding: 0 .7rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--blue-deep);
+  font-weight: 600;
+  font-size: .9rem;
+}
+.password-field .toggle-password:hover { background: var(--surface-2); }
+
+/* Avisos (errores generales, confirmaciones). */
+.notice {
+  padding: .85rem 1rem;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: var(--white);
+  font-size: .95rem;
+}
+.notice[hidden] { display: none; }
+.notice-error { border-color: #F3C3C7; background: var(--danger-wash); color: #8E1F28; }
+.notice-ok { border-color: #BDE8DA; background: var(--ok-wash); color: var(--ok-deep); }
+.notice-warn { border-color: #F2D7A8; background: var(--warn-wash); color: var(--warn-deep); }
+
+/* ---------------------------------------------------------------- MARCA */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+.brand img { width: 34px; height: 34px; }
+.brand small { font-family: var(--f-body); font-weight: 500; color: var(--text-soft); font-size: .8rem; }
+.brand-on-dark { color: var(--white); }
+
+/* ---------------------------------------------------------------- ENCABEZADO PÚBLICO */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(246, 248, 252, .92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.site-header .inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 68px;
+}
+.brand span { white-space: nowrap; }
+.site-nav { display: flex; align-items: center; gap: .5rem; }
+.site-nav .btn { white-space: nowrap; }
+.site-nav a.nav-text { color: var(--text-mid); text-decoration: none; font-weight: 500; padding: .5rem .6rem; white-space: nowrap; }
+.site-nav a.nav-text:hover { color: var(--ink); }
+/* En pantallas chicas: marca + "Ingresar". El alta es el botón principal del hero, justo debajo. */
+@media (max-width: 575.98px) {
+  .site-nav a.nav-text.optional,
+  .site-nav .btn.optional { display: none; }
+  .site-nav a.nav-text {
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--white);
+    padding: .5rem .9rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+}
+
+/* ---------------------------------------------------------------- TICKET DE PRESUPUESTO */
+/* El borde dentado inferior representa el corte del papel. */
+.ticket {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  box-shadow: var(--shadow-ticket);
+  padding: 1.4rem 1.4rem 1.8rem;
+  margin-bottom: 14px;
+}
+.ticket::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -12px;
+  height: 12px;
+  background:
+    linear-gradient(135deg, var(--white) 6px, transparent 0) 0 0 / 12px 12px repeat-x,
+    linear-gradient(-135deg, var(--white) 6px, transparent 0) 0 0 / 12px 12px repeat-x;
+}
+.ticket-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-bottom: .9rem;
+  border-bottom: 1px dashed var(--line);
+}
+.ticket-head strong { font-family: var(--f-display); font-size: 1.05rem; color: var(--ink); }
+.ticket-head span { color: var(--text-soft); font-size: .85rem; }
+.ticket-lines { list-style: none; margin: 0; padding: .8rem 0; border-bottom: 1px dashed var(--line); }
+.ticket-lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .3rem 0;
+  font-size: .95rem;
+  color: var(--text-mid);
+  font-variant-numeric: tabular-nums;
+}
+.ticket-lines li b { font-weight: 600; color: var(--text); white-space: nowrap; }
+.ticket-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  padding-top: .9rem;
+}
+.ticket-total span { color: var(--text-mid); font-weight: 600; }
+.ticket-total output {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.ticket-note { margin: .9rem 0 0; font-size: .8rem; color: var(--text-soft); }
+
+/* WhatsApp: verde oscuro con contraste AA para texto blanco (el verde de la marca no lo tiene). */
+.btn-whatsapp {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #1A7F4B;              /* verde oscuro: contraste AA con texto blanco */
+  --bs-btn-border-color: #1A7F4B;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #146A3E;
+  --bs-btn-hover-border-color: #146A3E;
+  font-weight: 600;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------------------------------------------------------------- PIE */
+.site-footer {
+  border-top: 1px solid var(--line-soft);
+  padding: 2rem 0 2.5rem;
+  color: var(--text-soft);
+  font-size: .9rem;
+}
+.site-footer a { color: var(--text-mid); }
+.site-footer .links { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

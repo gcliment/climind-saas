@@ -1,0 +1,30 @@
+# Build
+backend/target/
+backend/src/main/resources/static/
+*.class
+
+# Node / Playwright
+node_modules/
+tests/e2e/test-results/
+tests/e2e/playwright-report/
+tests/e2e/.cache/
+
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Datos locales
+/storage/
+/backend/storage/
+backups/
+*.dump
+
+# IDE / SO
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

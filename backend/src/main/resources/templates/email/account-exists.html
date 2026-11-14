@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${'Ya tenés una cuenta'}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;">Hola:</p>
+  <p style="margin:0 0 20px;">Alguien intentó crear una cuenta de Climind Cotiza con este email, pero ya tenés una cuenta registrada.</p>
+  <p style="margin:0 0 22px;">
+    <a th:href="${loginLink}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Ingresar a mi cuenta</a>
+  </p>
+  <p style="margin:0;font-size:13px;">¿No recordás tu contraseña? <a th:href="${resetLink}" href="#" style="color:#0063C7;">Restablecela acá</a>.</p>
+</div>
+</body>
+</html>

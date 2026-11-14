@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Climind Cotiza — Cotizadores automáticos para tu negocio</title>
+  <meta name="description" content="Creá cotizadores automáticos para tu negocio y dejá que tus clientes calculen un presupuesto estimado en segundos.">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/landing.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<header class="site-header">
+  <div class="container inner">
+    <a class="brand" href="/" aria-label="Climind Cotiza, inicio">
+      <img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34">
+      <span>Climind Cotiza</span>
+    </a>
+    <nav class="site-nav" aria-label="Principal">
+      <a class="nav-text optional" href="#como-funciona">Cómo funciona</a>
+      <a class="nav-text" href="/ingresar">Ingresar</a>
+      <a class="btn btn-primary optional" href="/registro">Crear cuenta</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1>Dejá que tus clientes coticen solos</h1>
+        <p class="lead">Creá un cotizador personalizado, compartí un enlace y recibí consultas de clientes interesados, sin programar.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/registro">Crear mi cotizador gratis</a>
+          <a class="btn btn-quiet btn-lg" href="#como-funciona">Ver cómo funciona</a>
+        </div>
+        <p class="hero-fineprint">Sin tarjeta de crédito. En español y en pesos argentinos.</p>
+      </div>
+
+      <form class="demo" id="demo" aria-labelledby="demo-title" novalidate>
+        <div class="demo-caption">
+          <span id="demo-title">Así lo ve tu cliente. Probalo:</span>
+          <span class="tag">Precios de ejemplo</span>
+        </div>
+        <div class="demo-fields">
+          <div>
+            <label class="form-label" for="demo-tipo">¿Qué tipo de limpieza necesitás?</label>
+            <select class="form-select" id="demo-tipo" name="tipo">
+              <option value="basica">Limpieza básica</option>
+              <option value="profunda" selected>Limpieza profunda</option>
+              <option value="obra">Después de obra</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" for="demo-m2">¿Cuántos metros cuadrados tiene el lugar?</label>
+            <div class="range-row">
+              <input type="range" id="demo-m2" name="m2" min="20" max="300" step="5" value="60">
+              <output for="demo-m2" id="demo-m2-out" class="num">60 m²</output>
+            </div>
+          </div>
+          <fieldset>
+            <legend class="form-label">Servicios adicionales</legend>
+            <div class="chip-group">
+              <label class="chip"><input type="checkbox" name="extra" value="vidrios"><span>Vidrios</span></label>
+              <label class="chip"><input type="checkbox" name="extra" value="horno" checked><span>Horno</span></label>
+              <label class="chip"><input type="checkbox" name="extra" value="urgente"><span>Para mañana (+20%)</span></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="ticket" aria-live="polite">
+          <div class="ticket-head">
+            <strong>Limpiezas Ejemplo</strong>
+            <span>Estimación</span>
+          </div>
+          <ul class="ticket-lines" id="demo-lines"></ul>
+          <div class="ticket-total">
+            <span>Total estimado</span>
+            <output id="demo-total" class="num">$ 0</output>
+          </div>
+          <p class="ticket-note">Este importe es una estimación. El precio final está sujeto a confirmación del negocio.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="como-funciona">
+    <div class="container">
+      <h2>De la pregunta “¿cuánto sale?” a una consulta concreta</h2>
+      <p class="intro">Tus clientes calculan solos. Vos recibís a quien ya sabe qué quiere y cuánto cuesta.</p>
+      <ol class="steps">
+        <li>
+          <h3>Cargá tus precios</h3>
+          <p>Elegí una plantilla de tu rubro y ajustá los valores: precio base, por unidad, adicionales y mínimos.</p>
+        </li>
+        <li>
+          <h3>Compartí tu enlace</h3>
+          <p>Mandalo por WhatsApp, ponelo en Instagram o en tu web. Funciona desde cualquier celular.</p>
+        </li>
+        <li>
+          <h3>Recibí consultas</h3>
+          <p>Cada cliente ve su estimación y te deja sus datos. Las seguís desde tu panel, con el detalle de lo que eligió.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Sirve para cualquier negocio que cotiza</h2>
+      <p class="intro">Cada rubro define sus propias preguntas. Algunos ejemplos:</p>
+      <div class="uses">
+        <div class="use"><strong>Limpieza</strong><span>Tipo de limpieza, metros cuadrados, ambientes y frecuencia.</span></div>
+        <div class="use"><strong>Catering y eventos</strong><span>Invitados, tipo de menú, bebidas, mozos y horas de servicio.</span></div>
+        <div class="use"><strong>Instalaciones</strong><span>Tipo de equipo, cantidad, materiales incluidos y urgencia.</span></div>
+        <div class="use"><strong>Construcción</strong><span>Superficie, terminaciones y trabajos adicionales.</span></div>
+        <div class="use"><strong>Productos a medida</strong><span>Cantidad, tamaño, material y personalización.</span></div>
+        <div class="use"><strong>Fletes y mudanzas</strong><span>Ambientes, distancia, pisos por escalera y embalaje.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <h2>Lo que cambia en tu día a día</h2>
+      <div class="benefits">
+        <div>
+          <h3>Menos preguntas repetidas</h3>
+          <p>El precio orientativo ya está en el enlace. Respondés menos “¿cuánto sale?” por WhatsApp.</p>
+        </div>
+        <div>
+          <h3>Consultas ordenadas</h3>
+          <p>Cada pedido llega con lo que el cliente eligió, su contacto y el importe estimado, en un solo lugar.</p>
+        </div>
+        <div>
+          <h3>El mismo criterio siempre</h3>
+          <p>Tus precios y reglas se aplican igual en cada cotización, aunque cambies los valores el mes que viene.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Preguntas frecuentes</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Necesito saber programar?</summary>
+          <p>No. Elegís una plantilla, completás tus precios en formularios simples y publicás. Nada de fórmulas ni código.</p>
+        </details>
+        <details>
+          <summary>¿El precio que ve mi cliente es definitivo?</summary>
+          <p>No: es una estimación según tus reglas. Cada cotización muestra que el precio final está sujeto a tu confirmación, y vos definís su vigencia.</p>
+        </details>
+        <details>
+          <summary>¿Cuánto cuesta?</summary>
+          <p>Podés empezar gratis, sin tarjeta. Si necesitás más cotizadores o más cotizaciones por mes, vas a poder pasar a un plan pago desde tu panel.</p>
+        </details>
+        <details>
+          <summary>¿Qué pasa si cambio mis precios?</summary>
+          <p>Las cotizaciones que ya se hicieron conservan el importe original. Los precios nuevos se aplican desde que los publicás.</p>
+        </details>
+        <details>
+          <summary>¿Quién ve los datos de mis clientes?</summary>
+          <p>Solo tu negocio. Cada cuenta tiene su espacio separado y los datos de contacto se usan únicamente para que puedas responder la consulta.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container">
+      <h2>Armá tu primer cotizador hoy</h2>
+      <p>Creá tu cuenta, cargá los datos de tu negocio y empezá con una plantilla de tu rubro.</p>
+      <a class="btn btn-primary btn-lg" href="/registro">Crear cuenta gratis</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container d-flex flex-column flex-md-row justify-content-between gap-3">
+    <span>Climind Cotiza es un producto de <a href="/saas/">Climind SaaS</a>, de <a href="https://climind-ia.com" rel="noopener">Climind-IA</a>.</span>
+    <nav class="links" aria-label="Legales">
+      <a href="/legal/terminos">Términos y condiciones</a>
+      <a href="/legal/privacidad">Política de privacidad</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="module" src="/shared/js/landing.js"></script>
+</body>
+</html>

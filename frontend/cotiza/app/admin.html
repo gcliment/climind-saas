@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administración — Climind SaaS</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+  <link rel="stylesheet" href="/shared/css/billing.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/admin"><img src="/shared/img/climind-c.svg" alt="" width="34" height="34"><span>Climind SaaS</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz">Administración global</div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/admin"><img src="/shared/img/climind-c.svg" alt="" width="30" height="30"><span>Climind SaaS</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Administración</h1>
+          <p>Estado general de la plataforma.</p>
+        </div>
+      </div>
+      <div class="notice mb-3" id="admin-notice" hidden></div>
+
+      <div class="admin-tabs" role="tablist" aria-label="Secciones de administración" id="admin-tabs" hidden>
+        <button type="button" role="tab" id="tab-resumen" aria-controls="panel-resumen" aria-selected="true">Resumen</button>
+        <button type="button" role="tab" id="tab-negocios" aria-controls="panel-negocios" aria-selected="false" tabindex="-1">Negocios</button>
+        <button type="button" role="tab" id="tab-suscripciones" aria-controls="panel-suscripciones" aria-selected="false" tabindex="-1">Suscripciones</button>
+        <button type="button" role="tab" id="tab-pagos" aria-controls="panel-pagos" aria-selected="false" tabindex="-1">Pagos</button>
+        <button type="button" role="tab" id="tab-planes" aria-controls="panel-planes" aria-selected="false" tabindex="-1">Planes</button>
+        <button type="button" role="tab" id="tab-integracion" aria-controls="panel-integracion" aria-selected="false" tabindex="-1">Integración</button>
+      </div>
+
+      <section role="tabpanel" id="panel-resumen" aria-labelledby="tab-resumen" hidden>
+        <section class="panel-block" aria-labelledby="revenue-title">
+          <h2 id="revenue-title">Ingresos</h2>
+          <p>El MRR estimado es el precio mensual de las suscripciones que se van a renovar. Lo cobrado son pagos aprobados por Mercado Pago.</p>
+          <dl class="stats" id="revenue-stats"></dl>
+        </section>
+        <section class="panel-block" aria-labelledby="summary-title">
+          <h2 id="summary-title">Negocios y uso</h2>
+          <dl class="stats" id="stats"></dl>
+        </section>
+      </section>
+
+      <section role="tabpanel" id="panel-negocios" aria-labelledby="tab-negocios" hidden>
+        <form class="admin-toolbar" id="tenant-filters" role="search">
+          <label class="visually-hidden" for="tenant-q">Buscar negocios</label>
+          <input class="form-control" type="search" id="tenant-q" placeholder="Nombre, dirección o email del dueño">
+          <label class="visually-hidden" for="tenant-status">Estado</label>
+          <select class="form-select" id="tenant-status"><option value="">Todos</option><option value="ACTIVE">Activos</option><option value="SUSPENDED">Suspendidos</option></select>
+          <button class="btn btn-quiet" type="submit">Buscar</button>
+        </form>
+        <div class="table-responsive"><table class="table admin-table"><thead><tr>
+          <th scope="col">Negocio</th><th scope="col">Alta</th><th scope="col">Plan</th><th scope="col" class="num">Cotizaciones</th>
+          <th scope="col" class="num">Publicados</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Acciones</span></th>
+        </tr></thead><tbody id="tenant-rows"></tbody></table></div>
+        <p class="form-text" id="tenant-count"></p>
+      </section>
+
+      <section role="tabpanel" id="panel-suscripciones" aria-labelledby="tab-suscripciones" hidden>
+        <div class="admin-toolbar">
+          <label class="visually-hidden" for="sub-status">Estado</label>
+          <select class="form-select" id="sub-status">
+            <option value="">Todas</option><option value="ACTIVE">Activas</option><option value="PAST_DUE">Con cobro rechazado</option>
+            <option value="PENDING">Pendientes</option><option value="PAUSED">Pausadas</option><option value="CANCELED">Canceladas</option><option value="EXPIRED">Vencidas</option>
+          </select>
+        </div>
+        <div class="table-responsive"><table class="table admin-table"><thead><tr>
+          <th scope="col">Negocio</th><th scope="col">Plan</th><th scope="col">Estado</th><th scope="col">Vence</th>
+          <th scope="col">Último pago</th><th scope="col">Proveedor</th>
+        </tr></thead><tbody id="sub-rows"></tbody></table></div>
+      </section>
+
+      <section role="tabpanel" id="panel-pagos" aria-labelledby="tab-pagos" hidden>
+        <div class="admin-toolbar">
+          <label class="visually-hidden" for="pay-status">Estado</label>
+          <select class="form-select" id="pay-status">
+            <option value="">Todos</option><option value="APPROVED">Aprobados</option><option value="REJECTED">Rechazados</option>
+            <option value="PENDING">En proceso</option><option value="REFUNDED">Devueltos</option>
+          </select>
+        </div>
+        <div class="table-responsive"><table class="table admin-table"><thead><tr>
+          <th scope="col">Fecha</th><th scope="col">Negocio</th><th scope="col" class="num">Importe</th><th scope="col">Estado</th><th scope="col">Id externo</th>
+        </tr></thead><tbody id="pay-rows"></tbody></table></div>
+      </section>
+
+      <section role="tabpanel" id="panel-planes" aria-labelledby="tab-planes" hidden>
+        <p class="notice notice-warn">Los cambios se aplican a contrataciones nuevas y al plan Gratis. Cada suscripción paga conserva el precio y los límites que contrató.</p>
+        <div id="plan-forms"></div>
+        <details class="panel-block mt-3">
+          <summary class="fw-semibold">Crear un plan nuevo</summary>
+          <form class="plan-form mt-3" id="new-plan" data-new novalidate></form>
+        </details>
+      </section>
+
+      <section role="tabpanel" id="panel-integracion" aria-labelledby="tab-integracion" hidden>
+        <section class="panel-block">
+          <h2>Mercado Pago</h2>
+          <dl class="stats stats-text" id="health-stats"></dl>
+          <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+            <button class="btn btn-primary" type="button" id="reconcile">Conciliar ahora</button>
+            <span class="form-text" id="reconcile-result"></span>
+          </div>
+        </section>
+        <section class="panel-block">
+          <h2>Diferencias de conciliación</h2>
+          <p>Cambios que la conciliación detectó y corrigió porque una notificación no llegó o llegó tarde.</p>
+          <ul id="corrections"></ul>
+          <h2 class="mt-4">Notificaciones con error</h2>
+          <ul id="failures"></ul>
+        </section>
+      </section>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+<script type="module" src="/shared/js/admin.js"></script>
+</body>
+</html>

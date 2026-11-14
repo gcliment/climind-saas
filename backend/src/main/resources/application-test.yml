@@ -1,0 +1,35 @@
+spring:
+  web:
+    resources:
+      static-locations: file:../frontend/cotiza/,file:../frontend/
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+app:
+  env: test
+  public-url: http://localhost:8080
+  storage:
+    dir: target/test-storage
+  # Simulador de pagos (solo dev y test): permite probar planes sin credenciales de Mercado Pago.
+  payments:
+    provider: ${PAYMENT_PROVIDER:fake}
+  mail:
+    provider: log
+    async: false
+  admin-bootstrap:
+    email: ""
+    password: ""
+
+logging:
+  level:
+    com.climind.saas: INFO

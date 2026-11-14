@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${'Recibiste una consulta nueva'}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;"><strong th:text="${customerName}">Nombre</strong> pidió que lo contactes por esta cotización:</p>
+  <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 18px;border-collapse:collapse;font-size:14px;">
+    <tr><td style="padding:6px 0;color:#7A879C;width:38%;">Código</td><td style="padding:6px 0;color:#0D141F;font-weight:600;" th:text="${code}">COT-ABC123</td></tr>
+    <tr><td style="padding:6px 0;color:#7A879C;">Cotizador</td><td style="padding:6px 0;color:#0D141F;" th:text="${calculatorName}">Cotizador</td></tr>
+    <tr><td style="padding:6px 0;color:#7A879C;">Total estimado</td><td style="padding:6px 0;color:#0D141F;font-weight:600;" th:text="${total}">$ 0</td></tr>
+    <tr><td style="padding:6px 0;color:#7A879C;">WhatsApp</td><td style="padding:6px 0;color:#0D141F;" th:text="${customerWhatsapp}">+54</td></tr>
+    <tr th:if="${customerEmail}"><td style="padding:6px 0;color:#7A879C;">Email</td><td style="padding:6px 0;color:#0D141F;" th:text="${customerEmail}">email</td></tr>
+  </table>
+  <p th:if="${comments}" style="margin:0 0 18px;padding:12px 14px;background:#F6F8FC;border-radius:8px;color:#0D141F;" th:text="${comments}">Comentarios</p>
+  <p style="margin:0 0 20px;">Respondé rápido: las consultas que se atienden en el día tienen más chances de concretarse.</p>
+  <p style="margin:0;">
+    <a th:href="${leadLink}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Ver la consulta</a>
+  </p>
+  <p style="margin:18px 0 0;font-size:13px;color:#7A879C;">Podés desactivar estos avisos desde Mi negocio, en Notificaciones.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confirmar email — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/auth.css">
+</head>
+<body class="auth-page" data-page="verificar">
+<header class="auth-top">
+  <div class="container">
+    <a class="brand" href="/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+  </div>
+</header>
+<main class="auth-main">
+  <div class="auth-card" aria-live="polite">
+    <section class="result-state" id="verify-pending">
+      <div class="mark mark-wait" aria-hidden="true">…</div>
+      <h1>Confirmando tu email</h1>
+      <p>Esto toma un segundo.</p>
+    </section>
+    <section class="result-state" id="verify-ok" hidden tabindex="-1">
+      <div class="mark mark-ok" aria-hidden="true">✓</div>
+      <h1>Email confirmado</h1>
+      <p>Tu cuenta está activa. Ingresá para completar los datos de tu negocio.</p>
+      <a class="btn btn-primary" href="/ingresar" id="verify-login">Ingresar</a>
+    </section>
+    <section class="result-state" id="verify-error" hidden tabindex="-1">
+      <div class="mark mark-error" aria-hidden="true">!</div>
+      <h1>No pudimos confirmar tu email</h1>
+      <p id="verify-error-message">El enlace no es válido.</p>
+      <form id="verify-resend-form" class="d-grid gap-3" novalidate>
+        <div class="notice" id="verify-resend-notice" hidden></div>
+        <div>
+          <label class="form-label" for="email">Tu email</label>
+          <input class="form-control" id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Enviarme un enlace nuevo</button>
+      </form>
+    </section>
+  </div>
+</main>
+<script type="module" src="/shared/js/auth.js"></script>
+</body>
+</html>

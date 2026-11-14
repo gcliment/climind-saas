@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <title th:text="${'Cotización ' + code}">Cotización</title>
+  <style>
+    @page { size: A4; margin: 18mm 17mm 20mm 17mm;
+      @bottom-center { content: element(footer); } }
+    * { box-sizing: border-box; }
+    body { font-family: 'Noto Sans', sans-serif; font-size: 10pt; color: #1B2533; line-height: 1.45; margin: 0; }
+    .head { width: 100%; border-collapse: collapse; margin-bottom: 8mm; }
+    .head td { vertical-align: top; padding: 0; }
+    .logo { width: 16mm; padding-right: 4mm; }
+    .logo img { max-width: 16mm; max-height: 16mm; }
+    .biz-name { font-size: 15pt; font-weight: 700; color: #0D141F; margin: 0; line-height: 1.2; }
+    .biz-contact { font-size: 8.5pt; color: #5B6880; margin: 1.5mm 0 0; }
+    .doc { text-align: right; width: 58mm; }
+    .doc-title { font-size: 8pt; letter-spacing: 1.2pt; text-transform: uppercase; color: #5B6880; margin: 0; }
+    .doc-code { font-size: 14pt; font-weight: 700; color: #0D141F; margin: 1mm 0 0; }
+    .doc-date { font-size: 9pt; color: #5B6880; margin: 1mm 0 0; }
+    .meta { width: 100%; border-collapse: collapse; margin-bottom: 7mm; border-top: 0.6pt solid #D5DCE8; border-bottom: 0.6pt solid #D5DCE8; }
+    .meta td { padding: 3mm 0; vertical-align: top; }
+    .meta .k { font-size: 8pt; text-transform: uppercase; letter-spacing: 0.8pt; color: #5B6880; display: block; }
+    .meta .v { font-size: 11pt; font-weight: 700; color: #0D141F; }
+    h2 { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1pt; color: #5B6880; margin: 0 0 2mm; font-weight: 700; }
+    .answers { width: 100%; border-collapse: collapse; margin-bottom: 7mm; }
+    .answers td { padding: 1.4mm 0; border-bottom: 0.4pt solid #E6EBF3; vertical-align: top; }
+    .answers td.k { color: #5B6880; width: 45%; padding-right: 4mm; }
+    .lines { width: 100%; border-collapse: collapse; }
+    .lines th { text-align: left; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.8pt; color: #5B6880; font-weight: 700; padding: 0 0 2mm; border-bottom: 0.8pt solid #1B2533; }
+    .lines td { padding: 2mm 0; border-bottom: 0.4pt solid #E6EBF3; vertical-align: top; }
+    .lines .num { text-align: right; white-space: nowrap; }
+    .lines .detail { color: #5B6880; font-size: 9pt; padding-left: 3mm; padding-right: 3mm; }
+    .lines tr.discount td { color: #1F7A4D; }
+    .sum { width: 100%; border-collapse: collapse; margin-top: 2mm; }
+    .sum td { padding: 1.2mm 0; }
+    .sum .k { text-align: right; color: #5B6880; padding-right: 6mm; }
+    .sum .v { text-align: right; width: 40mm; white-space: nowrap; }
+    .total { width: 100%; border-collapse: collapse; margin-top: 3mm; background: #F2F5FA; }
+    .total td { padding: 4mm; }
+    .total .k { font-weight: 700; font-size: 11pt; }
+    .total .v { text-align: right; font-weight: 700; font-size: 17pt; color: #0D141F; white-space: nowrap; }
+    .notes { margin-top: 6mm; font-size: 9pt; color: #3A465A; }
+    .notes p { margin: 0 0 1.5mm; }
+    .footer { position: running(footer); font-size: 7.5pt; color: #7A879C; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="footer">
+    Este documento es una estimación de precio. No es una factura ni un comprobante fiscal.<th:block th:if="${branding}"> Creado con Climind Cotiza.</th:block>
+  </div>
+
+  <table class="head">
+    <tr>
+      <td class="logo" th:if="${logo}"><img th:src="${logo}" src="" alt=""/></td>
+      <td>
+        <p class="biz-name" th:text="${businessName}">Negocio</p>
+        <p class="biz-contact" th:if="${businessContact != ''}" th:text="${businessContact}">Contacto</p>
+      </td>
+      <td class="doc">
+        <p class="doc-title">Cotización estimada</p>
+        <p class="doc-code" th:text="${code}">COT-XXXXXX</p>
+        <p class="doc-date" th:text="${'Emitida el ' + date}">Fecha</p>
+      </td>
+    </tr>
+  </table>
+
+  <table class="meta">
+    <tr>
+      <td>
+        <span class="k">Servicio</span>
+        <span class="v" th:text="${calculatorName}">Servicio</span>
+      </td>
+      <td th:if="${customerName}">
+        <span class="k">Para</span>
+        <span class="v" th:text="${customerName}">Cliente</span>
+      </td>
+    </tr>
+  </table>
+
+  <th:block th:if="${!answers.isEmpty()}">
+    <h2>Lo que se eligió</h2>
+    <table class="answers">
+      <tr th:each="row : ${answers}">
+        <td class="k" th:text="${row.label}">Pregunta</td>
+        <td th:text="${row.value}">Respuesta</td>
+      </tr>
+    </table>
+  </th:block>
+
+  <h2>Detalle del precio</h2>
+  <table class="lines">
+    <tr><th>Concepto</th><th></th><th class="num">Importe</th></tr>
+    <tr th:each="line : ${lines}" th:class="${line.discount} ? 'discount' : null">
+      <td th:text="${line.label}">Concepto</td>
+      <td class="detail" th:text="${line.detail}"></td>
+      <td class="num" th:text="${line.amount}">$ 0</td>
+    </tr>
+  </table>
+  <table class="sum" th:if="${!totals.isEmpty()}">
+    <tr th:each="row : ${totals}">
+      <td class="k" th:text="${row.label}">Subtotal</td>
+      <td class="v" th:text="${row.value}">$ 0</td>
+    </tr>
+  </table>
+  <table class="total">
+    <tr>
+      <td class="k">Total estimado</td>
+      <td class="v" th:text="${total}">$ 0</td>
+    </tr>
+  </table>
+
+  <div class="notes">
+    <p th:if="${taxNote}" th:text="${taxNote}">Impuestos</p>
+    <p th:if="${validity}" th:text="${validity}">Vigencia</p>
+    <p th:if="${disclaimer}" th:text="${disclaimer}">Aclaración</p>
+  </div>
+</body>
+</html>

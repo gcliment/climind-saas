@@ -1,0 +1,133 @@
+# Configuración común. Los valores sensibles y los que cambian por entorno se leen de variables
+# de entorno (ver docs/ENVIRONMENT.md). Perfiles: dev, test, prod.
+spring:
+  application:
+    name: climind-saas
+  profiles:
+    default: dev
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/climind_saas}
+    username: ${DB_USERNAME:climind}
+    password: ${DB_PASSWORD:climind-local}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate          # el esquema lo maneja exclusivamente Flyway
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+        timezone.default_storage: NORMALIZE_UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  session:
+    timeout: ${SESSION_TIMEOUT:7d}
+    jdbc:
+      initialize-schema: never    # tablas creadas por Flyway (V1)
+      cleanup-cron: "0 */15 * * * *"
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 3MB
+  mail:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${SMTP_AUTH:false}
+      mail.smtp.starttls.enable: ${SMTP_STARTTLS:false}
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 10000
+      mail.smtp.writetimeout: 10000
+  thymeleaf:
+    check-template-location: false
+  web:
+    resources:
+      static-locations: ${APP_FRONTEND_LOCATION:classpath:/static/cotiza/,classpath:/static/}
+      cache:
+        use-last-modified: true
+        cachecontrol:
+          no-cache: true          # los archivos no llevan hash: siempre revalidar (ETag/Last-Modified)
+
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  error:
+    include-message: never
+    include-stacktrace: never
+    whitelabel:
+      enabled: false
+  servlet:
+    session:
+      cookie:
+        # Solo "secure" se lee (SessionCookieConfig). Nombre, HttpOnly y SameSite=Lax están fijados en código.
+        secure: ${COOKIE_SECURE:true}
+  tomcat:
+    max-swallow-size: 3MB
+    max-http-form-post-size: 64KB
+
+management:
+  health:
+    # Una caída del SMTP no debe marcar la app como caída (EasyPanel reiniciaría el contenedor).
+    mail:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    enabled: ${API_DOCS_ENABLED:false}
+    path: /api/docs/openapi.json
+  swagger-ui:
+    enabled: ${API_DOCS_ENABLED:false}
+    path: /api/docs
+  paths-to-match: /api/v1/**
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN
+
+app:
+  env: ${APP_ENV:dev}
+  public-url: ${APP_PUBLIC_URL:http://localhost:8080}
+  portal-url: ${APP_PORTAL_URL:http://localhost:8080/saas/}
+  portal-host: ${APP_PORTAL_HOST:}
+  storage:
+    dir: ${STORAGE_DIR:./storage}
+  security:
+    client-ip-header: ${APP_CLIENT_IP_HEADER:}
+    max-json-body-bytes: 65536
+    login-max-failures: 5
+    login-lock-duration: 15m
+    verification-token-ttl: 24h
+    reset-token-ttl: 1h
+  rate-limit:
+    auth-per-minute-per-ip: ${RATE_LIMIT_AUTH_PER_MINUTE:20}
+    api-per-minute-per-ip: ${RATE_LIMIT_API_PER_MINUTE:300}
+    email-actions-per-hour: ${RATE_LIMIT_EMAIL_PER_HOUR:5}
+    public-quotes-per-minute-per-ip: ${RATE_LIMIT_PUBLIC_QUOTES_PER_MINUTE:30}
+    public-leads-per-hour-per-ip: ${RATE_LIMIT_PUBLIC_LEADS_PER_HOUR:10}
+  mail:
+    provider: ${MAIL_PROVIDER:log}
+    from: ${MAIL_FROM:Climind Cotiza <no-reply@climind-ia.com>}
+    async: true
+  payments:
+    provider: ${PAYMENT_PROVIDER:mercadopago}
+    grace-days: 7
+    mercadopago:
+      access-token: ${MERCADOPAGO_ACCESS_TOKEN:}
+      webhook-secret: ${MERCADOPAGO_WEBHOOK_SECRET:}
+  admin-bootstrap:
+    email: ${ADMIN_BOOTSTRAP_EMAIL:}
+    password: ${ADMIN_BOOTSTRAP_PASSWORD:}

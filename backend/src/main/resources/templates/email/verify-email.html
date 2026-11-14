@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${'Confirmá tu email'}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;">Hola <strong th:text="${firstName}">Nombre</strong>:</p>
+  <p style="margin:0 0 20px;">Gracias por registrarte en Climind Cotiza. Para activar tu cuenta, confirmá que este email es tuyo:</p>
+  <p style="margin:0 0 22px;">
+    <a th:href="${link}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Confirmar mi email</a>
+  </p>
+  <p style="margin:0 0 8px;font-size:13px;">El enlace vence en 24 horas. Si el botón no funciona, copiá esta dirección en tu navegador:</p>
+  <p style="margin:0;font-size:12px;word-break:break-all;color:#0063C7;" th:text="${link}">link</p>
+</div>
+</body>
+</html>

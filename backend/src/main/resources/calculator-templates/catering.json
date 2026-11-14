@@ -1,0 +1,119 @@
+{
+  "code": "catering",
+  "name": "Catering y eventos",
+  "industry": "CATERING_EVENTOS",
+  "description": "Eventos y catering: precio por invitado según el menú, bebidas, mozos, duración y adicionales. Los precios son ejemplos: reemplazalos por los tuyos.",
+  "objectives": ["SERVICIOS", "CANTIDAD", "CARACTERISTICAS"],
+  "order": 2,
+  "calculatorName": "Presupuesto para tu evento",
+  "calculatorDescription": "Contanos cómo es tu evento y te mostramos un precio estimado al instante.",
+  "config": {
+    "schemaVersion": 1,
+    "currency": "ARS",
+    "questions": [
+      {
+        "key": "invitados",
+        "type": "QUANTITY",
+        "label": "¿Cuántas personas asistirán?",
+        "required": true,
+        "min": 10,
+        "max": 1000,
+        "unit": "invitados"
+      },
+      {
+        "key": "menu",
+        "type": "SINGLE_CHOICE",
+        "label": "¿Qué tipo de menú preferís?",
+        "required": true,
+        "options": [
+          { "key": "finger", "label": "Finger food" },
+          { "key": "clasico", "label": "Menú clásico" },
+          { "key": "premium", "label": "Menú premium" }
+        ]
+      },
+      {
+        "key": "bebidas",
+        "type": "YES_NO",
+        "label": "¿Incluimos bebidas sin alcohol?",
+        "required": true
+      },
+      {
+        "key": "mozos",
+        "type": "YES_NO",
+        "label": "¿Necesitás servicio de mozos?",
+        "required": true
+      },
+      {
+        "key": "duracion",
+        "type": "QUANTITY",
+        "label": "¿Cuántas horas dura el evento?",
+        "required": true,
+        "min": 2,
+        "max": 12,
+        "unit": "horas"
+      },
+      {
+        "key": "extras",
+        "type": "MULTI_CHOICE",
+        "label": "Servicios adicionales",
+        "options": [
+          { "key": "torta", "label": "Torta" },
+          { "key": "barra", "label": "Barra de tragos" },
+          { "key": "vajilla", "label": "Vajilla premium" }
+        ]
+      },
+      {
+        "key": "fecha",
+        "type": "DATE",
+        "label": "¿Para qué fecha es el evento?"
+      }
+    ],
+    "pricing": {
+      "rules": [
+        {
+          "type": "OPTION_PER_UNIT",
+          "id": "menu_por_invitado",
+          "label": "Menú por invitado",
+          "question": "menu",
+          "quantityQuestion": "invitados",
+          "prices": { "finger": "9000", "clasico": "12000", "premium": "18000" }
+        },
+        {
+          "type": "PER_UNIT",
+          "id": "bebidas",
+          "label": "Bebidas sin alcohol",
+          "question": "invitados",
+          "unitPrice": "4000",
+          "when": [{ "question": "bebidas", "op": "IS_TRUE" }]
+        },
+        {
+          "type": "FIXED",
+          "id": "mozos",
+          "label": "Servicio de mozos",
+          "amount": "60000",
+          "when": [{ "question": "mozos", "op": "IS_TRUE" }]
+        },
+        {
+          "type": "OPTION_PRICE",
+          "id": "adicionales",
+          "label": "Adicionales",
+          "question": "extras",
+          "prices": { "torta": "45000", "barra": "120000", "vajilla": "50000" }
+        },
+        {
+          "type": "SURCHARGE_PERCENT",
+          "id": "evento_largo",
+          "label": "Evento de más de 6 horas",
+          "percent": "10",
+          "when": [{ "question": "duracion", "op": "GT", "value": "6" }]
+        }
+      ],
+      "minimumTotal": "250000",
+      "tax": { "mode": "FINAL" },
+      "rounding": { "scale": 0 }
+    },
+    "commercial": {
+      "validityDays": 10
+    }
+  }
+}

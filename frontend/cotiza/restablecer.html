@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nueva contraseña — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/auth.css">
+</head>
+<body class="auth-page" data-page="restablecer">
+<header class="auth-top">
+  <div class="container">
+    <a class="brand" href="/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+  </div>
+</header>
+<main class="auth-main">
+  <div class="auth-card">
+    <section id="reset-step">
+      <h1>Elegí una contraseña nueva</h1>
+      <p class="subtitle">Al guardarla, se cierran las sesiones abiertas en otros dispositivos.</p>
+      <form id="reset-form" novalidate>
+        <div class="notice" id="reset-notice" hidden></div>
+        <div>
+          <label class="form-label" for="password">Contraseña nueva</label>
+          <div class="password-field">
+            <input class="form-control" id="password" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="72" required aria-describedby="password-help">
+            <button type="button" class="toggle-password" aria-pressed="false" aria-controls="password">Mostrar</button>
+          </div>
+          <div class="form-text" id="password-help">Al menos 10 caracteres.</div>
+        </div>
+        <div>
+          <label class="form-label" for="passwordConfirmation">Repetí la contraseña</label>
+          <input class="form-control" id="passwordConfirmation" name="passwordConfirmation" type="password" autocomplete="new-password" maxlength="72" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Guardar contraseña</button>
+      </form>
+    </section>
+    <section class="result-state" id="reset-done" hidden tabindex="-1">
+      <div class="mark mark-ok" aria-hidden="true">✓</div>
+      <h1>Contraseña actualizada</h1>
+      <p>Ya podés ingresar con tu contraseña nueva.</p>
+      <a class="btn btn-primary" href="/ingresar">Ingresar</a>
+    </section>
+  </div>
+</main>
+<script type="module" src="/shared/js/auth.js"></script>
+</body>
+</html>

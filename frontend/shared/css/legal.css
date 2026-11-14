@@ -1,0 +1,11 @@
+/* Páginas legales y de error. */
+.legal { padding: clamp(2rem, 6vw, 4rem) 0 4rem; }
+.legal article { max-width: 720px; }
+.legal h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); margin-bottom: .5rem; }
+.legal h2 { font-size: 1.3rem; margin: 2rem 0 .6rem; }
+.legal p, .legal li { color: var(--text-mid); }
+.legal .updated { color: var(--text-soft); font-size: .92rem; }
+
+.not-found { min-height: 70vh; display: grid; align-content: center; padding: 3rem 0; }
+.not-found h1 { font-size: clamp(2rem, 6vw, 3rem); margin-bottom: .75rem; }
+.not-found p { color: var(--text-mid); margin-bottom: 1.5rem; }

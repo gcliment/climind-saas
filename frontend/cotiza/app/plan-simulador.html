@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador de pagos — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+  <link rel="stylesheet" href="/shared/css/leads.css">
+  <link rel="stylesheet" href="/shared/css/billing.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Simulador de Mercado Pago</h1>
+          <p>Solo existe en desarrollo y pruebas: reemplaza al checkout real para probar planes sin cobrar nada.</p>
+        </div>
+      </div>
+      <div class="notice mb-3" id="sim-notice" hidden></div>
+      <section class="panel-block" id="sim-block" hidden aria-labelledby="sim-title">
+        <h2 id="sim-title">¿Qué pasa con el pago?</h2>
+        <p id="sim-text"></p>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-primary" type="button" data-charge="approved">Aprobar el pago</button>
+          <button class="btn btn-quiet" type="button" data-charge="in_process">Dejarlo en proceso</button>
+          <button class="btn btn-quiet" type="button" data-charge="rejected">Rechazar el pago</button>
+          <button class="btn btn-quiet" type="button" data-status="cancelled">Cancelar desde Mercado Pago</button>
+        </div>
+        <p class="form-text mt-3">Cada acción envía una notificación firmada al webhook, igual que Mercado Pago. Después volvés a tu plan.</p>
+      </section>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+<script type="module" src="/shared/js/plan-simulador.js"></script>
+</body>
+</html>

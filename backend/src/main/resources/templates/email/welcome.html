@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${'¡Tu cuenta está lista!'}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;">Hola <strong th:text="${firstName}">Nombre</strong>:</p>
+  <p style="margin:0 0 14px;">Confirmaste tu email y tu espacio en Climind Cotiza ya está activo.</p>
+  <p style="margin:0 0 20px;">El próximo paso es completar los datos de tu negocio: así tus clientes van a ver tu nombre, tu WhatsApp y tu logo en cada cotización.</p>
+  <p style="margin:0;">
+    <a th:href="${appLink}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Ir a mi panel</a>
+  </p>
+</div>
+</body>
+</html>

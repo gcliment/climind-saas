@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mi negocio — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Mi negocio</h1>
+          <p>Estos datos aparecen en tus cotizadores y en las cotizaciones que reciben tus clientes.</p>
+        </div>
+      </div>
+
+      <form id="profile-form" class="panel-block" novalidate>
+        <div class="notice mb-3" id="profile-notice" hidden></div>
+        <p class="form-text mt-0 mb-3">Tus clientes ven el nombre, la descripción, el WhatsApp, el teléfono, el email de contacto y el sitio web en tus cotizadores. Completá solo lo que quieras mostrar.</p>
+        <div class="form-grid">
+          <div class="span-2">
+            <label class="form-label" for="businessName">Nombre comercial</label>
+            <input class="form-control" id="businessName" name="businessName" maxlength="120" required autocomplete="organization">
+          </div>
+          <div>
+            <label class="form-label" for="industry">Rubro</label>
+            <select class="form-select" id="industry" name="industry">
+              <option value="">Elegí tu rubro</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" for="whatsapp">WhatsApp</label>
+            <input class="form-control" id="whatsapp" name="whatsapp" type="tel" inputmode="tel" maxlength="25" autocomplete="tel" aria-describedby="whatsapp-help">
+            <div class="form-text" id="whatsapp-help">Con código de país y área, por ejemplo +54 9 11 2345-6789. Tus clientes te van a escribir a este número.</div>
+          </div>
+          <div>
+            <label class="form-label" for="phone">Teléfono <span class="text-body-secondary fw-normal">(opcional)</span></label>
+            <input class="form-control" id="phone" name="phone" type="tel" inputmode="tel" maxlength="30">
+          </div>
+          <div>
+            <label class="form-label" for="contactEmail">Email de contacto</label>
+            <input class="form-control" id="contactEmail" name="contactEmail" type="email" inputmode="email" maxlength="254" autocomplete="email" aria-describedby="contactEmail-help">
+            <div class="form-text" id="contactEmail-help">Se muestra a tus clientes y ahí te avisamos de cada consulta nueva.</div>
+          </div>
+          <div class="span-2">
+            <label class="form-label" for="website">Sitio web o red social <span class="text-body-secondary fw-normal">(opcional)</span></label>
+            <input class="form-control" id="website" name="website" inputmode="url" maxlength="200" placeholder="minegocio.com.ar">
+          </div>
+          <div class="span-2">
+            <label class="form-label" for="description">Descripción breve <span class="text-body-secondary fw-normal">(opcional)</span></label>
+            <textarea class="form-control" id="description" name="description" rows="3" maxlength="500" aria-describedby="description-help"></textarea>
+            <div class="form-text" id="description-help">Qué hacés y en qué zona trabajás. Hasta 500 caracteres.</div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Guardar cambios</button>
+          <span class="save-status" id="save-status" role="status" hidden>Cambios guardados</span>
+        </div>
+      </form>
+
+      <section class="panel-block" aria-labelledby="logo-title">
+        <h2 id="logo-title">Logo</h2>
+        <p>Aparece arriba de tus cotizadores. PNG, JPG o WebP, hasta 2 MB.</p>
+        <div class="notice mb-3" id="logo-notice" hidden></div>
+        <div class="logo-field">
+          <div class="logo-preview" id="logo-preview">Sin logo</div>
+          <div class="d-grid gap-2">
+            <label class="form-label mb-0" for="logo-file">Elegir una imagen</label>
+            <input class="form-control" type="file" id="logo-file" accept="image/png,image/jpeg,image/webp">
+            <button class="btn btn-quiet" type="button" id="logo-remove" hidden>Quitar logo</button>
+          </div>
+        </div>
+      </section>
+
+      <form class="panel-block" id="settings-form" aria-labelledby="settings-title" novalidate>
+        <h2 id="settings-title">Notificaciones y datos de tus clientes</h2>
+        <div class="notice mb-3" id="settings-notice" hidden></div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="notifyNewLeadEmail" name="notifyNewLeadEmail">
+          <label class="form-check-label" for="notifyNewLeadEmail">Avisarme por email cuando llegue una consulta nueva</label>
+        </div>
+        <div class="settings-retention">
+          <label class="form-label" for="leadRetentionMonths">Conservar los datos de contacto de las consultas durante</label>
+          <select class="form-select w-auto" id="leadRetentionMonths" name="leadRetentionMonths" aria-describedby="retention-help">
+            <option value="6">6 meses</option>
+            <option value="12">12 meses</option>
+            <option value="24">24 meses</option>
+            <option value="36">36 meses</option>
+            <option value="60">60 meses</option>
+          </select>
+          <div class="form-text" id="retention-help">Pasado ese plazo se borran solos el nombre, el teléfono, el email y los comentarios. El código, el importe y el estado quedan para tus estadísticas.</div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Guardar preferencias</button>
+          <span class="save-status" id="settings-status" role="status" hidden>Preferencias guardadas</span>
+        </div>
+      </form>
+
+      <section class="panel-block" aria-labelledby="link-title">
+        <h2 id="link-title">Tu dirección pública</h2>
+        <p>Tus cotizadores van a publicarse bajo esta dirección:</p>
+        <p class="public-link" id="public-link"></p>
+      </section>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+<script src="/site-config.js"></script>
+<script type="module" src="/shared/js/negocio.js"></script>
+</body>
+</html>

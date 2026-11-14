@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consultas — Climind Cotiza</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
+  <link rel="stylesheet" href="/shared/css/climind.css">
+  <link rel="stylesheet" href="/shared/css/panel.css">
+  <link rel="stylesheet" href="/shared/css/builder.css">
+  <link rel="stylesheet" href="/shared/css/leads.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div class="panel" data-state="loading">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <a class="brand brand-on-dark" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34"><span>Climind Cotiza</span></a>
+    <nav class="side-nav" id="side-nav" aria-label="Secciones"></nav>
+    <div class="side-foot">
+      <div class="who" data-user-name></div>
+      <div class="biz" data-business-name></div>
+      <button type="button" data-logout>Cerrar sesión</button>
+    </div>
+  </aside>
+  <div>
+    <header class="panel-topbar">
+      <a class="brand" href="/app/"><img src="/shared/img/cotiza-mark.svg" alt="" width="30" height="30"><span data-business-name>Climind Cotiza</span></a>
+      <button type="button" data-logout>Salir</button>
+    </header>
+    <main class="panel-main" id="contenido">
+      <div class="page-head">
+        <div>
+          <h1>Consultas</h1>
+          <p>Clientes que cotizaron y te dejaron sus datos para que los contactes.</p>
+        </div>
+        <a class="btn btn-quiet" id="export-link" href="/api/v1/leads/export.csv" download>Exportar CSV</a>
+      </div>
+
+      <div class="notice mb-3" id="list-notice" hidden></div>
+
+      <div class="status-filter" id="status-filter" role="group" aria-label="Filtrar por estado"></div>
+
+      <form class="lead-filters" id="filters" role="search">
+        <div class="lead-search">
+          <label class="visually-hidden" for="q">Buscar</label>
+          <input class="form-control" id="q" name="q" type="search" placeholder="Buscar por nombre, código, teléfono o email" maxlength="100">
+        </div>
+        <div>
+          <label class="visually-hidden" for="calculator">Cotizador</label>
+          <select class="form-select" id="calculator" name="calculatorId"><option value="">Todos los cotizadores</option></select>
+        </div>
+        <div>
+          <label class="visually-hidden" for="sort">Ordenar</label>
+          <select class="form-select" id="sort" name="sort">
+            <option value="recientes">Más recientes</option>
+            <option value="antiguas">Más antiguas</option>
+            <option value="mayor_importe">Mayor importe</option>
+            <option value="menor_importe">Menor importe</option>
+          </select>
+        </div>
+      </form>
+
+      <div class="lead-list" id="lead-list" aria-live="polite"></div>
+
+      <div class="empty-state" id="empty-all" hidden>
+        <h2>Todavía no recibiste consultas</h2>
+        <p>Cuando un cliente cotice con tu enlace y te deje sus datos, la consulta aparece acá y te avisamos por email.</p>
+        <a class="btn btn-primary" href="/app/cotizadores">Compartir mi cotizador</a>
+      </div>
+      <p class="empty-filter" id="empty-filter" hidden>No hay consultas con estos filtros.</p>
+
+      <nav class="pager" id="pager" aria-label="Páginas" hidden>
+        <button class="btn btn-quiet" type="button" id="prev">Anteriores</button>
+        <span id="page-info"></span>
+        <button class="btn btn-quiet" type="button" id="next">Siguientes</button>
+      </nav>
+    </main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+
+<dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-title">
+  <div class="lead-dialog-inner">
+    <div class="lead-dialog-head">
+      <div>
+        <p class="lead-code" id="lead-code"></p>
+        <h2 id="lead-title">Consulta</h2>
+        <p class="lead-when" id="lead-when"></p>
+      </div>
+      <button class="btn btn-quiet" type="button" id="lead-close">Cerrar</button>
+    </div>
+    <div class="notice" id="lead-notice" hidden></div>
+    <div id="lead-body"></div>
+  </div>
+</dialog>
+
+<dialog class="app-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+  <form method="dialog">
+    <h2 id="confirm-title">Eliminar datos personales</h2>
+    <p id="confirm-text">Se borran el nombre, el WhatsApp, el email, los comentarios, tus notas y las respuestas de texto libre de esta consulta. Quedan el código, el importe y el estado para tus estadísticas. No se puede deshacer.</p>
+    <div class="dialog-actions">
+      <button class="btn btn-quiet" value="cancel">Cancelar</button>
+      <button class="btn btn-danger" value="ok">Eliminar datos</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="/shared/js/consultas.js"></script>
+</body>
+</html>

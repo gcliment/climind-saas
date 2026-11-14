@@ -1,0 +1,126 @@
+/* Página pública del cotizador (/c/...) y cotización emitida (/cotizacion/...).
+   Pensada primero para el celular: una columna, botones grandes y el ticket como pieza central.
+   El color de acento (--accent) es el que eligió el negocio (contraste AA con blanco validado en el servidor). */
+
+.pub {
+  --accent: var(--blue-btn);
+  background: var(--paper);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.pub[data-state="loading"] main { visibility: hidden; }
+.pub-wrap { width: 100%; max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+.pub main { flex: 1; padding-bottom: 2.5rem; }
+
+/* ---------------------------------------------------------------- encabezado */
+.pub-top { background: var(--white); border-bottom: 1px solid var(--line); }
+.pub-brand { display: flex; align-items: center; gap: .75rem; min-height: 64px; padding-top: .6rem; padding-bottom: .6rem; }
+.pub-brand img { width: 44px; height: 44px; object-fit: contain; border-radius: 10px; background: var(--white); border: 1px solid var(--line-soft); }
+.pub-biz { font-family: var(--f-display); font-weight: 700; font-size: 1.1rem; color: var(--ink); line-height: 1.2; overflow-wrap: anywhere; }
+
+.pub-intro { padding: 1.6rem 0 1.2rem; max-width: 640px; }
+.pub-intro h1, .pub-unavailable h1 {
+  font-family: var(--f-display);
+  font-size: clamp(1.6rem, 5.5vw, 2.3rem);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+  overflow-wrap: anywhere;
+}
+.pub-intro p { color: var(--text-mid); margin: 0; font-size: 1.02rem; }
+.pub-unavailable { padding: 2.2rem 0 1rem; max-width: 560px; }
+.pub-unavailable p { color: var(--text-mid); }
+
+/* ---------------------------------------------------------------- layout */
+.pub-grid { display: grid; gap: 1.5rem; align-items: start; }
+.pub-grid > * { min-width: 0; }
+@media (min-width: 900px) {
+  .pub-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 2rem; }
+  .pub-result { position: sticky; top: 1.25rem; }
+}
+
+.pub-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: clamp(1.1rem, 4vw, 1.6rem);
+}
+.pub-form .quote-form { margin-bottom: 1.4rem; }
+.pub-hint { margin: .75rem 0 0; font-size: .85rem; color: var(--text-soft); text-align: center; }
+.pub-form .notice { margin-bottom: 1rem; }
+
+/* Botón con el color del negocio. */
+.btn-accent {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--accent);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--accent);
+  --bs-btn-active-border-color: var(--accent);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--accent);
+  --bs-btn-disabled-border-color: var(--accent);
+  font-weight: 600;
+  min-height: 48px;
+}
+.btn-accent:hover { filter: brightness(.93); }
+
+/* ---------------------------------------------------------------- resultado */
+.pub-result { outline: none; display: grid; gap: 1rem; }
+.pub-result .ticket { margin-bottom: 12px; transition: opacity .2s var(--ease); }
+.ticket.is-stale { opacity: .45; }
+.ticket-stamp { margin: .9rem 0 0; padding-top: .7rem; border-top: 1px dashed var(--line); font-size: .82rem; color: var(--text-soft); }
+.ticket-stamp strong { color: var(--ink); font-weight: 650; letter-spacing: .02em; }
+.pub-stale { background: var(--warn-wash); color: var(--warn-deep); border-radius: var(--r-md); padding: .75rem 1rem; font-size: .92rem; }
+.pub-stale p { margin: 0; }
+
+.pub-actions { display: grid; gap: .6rem; }
+.pub-actions .btn { width: 100%; min-height: 48px; }
+.pub-permalink { justify-self: center; font-size: .88rem; text-align: center; }
+
+.pub-lead h2, .pub-done h2 { font-family: var(--f-display); font-size: 1.25rem; font-weight: 700; color: var(--ink); margin: 0 0 .35rem; }
+.pub-lead-text { color: var(--text-mid); margin: 0 0 1rem; font-size: .95rem; }
+.pub-contact-fields { border: 0; padding: 0; margin: 0 0 1.1rem; display: grid; gap: .9rem; min-width: 0; }
+.pub-contact-fields .form-check-label { font-size: .9rem; color: var(--text-mid); }
+.pub-contact-fields .form-control { min-height: 46px; }
+#contact-slot-before .pub-contact-fields { padding-top: 1.1rem; border-top: 1px solid var(--line-soft); }
+/* Campo trampa para bots: fuera de la vista y del orden de tabulación. */
+.pub-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+.pub-done { text-align: center; outline: none; }
+.pub-done p { color: var(--text-mid); margin: 0; }
+.pub-done-mark {
+  width: 48px; height: 48px; margin: 0 auto .75rem;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--ok-wash); color: var(--ok-deep);
+  font-size: 1.4rem; font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- contacto y pie */
+.pub-contact { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); max-width: 640px; }
+.pub-contact h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-soft); font-weight: 700; margin: 0 0 .75rem; }
+.pub-contact ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .45rem; }
+.pub-contact li { display: flex; gap: .75rem; flex-wrap: wrap; overflow-wrap: anywhere; }
+.pub-contact-label { color: var(--text-soft); min-width: 5.5rem; }
+.pub-contact-about { color: var(--text-mid); margin-bottom: .4rem; }
+
+.pub-foot { text-align: center; padding: 1.4rem 16px 1.8rem; font-size: .82rem; }
+.pub-foot a { color: var(--text-soft); text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; }
+.pub-foot a:hover { color: var(--ink); }
+
+/* ---------------------------------------------------------------- cotización emitida */
+.pub-quote { max-width: 560px; margin: 0 auto; padding-top: 1.6rem; display: grid; gap: 1rem; }
+.pub-quote-head h1 { font-family: var(--f-display); font-size: clamp(1.4rem, 5vw, 1.9rem); font-weight: 750; margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+.pub-quote-head p { color: var(--text-mid); margin: .3rem 0 0; }
+.pub-expired { background: var(--warn-wash); color: var(--warn-deep); border-radius: var(--r-md); padding: .75rem 1rem; margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pub-result .ticket { transition: none; }
+}

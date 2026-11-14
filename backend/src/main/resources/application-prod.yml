@@ -1,0 +1,29 @@
+# Producción (EasyPanel). Detrás del proxy inverso de EasyPanel (Traefik) y, opcionalmente, Cloudflare.
+server:
+  forward-headers-strategy: native   # respeta X-Forwarded-Proto/Host del proxy (cookies Secure, redirects)
+  servlet:
+    session:
+      cookie:
+        secure: ${COOKIE_SECURE:true}
+
+spring:
+  web:
+    resources:
+      static-locations: ${APP_FRONTEND_LOCATION:classpath:/static/cotiza/,classpath:/static/}
+
+springdoc:
+  api-docs:
+    enabled: ${API_DOCS_ENABLED:false}
+  swagger-ui:
+    enabled: ${API_DOCS_ENABLED:false}
+
+app:
+  env: prod
+  storage:
+    dir: ${STORAGE_DIR:/app/storage}
+  mail:
+    provider: ${MAIL_PROVIDER:smtp}
+
+logging:
+  level:
+    com.climind.saas: INFO

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${subject}">Asunto</title></head>
+<body th:replace="~{email/layout :: layout(${title}, ~{::content})}">
+<div th:fragment="content">
+  <p style="margin:0 0 14px;" th:each="line : ${lines}" th:text="${line}">Texto</p>
+  <p style="margin:6px 0 0;">
+    <a th:href="${link}" href="#"
+       style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;" th:text="${linkText}">Ver mi plan</a>
+  </p>
+</div>
+</body>
+</html>

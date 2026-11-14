@@ -1,0 +1,107 @@
+{
+  "code": "instalaciones",
+  "name": "Servicios de instalación",
+  "industry": "INSTALACIONES",
+  "description": "Instalación de equipos: precio por unidad según el tipo, materiales, descuento por cantidad, urgencia y adicionales. Los precios son ejemplos: reemplazalos por los tuyos.",
+  "objectives": ["SERVICIOS", "CANTIDAD", "PRODUCTOS"],
+  "order": 3,
+  "calculatorName": "Presupuesto de instalación",
+  "calculatorDescription": "Elegí el equipo y la cantidad, y conocé el precio estimado de la instalación.",
+  "config": {
+    "schemaVersion": 1,
+    "currency": "ARS",
+    "questions": [
+      {
+        "key": "tipo",
+        "type": "SINGLE_CHOICE",
+        "label": "¿Qué necesitás instalar?",
+        "required": true,
+        "options": [
+          { "key": "aire_split", "label": "Aire acondicionado split" },
+          { "key": "termotanque", "label": "Termotanque" },
+          { "key": "calefactor", "label": "Calefactor" },
+          { "key": "ventilador", "label": "Ventilador de techo" }
+        ]
+      },
+      {
+        "key": "cantidad",
+        "type": "QUANTITY",
+        "label": "¿Cuántas unidades?",
+        "required": true,
+        "min": 1,
+        "max": 50,
+        "unit": "unidades"
+      },
+      {
+        "key": "materiales",
+        "type": "YES_NO",
+        "label": "¿Incluimos los materiales de instalación?",
+        "help": "Caños, cables, soportes y fijaciones.",
+        "required": true
+      },
+      {
+        "key": "urgente",
+        "type": "YES_NO",
+        "label": "¿Lo necesitás en las próximas 48 horas?",
+        "required": true
+      },
+      {
+        "key": "extras",
+        "type": "MULTI_CHOICE",
+        "label": "Servicios adicionales",
+        "options": [
+          { "key": "retiro", "label": "Retiro del equipo viejo" },
+          { "key": "altura", "label": "Trabajo en altura" },
+          { "key": "electrica", "label": "Adecuación eléctrica" }
+        ]
+      }
+    ],
+    "pricing": {
+      "rules": [
+        {
+          "type": "OPTION_PER_UNIT",
+          "id": "instalacion",
+          "label": "Instalación por unidad",
+          "question": "tipo",
+          "quantityQuestion": "cantidad",
+          "prices": { "aire_split": "85000", "termotanque": "60000", "calefactor": "45000", "ventilador": "30000" }
+        },
+        {
+          "type": "PER_UNIT",
+          "id": "materiales",
+          "label": "Materiales de instalación",
+          "question": "cantidad",
+          "unitPrice": "25000",
+          "when": [{ "question": "materiales", "op": "IS_TRUE" }]
+        },
+        {
+          "type": "OPTION_PRICE",
+          "id": "adicionales",
+          "label": "Adicionales",
+          "question": "extras",
+          "prices": { "retiro": "15000", "altura": "30000", "electrica": "40000" }
+        },
+        {
+          "type": "SURCHARGE_PERCENT",
+          "id": "urgencia",
+          "label": "Instalación urgente",
+          "percent": "25",
+          "when": [{ "question": "urgente", "op": "IS_TRUE" }]
+        },
+        {
+          "type": "DISCOUNT_PERCENT",
+          "id": "por_cantidad",
+          "label": "Descuento por 3 unidades o más",
+          "percent": "10",
+          "when": [{ "question": "cantidad", "op": "GTE", "value": "3" }]
+        }
+      ],
+      "minimumTotal": "40000",
+      "tax": { "mode": "FINAL" },
+      "rounding": { "scale": 0 }
+    },
+    "commercial": {
+      "validityDays": 15
+    }
+  }
+}
