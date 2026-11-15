@@ -42,7 +42,7 @@ class WebLayerIT extends IntegrationTest {
             assertThat(result.getResponse().getStatus()).as(path).isEqualTo(200);
             assertThat(result.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).as(path).contains("<!doctype html>");
         }
-        assertThat(page("/").getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("Dejá que tus clientes coticen solos");
+        assertThat(page("/").getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("Dejá de contestar", "cotizador a medida");
         assertThat(page("/saas/").getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("Climind SaaS");
     }
 
@@ -98,7 +98,7 @@ class WebLayerIT extends IntegrationTest {
     void configuracionDelSitioYHealthcheck() throws Exception {
         MvcResult config = mockMvc.perform(anonymousGet("/site-config.js")).andReturn();
         assertThat(config.getResponse().getContentType()).startsWith("application/javascript");
-        assertThat(config.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("window.CLIMIND_CONFIG", "\"appUrl\"");
+        assertThat(config.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("window.CLIMIND_CONFIG", "\"appUrl\"", "\"supportWhatsapp\"");
 
         MvcResult health = mockMvc.perform(anonymousGet("/actuator/health")).andReturn();
         assertThat(health.getResponse().getStatus()).isEqualTo(200);

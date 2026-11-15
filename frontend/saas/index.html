@@ -3,21 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Climind SaaS — Aplicaciones para negocios</title>
-  <meta name="description" content="Climind SaaS: aplicaciones por suscripción de Climind-IA, listas para usar. Primer producto: Climind Cotiza, cotizadores automáticos para tu negocio.">
+  <title>Climind SaaS — Herramientas simples para negocios reales</title>
+  <meta name="description" content="Climind SaaS: herramientas simples, útiles y listas para usar el mismo día, con planes accesibles en pesos. Primer producto: Climind Cotiza, cotizadores automáticos para tu negocio.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Climind SaaS — Aplicaciones para negocios">
+  <meta property="og:title" content="Climind SaaS — Herramientas simples para negocios reales">
   <meta property="og:description" content="Herramientas por suscripción, listas para usar, sin instalaciones ni desarrollos a medida.">
   <link rel="icon" href="/shared/img/climind-c.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
   <link rel="stylesheet" href="/shared/css/climind.css">
   <link rel="stylesheet" href="/shared/css/landing.css">
+  <link rel="stylesheet" href="/shared/css/marketing.css">
 </head>
-<body>
+<body class="mk">
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
-<header class="site-header">
+<header class="site-header site-header-dark">
   <div class="container inner">
-    <a class="brand" href="/saas/" aria-label="Climind SaaS, inicio">
+    <a class="brand brand-on-dark" href="/saas/" aria-label="Climind SaaS, inicio">
       <img src="/shared/img/climind-c.svg" alt="" width="34" height="34">
       <span>Climind SaaS</span>
     </a>
@@ -25,58 +26,87 @@
       <a class="nav-text optional" href="#productos">Productos</a>
       <a class="nav-text optional" href="#planes">Planes</a>
       <a class="nav-text optional" href="#preguntas">Preguntas</a>
-      <a class="btn btn-quiet" href="/ingresar" data-app-link="/ingresar">Ingresar</a>
+      <a class="nav-text" href="/ingresar" data-app-link="/ingresar">Ingresar</a>
     </nav>
   </div>
 </header>
 
 <main id="contenido">
-  <section class="hero portal-hero">
+  <section class="mk-hero">
+    <div class="container mk-portal-hero-grid">
+      <div>
+        <p class="mk-kicker"><span class="mk-dot" aria-hidden="true"></span> La línea de productos de Climind-IA</p>
+        <h1>Herramientas simples para <span class="mk-accent">negocios reales</span></h1>
+        <p class="lead">Aplicaciones listas para usar, por suscripción: te registrás, la configurás vos y la usás el mismo día. Sin sistemas gigantes, sin meses de implementación y con un plan gratis para empezar.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/" data-app-link="/">Conocer Climind Cotiza</a>
+          <a class="btn mk-btn-ghost btn-lg" href="/ingresar" data-app-link="/ingresar">Ingresar a mi cuenta</a>
+        </div>
+        <ul class="mk-checks">
+          <li>Desde el celular</li>
+          <li>Planes en pesos</li>
+          <li>Sin instalar nada</li>
+        </ul>
+      </div>
+      <figure class="mk-photo">
+        <img src="/shared/img/negocio-real.webp" alt="Dueña de una pastelería mirando el celular en su taller" width="760" height="1362">
+        <figcaption class="mk-photo-tag"><span class="mk-dot" aria-hidden="true"></span><span><strong>Nueva consulta: $&nbsp;48.500</strong>Mesa dulce para 30 personas · llegó desde su cotizador</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="reglas-title">
     <div class="container">
-      <h1>Aplicaciones simples para negocios que quieren vender mejor</h1>
-      <p class="lead">Climind SaaS es la línea de productos por suscripción de Climind-IA: herramientas listas para usar, sin instalaciones ni desarrollos a medida, con un plan gratuito para empezar.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary btn-lg" href="/" data-app-link="/">Conocer Climind Cotiza</a>
-        <a class="btn btn-quiet btn-lg" href="/ingresar" data-app-link="/ingresar">Ingresar a mi cuenta</a>
+      <p class="eyebrow">Cómo pensamos cada herramienta</p>
+      <h2 id="reglas-title">Cuatro reglas que no negociamos</h2>
+      <div class="mk-pillars">
+        <div class="mk-pillar"><b>01</b><h3>Simple</h3><p>Se entiende sin capacitación ni manuales.</p></div>
+        <div class="mk-pillar"><b>02</b><h3>Útil</h3><p>Resuelve un problema concreto de tu negocio, no veinte a medias.</p></div>
+        <div class="mk-pillar"><b>03</b><h3>Rápida</h3><p>La configurás y la usás el mismo día.</p></div>
+        <div class="mk-pillar"><b>04</b><h3>Accesible</h3><p>Plan gratis para empezar y planes en pesos que un negocio real puede pagar.</p></div>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt" id="productos">
+  <section class="section section-alt" id="productos" aria-labelledby="productos-title">
     <div class="container">
-      <h2>Productos</h2>
-      <div class="product-row">
-        <img src="/shared/img/cotiza-mark.svg" alt="" width="64" height="64">
+      <p class="eyebrow">Productos</p>
+      <h2 id="productos-title">La primera: Climind Cotiza</h2>
+      <div class="mk-product">
         <div>
-          <h3>Climind Cotiza</h3>
-          <p>Creá cotizadores automáticos para tu negocio y dejá que tus clientes calculen un presupuesto estimado en segundos. Compartís un enlace, tus clientes cotizan solos y las consultas te llegan ordenadas.</p>
+          <div class="mk-product-brand"><img src="/shared/img/cotiza-mark.svg" alt="" width="52" height="52"><span>Climind Cotiza</span></div>
+          <h3>Tus clientes calculan su presupuesto solos</h3>
+          <p>Armás tu cotizador, compartís un enlace y tu cliente ve cuánto sale en segundos. A vos te llega la consulta lista para cerrar, sin pasar precios uno por uno por WhatsApp.</p>
           <ul class="product-points">
-            <li>Plantillas para limpieza, catering, instalaciones y más</li>
+            <li>Plantillas para limpieza, catering, instalaciones, construcción, fletes y más</li>
             <li>Página para celular con PDF y botón de WhatsApp</li>
             <li>Consultas, estados y estadísticas en un solo panel</li>
           </ul>
         </div>
-        <div class="product-actions">
-          <a class="btn btn-primary" href="/" data-app-link="/">Ver Climind Cotiza</a>
-          <a class="btn btn-quiet" href="/#demos" data-app-link="/#demos">Probar la demo</a>
+        <div class="mk-product-side">
+          <p class="mk-product-note"><strong>¿Tu rubro no está en las plantillas?</strong> Con el plan Pro o Negocio te armamos el cotizador a medida, sin costo adicional.</p>
+          <a class="btn btn-primary btn-lg" href="/" data-app-link="/">Ver Climind Cotiza</a>
+          <a class="btn mk-btn-ghost" href="/#demos" data-app-link="/#demos">Probar la demo</a>
+          <a class="btn mk-btn-ghost" href="#planes" data-contact="Hola, mi rubro no está en las plantillas de Climind Cotiza y quiero un cotizador a medida.">Pedir un cotizador a medida</a>
         </div>
       </div>
-      <p class="mt-4 mb-0 text-secondary">Por ahora Climind Cotiza es el único producto. Vamos a sumar nuevas herramientas con la misma cuenta.</p>
+      <p class="mk-next"><strong>Esto recién empieza.</strong> Vamos a sumar nuevas herramientas con la misma cuenta y la misma idea: simples, útiles y a un precio accesible.</p>
     </div>
   </section>
 
-  <section class="section" id="planes" aria-labelledby="planes-title">
+  <section class="section mk-pricing" id="planes" aria-labelledby="planes-title">
     <div class="container">
+      <p class="eyebrow">Planes</p>
       <h2 id="planes-title">Planes de Climind Cotiza</h2>
-      <p class="intro">En pesos argentinos, con cobro mensual por Mercado Pago. Empezás gratis y cambiás de plan cuando quieras.</p>
+      <p class="intro">En pesos argentinos, con cobro mensual por Mercado Pago. Empezás gratis y cambiás de plan cuando quieras. Con Pro o Negocio, el cotizador a medida va incluido.</p>
       <div class="pricing-grid" id="pricing-grid" aria-live="polite"><p class="pricing-error">Cargando planes…</p></div>
       <p class="pricing-note"><a href="/precios" data-app-link="/precios">Comparar los planes en detalle</a></p>
     </div>
   </section>
 
-  <section class="section section-alt">
+  <section class="section section-alt" aria-labelledby="ecosistema-title">
     <div class="container">
-      <h2>Un ecosistema, tres formas de trabajar con nosotros</h2>
+      <h2 id="ecosistema-title">Un ecosistema, tres formas de trabajar con nosotros</h2>
       <div class="lines-of-business">
         <div>
           <h3>Climind-IA</h3>
@@ -103,6 +133,10 @@
           <p>Climind-IA hace desarrollos a medida. Climind SaaS ofrece productos listos para usar por una suscripción mensual: te registrás, lo configurás vos mismo y empezás a usarlo el mismo día.</p>
         </details>
         <details>
+          <summary>¿Y si mi negocio no entra en las plantillas?</summary>
+          <p>Con el plan Pro o Negocio de Climind Cotiza nos contás cómo armás tus presupuestos y te armamos el cotizador a medida, sin costo adicional.</p>
+        </details>
+        <details>
           <summary>¿Tengo que instalar algo?</summary>
           <p>No. Todo funciona desde el navegador, en la computadora o en el celular.</p>
         </details>
@@ -118,6 +152,17 @@
           <summary>¿Dónde consigo ayuda?</summary>
           <p>En el <a href="/ayuda" data-app-link="/ayuda">centro de ayuda de Climind Cotiza</a> explicamos cada paso.<span data-support-only hidden> También podés escribirnos a <span data-support-email></span>.</span></p>
         </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="mk-final">
+    <div class="container">
+      <h2>Empezá hoy con Climind Cotiza</h2>
+      <p>Creá tu cuenta gratis y armá tu primer cotizador con la plantilla de tu rubro.</p>
+      <div class="hero-actions mk-center">
+        <a class="btn mk-btn-white btn-lg" href="/registro" data-app-link="/registro">Crear mi cuenta gratis</a>
+        <a class="btn mk-btn-ghost btn-lg" href="#productos" data-contact="Hola, quiero saber si Climind Cotiza sirve para mi negocio.">Hablar con nosotros</a>
       </div>
     </div>
   </section>

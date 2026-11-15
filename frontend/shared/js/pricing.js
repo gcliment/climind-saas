@@ -22,6 +22,8 @@ export function planFeatures(plan) {
     [plan.leadEmailNotifications, 'Aviso por email de cada consulta'],
     [plan.csvExport, 'Exportación de consultas a CSV'],
     [plan.customBranding, 'Tu color y sin la marca de Climind'],
+    // Promesa comercial de los planes pagos: si el rubro no entra en las plantillas, lo armamos nosotros.
+    [!plan.free, 'Cotizador a medida si tu rubro no está en las plantillas, sin costo adicional'],
   ];
 }
 
@@ -81,6 +83,7 @@ export function renderComparison(table, plans) {
     ['Aviso por email de cada consulta', (p) => p.leadEmailNotifications],
     ['Exportación de consultas a CSV', (p) => p.csvExport],
     ['Tu color y sin la marca de Climind', (p) => p.customBranding],
+    ['Cotizador a medida (lo armamos nosotros, sin costo adicional)', (p) => !p.free],
   ];
   const caption = el('caption', '', 'Comparación de planes de Climind Cotiza');
   const head = el('thead');

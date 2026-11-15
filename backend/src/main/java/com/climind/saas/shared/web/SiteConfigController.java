@@ -27,6 +27,8 @@ public class SiteConfigController {
         config.put("portalUrl", properties.getPortalUrl());
         config.put("env", properties.getEnv());
         config.put("supportEmail", properties.getSupportEmail() == null ? "" : properties.getSupportEmail().strip());
+        // Solo dígitos: se arma el enlace https://wa.me/<número> en el navegador.
+        config.put("supportWhatsapp", properties.getSupportWhatsapp() == null ? "" : properties.getSupportWhatsapp().replaceAll("\\D", ""));
         this.body = "window.CLIMIND_CONFIG = Object.freeze(" + jsonMapper.writeValueAsString(config) + ");\n";
     }
 

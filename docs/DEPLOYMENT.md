@@ -58,6 +58,7 @@ Internet ─► Cloudflare (DNS/proxy, opcional) ─► EasyPanel (Traefik, HTTP
   APP_PORTAL_URL=https://saas.climind-ia.com/
   APP_PORTAL_HOST=saas.climind-ia.com
   APP_SUPPORT_EMAIL=…                      (el que se muestra en la ayuda)
+  APP_SUPPORT_WHATSAPP=549…                (botones «Escribinos» del cotizador a medida)
   MAIL_PROVIDER=smtp
   SMTP_HOST=… SMTP_PORT=587 SMTP_USERNAME=… SMTP_PASSWORD=… SMTP_AUTH=true SMTP_STARTTLS=true
   MAIL_FROM=Climind Cotiza <no-reply@climind-ia.com>

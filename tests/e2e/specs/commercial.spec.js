@@ -4,7 +4,7 @@ const { test, expect, expectNoHorizontalScroll } = require('./fixtures');
 
 test('la landing calcula la demo en el servidor y muestra los precios vigentes', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Dejá que tus clientes coticen solos');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Dejá de contestar «¿cuánto sale?»');
 
   const demo = page.locator('#demos');
   await expect(demo).toBeVisible();
@@ -26,7 +26,27 @@ test('la landing calcula la demo en el servidor y muestra los precios vigentes',
   await expect(pricing.locator('[data-plan="GRATIS"]')).toContainText('Sin costo');
   await expect(pricing.locator('[data-plan="PRO"]')).toContainText(/9\.900/);
   await expect(pricing.locator('[data-plan="PRO"]')).toContainText('3 cotizadores publicados');
+  // Cotizador a medida sin costo adicional: incluido en los planes pagos, no en el gratis.
+  await expect(pricing.locator('[data-plan="PRO"] li', { hasText: 'Cotizador a medida' })).not.toHaveClass(/is-off/);
+  await expect(pricing.locator('[data-plan="NEGOCIO"] li', { hasText: 'Cotizador a medida' })).not.toHaveClass(/is-off/);
+  await expect(pricing.locator('[data-plan="GRATIS"] li', { hasText: 'Cotizador a medida' })).toHaveClass(/is-off/);
+  await expect(page.locator('#a-medida')).toContainText('sin ningún costo adicional', { ignoreCase: true });
   await expectNoHorizontalScroll(page);
+});
+
+test('los botones «Escribinos» van al WhatsApp configurado, o al email si no hay WhatsApp', async ({ page }) => {
+  await page.goto('/');
+  const contacto = page.locator('#a-medida a[data-contact]');
+  const href = await contacto.getAttribute('href');
+  // El servidor de E2E puede tener WhatsApp (APP_SUPPORT_WHATSAPP), solo email o ninguno de los dos.
+  const config = await page.evaluate(() => window.CLIMIND_CONFIG);
+  if (config.supportWhatsapp) {
+    expect(href).toMatch(new RegExp(`^https://wa\\.me/${config.supportWhatsapp}\\?text=`));
+  } else if (config.supportEmail) {
+    expect(href).toMatch(/^mailto:/);
+  } else {
+    await expect(contacto).toBeHidden();
+  }
 });
 
 test('la demo completa no pide datos personales e invita a crear un cotizador', async ({ page }) => {

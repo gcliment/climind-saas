@@ -3,30 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Climind Cotiza — Dejá que tus clientes coticen solos</title>
-  <meta name="description" content="Creá un cotizador personalizado, compartí un enlace y recibí consultas de clientes interesados, sin programar. Planes en pesos, con plan gratuito.">
+  <title>Climind Cotiza — Dejá de contestar «¿cuánto sale?»</title>
+  <meta name="description" content="Armá tu cotizador sin programar, compartí un enlace y tus clientes calculan su presupuesto solos. A vos te llegan las consultas listas para cerrar. Plan gratis, en pesos.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Climind Cotiza — Dejá que tus clientes coticen solos">
-  <meta property="og:description" content="Creá un cotizador personalizado, compartí un enlace y recibí consultas de clientes interesados, sin programar.">
+  <meta property="og:title" content="Climind Cotiza — Dejá de contestar «¿cuánto sale?»">
+  <meta property="og:description" content="Tus clientes calculan su presupuesto solos desde un enlace. A vos te llegan las consultas listas para cerrar.">
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
   <link rel="stylesheet" href="/shared/css/climind.css">
   <link rel="stylesheet" href="/shared/css/builder.css">
   <link rel="stylesheet" href="/shared/css/landing.css">
+  <link rel="stylesheet" href="/shared/css/marketing.css">
 </head>
-<body>
+<body class="mk">
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header class="site-header">
+<header class="site-header site-header-dark">
   <div class="container inner">
-    <a class="brand" href="/" aria-label="Climind Cotiza, inicio">
+    <a class="brand brand-on-dark" href="/" aria-label="Climind Cotiza, inicio">
       <img src="/shared/img/cotiza-mark.svg" alt="" width="34" height="34">
       <span>Climind Cotiza</span>
     </a>
     <nav class="site-nav" aria-label="Principal">
       <a class="nav-text optional" href="#demos" data-needs-demos hidden>Demo</a>
-      <a class="nav-text optional" href="/precios">Precios</a>
+      <a class="nav-text optional" href="#precios">Precios</a>
       <a class="nav-text optional" href="/ayuda">Ayuda</a>
       <a class="nav-text" href="/ingresar">Ingresar</a>
       <a class="btn btn-primary optional" href="/registro">Crear cuenta</a>
@@ -35,42 +36,119 @@
 </header>
 
 <main id="contenido">
-  <section class="hero">
-    <div class="container hero-grid">
-      <div>
-        <h1>Dejá que tus clientes coticen solos</h1>
-        <p class="lead">Creá un cotizador personalizado, compartí un enlace y recibí consultas de clientes interesados, sin programar.</p>
+  <!-- HERO: el dolor en el título y el recorrido completo en el celular. -->
+  <section class="mk-hero">
+    <div class="container mk-hero-grid">
+      <div class="mk-hero-copy">
+        <p class="mk-kicker"><span class="mk-dot" aria-hidden="true"></span> Para negocios que cotizan todos los días</p>
+        <h1>Dejá de contestar <span class="mk-accent">«¿cuánto sale?»</span></h1>
+        <p class="lead">Armás tu cotizador sin programar, compartís un enlace y tus clientes calculan su presupuesto solos, desde el celular. A vos te llegan las consultas listas para cerrar.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" href="/registro">Crear mi cotizador gratis</a>
-          <a class="btn btn-quiet btn-lg" href="#demos" data-needs-demos hidden>Probar la demo</a>
+          <a class="btn mk-btn-ghost btn-lg" href="#demos" data-needs-demos hidden>Probar la demo</a>
         </div>
-        <p class="hero-fineprint">Sin tarjeta de crédito. En español y en pesos argentinos.</p>
+        <ul class="mk-checks">
+          <li>Plan gratis, sin tarjeta</li>
+          <li>Plantillas por rubro</li>
+          <li>Precios en pesos</li>
+        </ul>
       </div>
 
-      <figure class="flow m-0">
-        <figcaption class="visually-hidden">Ejemplo: un cliente pregunta por WhatsApp cuánto sale el servicio, recibe el enlace del cotizador, ve un presupuesto estimado de 108.000 pesos y la consulta llega al panel del negocio.</figcaption>
-        <div class="flow-chat" aria-hidden="true">
-          <p class="bubble bubble-in">Hola, ¿cuánto me sale una limpieza profunda de un depto de 60 m²?</p>
-          <p class="bubble bubble-out">¡Hola! Calculalo acá en un minuto: <span class="link">/c/tu-negocio/limpieza</span></p>
+      <figure class="mk-phone-wrap m-0">
+        <figcaption class="visually-hidden">Ejemplo animado: un cliente pregunta por WhatsApp cuánto sale una limpieza, recibe el enlace del cotizador, elige limpieza profunda de 60 m² y ve un presupuesto estimado de 108.000 pesos; la consulta llega al panel del negocio.</figcaption>
+        <div class="mk-phone" aria-hidden="true">
+          <div class="mk-notch"></div>
+          <div class="mk-screen">
+            <!-- 1. La pregunta de siempre -->
+            <div class="mk-scene mk-scene-1">
+              <div class="mk-wa-head"><span class="mk-avatar">L</span><span><strong>Laura</strong><small>en línea</small></span></div>
+              <div class="mk-wa-body">
+                <p class="mk-bubble mk-in">Hola! ¿Cuánto me sale una limpieza profunda de un depto de 60 m²?</p>
+                <p class="mk-bubble mk-out">¡Hola Laura! Calculalo acá en un minuto 👉 <span class="mk-link">cotiza.climind-ia.com/c/brillo/limpieza</span></p>
+              </div>
+            </div>
+            <!-- 2. El cliente cotiza solo -->
+            <div class="mk-scene mk-scene-2">
+              <div class="mk-page-head"><span class="mk-logo">B</span><strong>Limpiezas Brillo</strong></div>
+              <div class="mk-page-body">
+                <p class="mk-q">¿Qué tipo de limpieza?</p>
+                <div class="mk-chips"><span>Básica</span><span class="is-on">Profunda</span><span>Final de obra</span></div>
+                <div class="mk-row"><span>Metros cuadrados</span><b>60 m²</b></div>
+                <div class="mk-row"><span>Ambientes</span><b>3</b></div>
+                <div class="mk-row"><span>Horno y heladera</span><b>Sí</b></div>
+                <div class="mk-total"><span>Total estimado</span><strong>$&nbsp;108.000</strong></div>
+                <span class="mk-cta">Quiero que me contacten</span>
+              </div>
+            </div>
+            <!-- 3. Te llega la consulta -->
+            <div class="mk-scene mk-scene-3">
+              <div class="mk-page-head mk-panel-head"><strong>Consultas</strong><small>Hoy</small></div>
+              <div class="mk-page-body">
+                <div class="mk-lead is-new"><span class="mk-avatar">L</span><span><strong>Laura M.</strong><small>Limpieza profunda · 60 m²</small></span><b>$&nbsp;108.000</b></div>
+                <div class="mk-lead"><span class="mk-avatar">J</span><span><strong>Jorge P.</strong><small>Limpieza básica · 45 m²</small></span><b>$&nbsp;61.500</b></div>
+                <div class="mk-lead"><span class="mk-avatar">S</span><span><strong>Sofía R.</strong><small>Final de obra · 120 m²</small></span><b>$&nbsp;276.000</b></div>
+              </div>
+              <div class="mk-toast"><span class="mk-dot"></span><span><strong>Nueva consulta de Laura</strong>$&nbsp;108.000 · lista para responder</span></div>
+            </div>
+          </div>
         </div>
-        <div class="ticket flow-ticket" aria-hidden="true">
-          <div class="ticket-head"><strong>Tu negocio</strong><span>Estimación</span></div>
-          <ul class="ticket-lines">
-            <li><span class="ticket-line-name">Limpieza profunda<small>60 m² × $ 1.500</small></span><b>$ 90.000</b></li>
-            <li><span class="ticket-line-name">Ambientes<small>3 ambientes × $ 3.000</small></span><b>$ 9.000</b></li>
-            <li><span class="ticket-line-name">Horno y heladera</span><b>$ 9.000</b></li>
-          </ul>
-          <div class="ticket-total"><span>Total estimado</span><output class="num">$ 108.000</output></div>
-        </div>
-        <div class="flow-lead" aria-hidden="true">
-          <span class="dot"></span>
-          <span><strong>Nueva consulta de Laura</strong>Limpieza profunda · $ 108.000 · por WhatsApp</span>
-        </div>
-        <p class="flow-caption" aria-hidden="true">Ejemplo con precios ilustrativos</p>
+        <ol class="mk-phone-steps" aria-hidden="true">
+          <li>Te preguntan</li>
+          <li>Cotizan solos</li>
+          <li>Te llega la consulta</li>
+        </ol>
+        <p class="mk-fineprint" aria-hidden="true">Ejemplo con precios ilustrativos</p>
       </figure>
     </div>
   </section>
 
+  <!-- EL PROBLEMA -->
+  <section class="section mk-pain" aria-labelledby="dolor-title">
+    <div class="container">
+      <div class="mk-pain-grid">
+        <div>
+          <p class="eyebrow">Te suena, ¿no?</p>
+          <h2 id="dolor-title">Pasás el día pasando precios por WhatsApp</h2>
+          <p class="intro">Cada consulta te lleva un rato: preguntar medidas, hacer la cuenta, mandar el número. Y muchas veces el cliente no vuelve a escribir.</p>
+          <p class="mk-pain-answer">Con Climind Cotiza el cliente <strong>calcula solo</strong> y te escribe cuando ya sabe qué quiere y cuánto cuesta.</p>
+        </div>
+        <div class="mk-pain-bubbles" aria-hidden="true">
+          <p class="mk-bubble mk-in">¿Cuánto sale?</p>
+          <p class="mk-bubble mk-in">¿Y si en vez de 60 son 80 m²?</p>
+          <p class="mk-bubble mk-in">¿Me pasás precio por privado?</p>
+          <p class="mk-bubble mk-in">¿Con el adicional cuánto queda?</p>
+          <p class="mk-bubble mk-in">Hola, ¿precio? 🙏</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="section mk-steps-band" id="como-funciona" aria-labelledby="pasos-title">
+    <div class="container">
+      <p class="eyebrow">Cómo funciona</p>
+      <h2 id="pasos-title">En tres pasos, y sin programar</h2>
+      <ol class="mk-steps">
+        <li>
+          <span class="mk-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h6"/><circle cx="18" cy="16" r="3"/></svg></span>
+          <h3>Cargá tus precios</h3>
+          <p>Elegí la plantilla de tu rubro y poné tus valores: precio base, por metro o por unidad, adicionales, descuentos y mínimos.</p>
+        </li>
+        <li>
+          <span class="mk-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></span>
+          <h3>Compartí tu enlace</h3>
+          <p>Por WhatsApp, en tu Instagram, en tu web o con un código QR impreso. Se abre desde cualquier celular.</p>
+        </li>
+        <li>
+          <span class="mk-step-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 10h8"/></svg></span>
+          <h3>Recibí consultas</h3>
+          <p>Tu cliente ve su presupuesto y te deja sus datos. Te llega un aviso con lo que eligió y el importe.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- DEMO EN VIVO (mismo motor que los cotizadores reales) -->
   <section class="section demo-band" id="demos" aria-labelledby="demos-title" data-needs-demos hidden>
     <div class="container">
       <p class="eyebrow">Demo en vivo</p>
@@ -92,83 +170,125 @@
     </div>
   </section>
 
-  <section class="section section-alt" id="como-funciona">
+  <!-- RUBROS -->
+  <section class="section" aria-labelledby="rubros-title">
     <div class="container">
-      <h2>De la pregunta “¿cuánto sale?” a una consulta concreta</h2>
-      <p class="intro">Tus clientes calculan solos. Vos recibís a quien ya sabe qué quiere y cuánto cuesta.</p>
-      <ol class="steps">
-        <li>
-          <h3>Cargá tus precios</h3>
-          <p>Elegí una plantilla de tu rubro y ajustá los valores: precio base, por unidad, adicionales, descuentos y mínimos.</p>
-        </li>
-        <li>
-          <h3>Compartí tu enlace</h3>
-          <p>Mandalo por WhatsApp, ponelo en Instagram o en tu web, o imprimí el código QR. Funciona desde cualquier celular.</p>
-        </li>
-        <li>
-          <h3>Recibí consultas</h3>
-          <p>Cada cliente ve su estimación y te deja sus datos. Las seguís desde tu panel, con el detalle de lo que eligió.</p>
-        </li>
+      <p class="eyebrow">Rubros</p>
+      <h2 id="rubros-title">Para cualquier negocio que cotiza</h2>
+      <p class="intro">Cada rubro hace sus propias preguntas. Empezás con una plantilla y la ajustás a tu forma de trabajar.</p>
+      <div class="mk-rubros">
+        <article class="mk-rubro">
+          <img src="/shared/img/rubros/limpieza.webp" alt="Trabajador de una empresa de limpieza mirando el celular en una oficina" width="720" height="720" loading="lazy">
+          <p class="mk-bubble mk-in">¿Cuánto sale limpiar una oficina de 120 m²?</p>
+          <h3>Limpieza</h3>
+          <p>Tipo de limpieza, metros, ambientes y frecuencia.</p>
+        </article>
+        <article class="mk-rubro">
+          <img src="/shared/img/rubros/catering.webp" alt="Cocinera de un catering preparando bandejas" width="720" height="720" loading="lazy">
+          <p class="mk-bubble mk-in">¿Precio para 40 invitados con mozos?</p>
+          <h3>Catering y eventos</h3>
+          <p>Invitados, menú, bebidas, mozos y horas.</p>
+        </article>
+        <article class="mk-rubro">
+          <img src="/shared/img/rubros/instalaciones.webp" alt="Instalador sentado en su camioneta con herramientas, mirando el celular" width="720" height="720" loading="lazy">
+          <p class="mk-bubble mk-in">¿Cuánto me cobrás por instalar 2 splits?</p>
+          <h3>Instalaciones</h3>
+          <p>Equipo, cantidad, materiales y urgencia.</p>
+        </article>
+        <article class="mk-rubro">
+          <img src="/shared/img/rubros/construccion.webp" alt="Contratista en una obra de refacción mirando el celular" width="720" height="720" loading="lazy">
+          <p class="mk-bubble mk-in">¿Cuánto sale refaccionar un baño?</p>
+          <h3>Construcción y refacciones</h3>
+          <p>Superficie, terminaciones y trabajos extra.</p>
+        </article>
+        <article class="mk-rubro">
+          <img src="/shared/img/rubros/medida.webp" alt="Emprendedora en su taller de productos personalizados mirando el celular" width="720" height="720" loading="lazy">
+          <p class="mk-bubble mk-in">¿50 tazas personalizadas cuánto quedan?</p>
+          <h3>Productos a medida</h3>
+          <p>Cantidad, tamaño, material y personalización.</p>
+        </article>
+        <article class="mk-rubro">
+          <img src="/shared/img/rubros/fletes.webp" alt="Fletero apoyado en su camión con muebles embalados" width="720" height="720" loading="lazy">
+          <p class="mk-bubble mk-in">¿Cuánto sale la mudanza de un 3 ambientes?</p>
+          <h3>Fletes y mudanzas</h3>
+          <p>Ambientes, distancia, pisos y embalaje.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- A MEDIDA: la promesa de los planes pagos -->
+  <section class="mk-custom" id="a-medida" aria-labelledby="medida-title">
+    <div class="container mk-custom-grid">
+      <div>
+        <p class="mk-badge">Incluido en Pro y Negocio</p>
+        <h2 id="medida-title">¿Tu negocio no entra en una plantilla? <span>Te lo armamos nosotros.</span></h2>
+        <p class="mk-custom-lead">Si tu rubro necesita otras preguntas u otras reglas de precio, nos contás cómo armás tus presupuestos y te dejamos el cotizador listo. <strong>Sin ningún costo adicional</strong>: solo pagás tu plan.</p>
+        <div class="hero-actions">
+          <a class="btn mk-btn-white btn-lg" href="#precios" data-contact="Hola, mi rubro no está en las plantillas de Climind Cotiza y quiero un cotizador a medida.">Contanos tu caso</a>
+          <a class="btn mk-btn-ghost btn-lg" href="#precios">Ver los planes</a>
+        </div>
+      </div>
+      <ol class="mk-custom-steps">
+        <li><strong>Nos escribís</strong><span>Contanos qué vendés y cómo calculás el precio hoy, aunque sea en una planilla o de memoria.</span></li>
+        <li><strong>Lo armamos</strong><span>Configuramos las preguntas y las reglas con tus precios.</span></li>
+        <li><strong>Lo revisás y publicás</strong><span>Lo probás, nos pedís ajustes y compartís tu enlace.</span></li>
       </ol>
     </div>
   </section>
 
-  <section class="section">
+  <!-- BENEFICIOS -->
+  <section class="section section-alt" aria-labelledby="beneficios-title">
     <div class="container">
-      <h2>Sirve para cualquier negocio que cotiza</h2>
-      <p class="intro">Cada rubro define sus propias preguntas. Algunos ejemplos:</p>
-      <div class="uses">
-        <div class="use"><strong>Limpieza</strong><span>Tipo de limpieza, metros cuadrados, ambientes y frecuencia.</span></div>
-        <div class="use"><strong>Catering y eventos</strong><span>Invitados, tipo de menú, bebidas, mozos y horas de servicio.</span></div>
-        <div class="use"><strong>Instalaciones</strong><span>Tipo de equipo, cantidad, materiales incluidos y urgencia.</span></div>
-        <div class="use"><strong>Construcción</strong><span>Superficie, terminaciones y trabajos adicionales.</span></div>
-        <div class="use"><strong>Productos a medida</strong><span>Cantidad, tamaño, material y personalización.</span></div>
-        <div class="use"><strong>Fletes y mudanzas</strong><span>Ambientes, distancia, pisos por escalera y embalaje.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="container">
-      <h2>Lo que cambia en tu día a día</h2>
-      <div class="benefits">
-        <div>
+      <p class="eyebrow">Lo que cambia</p>
+      <h2 id="beneficios-title">Más tiempo para vender, menos para hacer cuentas</h2>
+      <div class="mk-benefits">
+        <div class="mk-benefit">
+          <span class="mk-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/><path d="M9 9l6 4M15 9l-6 4"/></svg></span>
           <h3>Menos preguntas repetidas</h3>
-          <p>El precio orientativo ya está en el enlace. Respondés menos “¿cuánto sale?” por WhatsApp.</p>
+          <p>El precio orientativo ya está en el enlace. Contestás menos «¿cuánto sale?».</p>
         </div>
-        <div>
+        <div class="mk-benefit">
+          <span class="mk-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg></span>
           <h3>Consultas ordenadas</h3>
-          <p>Cada pedido llega con lo que el cliente eligió, su contacto y el importe estimado, en un solo lugar.</p>
+          <p>Cada pedido llega con lo que eligió el cliente, su contacto y el importe, en un solo lugar.</p>
         </div>
-        <div>
+        <div class="mk-benefit">
+          <span class="mk-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span>
           <h3>El mismo criterio siempre</h3>
-          <p>Tus precios y reglas se aplican igual en cada cotización. Si cambiás los valores, las cotizaciones anteriores conservan su importe.</p>
+          <p>Tus reglas se aplican igual en cada cotización. Si cambiás precios, las anteriores no se tocan.</p>
         </div>
-        <div>
+        <div class="mk-benefit">
+          <span class="mk-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg></span>
           <h3>Presupuesto con tu nombre</h3>
-          <p>Tu cliente puede descargar un PDF con el detalle y escribirte por WhatsApp con el código de la cotización.</p>
+          <p>Tu cliente descarga un PDF con el detalle y te escribe por WhatsApp con el código de la cotización.</p>
         </div>
-        <div>
+        <div class="mk-benefit">
+          <span class="mk-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V9M12 19V5M19 19v-7"/></svg></span>
           <h3>Sabés qué funciona</h3>
-          <p>Estadísticas simples: cuántas cotizaciones recibís, cuántas terminan en consulta y qué cotizador se usa más.</p>
+          <p>Cuántas cotizaciones recibís, cuántas terminan en consulta y qué cotizador se usa más.</p>
         </div>
-        <div>
+        <div class="mk-benefit">
+          <span class="mk-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
           <h3>Tus datos, separados</h3>
-          <p>Cada negocio ve solo su información. Podés descargar todos tus datos o dar de baja la cuenta cuando quieras.</p>
+          <p>Cada negocio ve solo su información. Descargás tus datos o das de baja la cuenta cuando quieras.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="precios" aria-labelledby="precios-title">
+  <!-- PRECIOS (desde la base) -->
+  <section class="section mk-pricing" id="precios" aria-labelledby="precios-title">
     <div class="container">
-      <h2 id="precios-title">Precios simples, en pesos</h2>
-      <p class="intro">Empezá gratis y pasá a un plan pago cuando lo necesites. Se paga con Mercado Pago y se cancela cuando quieras.</p>
+      <p class="eyebrow">Precios</p>
+      <h2 id="precios-title">Empezá gratis. Pagá cuando lo necesites.</h2>
+      <p class="intro">En pesos, con Mercado Pago, y lo cancelás cuando quieras. Con Pro o Negocio, si tu rubro no está en las plantillas, el cotizador a medida va incluido.</p>
       <div class="pricing-grid" id="pricing-grid" aria-live="polite"><p class="pricing-error">Cargando planes…</p></div>
       <p class="pricing-note">Creás tu cuenta gratis y elegís un plan pago desde tu panel cuando quieras. <a href="/precios">Comparar los planes en detalle</a>.</p>
     </div>
   </section>
 
+  <!-- PREGUNTAS -->
   <section class="section section-alt">
     <div class="container">
       <h2>Preguntas frecuentes</h2>
@@ -176,6 +296,10 @@
         <details>
           <summary>¿Necesito saber programar?</summary>
           <p>No. Elegís una plantilla, completás tus precios en formularios simples y publicás. Nada de fórmulas ni código.</p>
+        </details>
+        <details>
+          <summary>¿Y si mi rubro no está en las plantillas?</summary>
+          <p>Con el plan Pro o Negocio nos escribís, nos contás cómo armás tus presupuestos y te armamos el cotizador a medida, sin costo adicional. Con el plan gratis podés partir de la plantilla más parecida y adaptarla vos.</p>
         </details>
         <details>
           <summary>¿El precio que ve mi cliente es definitivo?</summary>
@@ -206,11 +330,14 @@
     </div>
   </section>
 
-  <section class="cta-band">
+  <section class="mk-final">
     <div class="container">
-      <h2>Armá tu primer cotizador hoy</h2>
-      <p>Creá tu cuenta, cargá los datos de tu negocio y empezá con una plantilla de tu rubro.</p>
-      <a class="btn btn-primary btn-lg" href="/registro">Crear cuenta gratis</a>
+      <h2>Que tus clientes sepan cuánto sale. Hoy.</h2>
+      <p>Creá tu cuenta gratis, elegí la plantilla de tu rubro y compartí tu enlace.</p>
+      <div class="hero-actions mk-center">
+        <a class="btn mk-btn-white btn-lg" href="/registro">Crear mi cotizador gratis</a>
+        <a class="btn mk-btn-ghost btn-lg" href="#a-medida" data-contact="Hola, quiero saber si Climind Cotiza sirve para mi negocio.">Hablar con nosotros</a>
+      </div>
     </div>
   </section>
 </main>

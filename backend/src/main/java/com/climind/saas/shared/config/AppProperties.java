@@ -22,6 +22,11 @@ public class AppProperties {
     private String portalHost = "";
     /** Email de soporte que se muestra en la ayuda y la landing. Vacío = no se muestra. */
     private String supportEmail = "";
+    /**
+     * WhatsApp comercial (solo dígitos, con código de país: 5492211234567) para los botones «Escribinos» de la
+     * landing y el portal (cotizador a medida). Vacío = esos botones escriben al email de soporte.
+     */
+    private String supportWhatsapp = "";
 
     private Security security = new Security();
     private Storage storage = new Storage();

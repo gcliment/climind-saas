@@ -104,6 +104,7 @@ app:
   portal-url: ${APP_PORTAL_URL:http://localhost:8080/saas/}
   portal-host: ${APP_PORTAL_HOST:}
   support-email: ${APP_SUPPORT_EMAIL:}
+  support-whatsapp: ${APP_SUPPORT_WHATSAPP:}
   storage:
     dir: ${STORAGE_DIR:./storage}
   security:
