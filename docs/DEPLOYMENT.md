@@ -11,7 +11,15 @@ Verificado localmente con Docker 28.3.2 y el mismo `docker-compose.yml` de este 
 - [x] **Backup y prueba de restauración automática:** `backup now` genera el dump, los archivos y las sumas de control, y luego restaura en una base temporal y verifica el esquema V6, las tablas y los triggers.
 - [x] **Restauración ante desastre:** se borraron los volúmenes de base y de archivos, se restauró desde el backup y la app volvió a servir la misma consulta y el mismo logo.
 
-**No verificado:** el despliegue en el VPS real con EasyPanel, los DNS, Cloudflare, el SMTP productivo, la copia remota con rclone y Mercado Pago real. Dependen de accesos y credenciales que no están en este repositorio. La guía de abajo describe esos pasos.
+**En producción (15/11/2026):** EasyPanel en el VPS de Hostinger, con DNS en Hostinger y emails por Google Workspace (`smtp.gmail.com`, contraseña de aplicación; SPF, DKIM y DMARC en PASS). El circuito de Mercado Pago se probó primero con cuentas de prueba y después con cuentas reales.
+
+Lo que se aprendió al desplegar:
+- **Puerto:** EasyPanel define `PORT=80` por su cuenta. Hay que fijar `PORT=8080`; si no, el dominio responde "Service is not reachable".
+- **Credenciales de prueba de Mercado Pago:** el pagador también tiene que ser una cuenta de prueba (`MERCADOPAGO_TEST_PAYER_EMAIL`).
+- **Webhooks en modo prueba:** las notificaciones van a la aplicación dueña del token. La conciliación horaria cubre la activación igual.
+- **Simulador de Mercado Pago:** "Simular notificación" puede responder 502 sin enviar nada. La prueba que vale es un pago real.
+
+**No verificado (texto original de la Fase 5):** el despliegue en el VPS real con EasyPanel, los DNS, Cloudflare, el SMTP productivo, la copia remota con rclone y Mercado Pago real. Dependen de accesos y credenciales que no están en este repositorio. La guía de abajo describe esos pasos.
 
 ## Arquitectura de producción
 

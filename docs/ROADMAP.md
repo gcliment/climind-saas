@@ -74,8 +74,8 @@
 - [x] Servicio de backups (diario, fuera del VPS con rclone, prueba de restauración automática)
 - [x] Docker verificado: build, arranque, reinicio sin pérdida de datos, backup y **restauración completa desde cero**
 - [x] Pruebas finales: 198 tests backend; 28 recorridos E2E en Chromium (celular y escritorio), también en Safari de iPhone (WebKit) y Firefox
-- [ ] Despliegue productivo en EasyPanel + Cloudflare (guía paso a paso en DEPLOYMENT.md)
-- [ ] Mercado Pago con credenciales reales y webhook registrado
+- [x] Despliegue productivo en EasyPanel (15/11/2026): `cotiza.climind-ia.com` y `saas.climind-ia.com`, emails por Google Workspace con SPF, DKIM y DMARC en PASS. Cloudflare queda opcional
+- [x] Mercado Pago: aplicación "Climind Cotiza", webhook registrado, circuito probado con cuentas de prueba y luego con cuentas reales (contratación, activación y cancelación)
 - [ ] Textos legales revisados por un profesional (borradores actualizados con baja, exportación y emails)
 
 ### Escenarios de aceptación del MVP
@@ -89,9 +89,9 @@
 | 5 | La cotización conserva su importe aunque cambien los precios | `PublicQuoteIT`, `CalculatorIT` (trigger) |
 | 6 | Aislamiento entre negocios aun manipulando requests | `TenantIsolationIT`, IDOR en `CalculatorIT` y `LeadsIT`, exportación en `AccountIT` |
 | 7 | Límites comerciales en el backend | `BillingIT` (incluye 20 pedidos simultáneos) |
-| 8 | Plan pago activado solo con el pago confirmado | `BillingIT`, E2E contratación (simulador). **Falta con Mercado Pago real** |
+| 8 | Plan pago activado solo con el pago confirmado | `BillingIT`, E2E contratación (simulador), y en producción con Mercado Pago (15/11/2026) |
 | 9 | Rechazo o cancelación sin perder datos | `BillingIT`, E2E contratación |
-| 10 | Despliegue y reinicio conservando datos | Docker local (DEPLOYMENT.md). **Falta en EasyPanel** |
+| 10 | Despliegue y reinicio conservando datos | Docker local (DEPLOYMENT.md) y redeploys en EasyPanel sin pérdida de datos |
 | 11 | El administrador ve clientes, planes, suscripciones y estado | `BillingIT`, `DemoIT`, E2E administración |
 | 12 | Funciona en celulares y navegadores modernos | E2E en Pixel 7, iPhone (WebKit), escritorio Chrome y Firefox; sin scroll horizontal |
 
