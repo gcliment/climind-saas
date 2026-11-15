@@ -134,6 +134,25 @@ class PaymentsUnitTest {
         }
 
         @Test
+        void buscaLasCuotasPaginandoSinLimit() {
+            RestClient.Builder builder = RestClient.builder();
+            MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
+            String cuota = """
+                    {"id":%d,"preapproval_id":"2c93808479","status":"processed","transaction_amount":9900.00,
+                     "currency_id":"ARS","debit_date":"2026-10-07T12:00:00.000-03:00","payment":{"id":%d,"status":"approved"}}""";
+            server.expect(requestTo("https://api.mercadopago.test/authorized_payments/search?preapproval_id=2c93808479&offset=0"))
+                    .andRespond(withSuccess("{\"paging\":{\"total\":3},\"results\":[" + cuota.formatted(1, 11) + ","
+                            + cuota.formatted(2, 12) + "]}", MediaType.APPLICATION_JSON));
+            server.expect(requestTo("https://api.mercadopago.test/authorized_payments/search?preapproval_id=2c93808479&offset=2"))
+                    .andRespond(withSuccess("{\"paging\":{\"total\":3},\"results\":[" + cuota.formatted(3, 13) + "]}",
+                            MediaType.APPLICATION_JSON));
+            MercadoPagoProvider mp = new MercadoPagoProvider(builder, properties("TEST-token"), Clock.fixed(NOW, ZoneOffset.UTC));
+
+            assertThat(mp.searchPayments("2c93808479")).hasSize(3);
+            server.verify();
+        }
+
+        @Test
         void leeCuotasConSuPagoYSuscripciones() {
             RestClient.Builder builder = RestClient.builder();
             MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();

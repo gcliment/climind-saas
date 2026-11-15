@@ -118,16 +118,31 @@ public class MercadoPagoProvider implements PaymentProvider {
         return get("/authorized_payments/{id}", externalId).map(this::payment);
     }
 
+    /** Tope de páginas por suscripción (cada página trae el tamaño por defecto de Mercado Pago). */
+    private static final int MAX_SEARCH_PAGES = 20;
+
+    /**
+     * Cuotas de una suscripción. No se envía {@code limit}: este endpoint rechaza valores que otras búsquedas
+     * aceptan ("Invalid value for limit"). Se pagina con {@code offset} hasta el total que informa la respuesta.
+     */
     @Override
     public List<RemotePayment> searchPayments(String subscriptionExternalId) {
-        JsonNode response = http.get()
-                .uri(b -> b.path("/authorized_payments/search").queryParam("preapproval_id", subscriptionExternalId)
-                        .queryParam("limit", 50).build())
-                .header(HttpHeaders.AUTHORIZATION, bearer())
-                .retrieve().body(JsonNode.class);
         List<RemotePayment> result = new ArrayList<>();
-        if (response != null) {
+        for (int page = 0; page < MAX_SEARCH_PAGES; page++) {
+            int offset = result.size();
+            JsonNode response = http.get()
+                    .uri(b -> b.path("/authorized_payments/search").queryParam("preapproval_id", subscriptionExternalId)
+                            .queryParam("offset", offset).build())
+                    .header(HttpHeaders.AUTHORIZATION, bearer())
+                    .retrieve().body(JsonNode.class);
+            if (response == null || !response.path("results").isArray() || response.path("results").isEmpty()) {
+                break;
+            }
             response.path("results").forEach(n -> result.add(payment(n)));
+            long total = response.path("paging").path("total").asLong(0);
+            if (result.size() >= total) {
+                break;
+            }
         }
         return result;
     }
