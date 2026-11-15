@@ -50,6 +50,7 @@ Ejemplo completo: [`infra/.env.example`](../infra/.env.example). **Nunca** commi
 | `PAYMENT_PROVIDER` | no | `mercadopago` (prod) / `fake` (dev y test) | `fake` es el simulador: **en prod la app no arranca** con ese valor |
 | `MERCADOPAGO_ACCESS_TOKEN` | para vender | vacío | Access token de la aplicación (Tus integraciones → Credenciales). Solo backend, nunca se expone ni se registra. Sin él, la contratación responde "pagos no habilitados" y el panel de administración lo marca |
 | `MERCADOPAGO_WEBHOOK_SECRET` | para vender | vacío | Clave secreta de Webhooks (Tus integraciones → Webhooks) para validar `x-signature`. Sin ella, toda notificación se rechaza (401) |
+| `MERCADOPAGO_TEST_PAYER_EMAIL` | no (**vacío en producción**) | vacío | Solo para probar con credenciales de prueba: Mercado Pago exige que el pagador también sea una cuenta de prueba (si no, responde "Both payer and collector must be real or test users"). Si se define, todas las suscripciones usan este email de pagador (el del comprador de prueba). La app lo avisa en el log y en Administración → Integración |
 
 ## Servicio de backups (`infra/backup`)
 

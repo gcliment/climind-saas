@@ -237,6 +237,7 @@ loaders.integracion = async () => {
     ['Proveedor', health.provider === 'FAKE' ? 'Simulador (solo desarrollo)' : 'Mercado Pago'],
     ['Credenciales', health.configured ? 'Configuradas' : 'Faltan (MERCADOPAGO_ACCESS_TOKEN)'],
     ['Clave de webhooks', health.webhookSecretConfigured ? 'Configurada' : 'Falta (MERCADOPAGO_WEBHOOK_SECRET)'],
+    ['Pagador', health.testPayerMode ? 'MODO PRUEBA: pagador fijo (quitar MERCADOPAGO_TEST_PAYER_EMAIL antes de vender)' : 'El email de cada negocio'],
     ['Última notificación', health.lastNotificationAt ? formatDateTime(health.lastNotificationAt) : 'Ninguna todavía'],
     ['Notificaciones con error (7 días)', formatNumber(health.failedLast7Days)],
     ['Última conciliación', health.lastReconciliationAt ? `${formatDateTime(health.lastReconciliationAt)}: ${health.lastReconciliationResult}` : 'Nunca'],

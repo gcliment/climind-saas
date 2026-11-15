@@ -48,6 +48,15 @@ public class MercadoPagoProvider implements PaymentProvider {
                     throw new PaymentProviderException("Mercado Pago respondió " + res.getStatusCode().value());
                 })
                 .build();
+        if (testPayerMode()) {
+            log.warn("Mercado Pago en MODO PRUEBA: todas las suscripciones se crean con el pagador de prueba "
+                    + "(MERCADOPAGO_TEST_PAYER_EMAIL). Quitar esa variable antes de cobrar de verdad.");
+        }
+    }
+
+    /** Pagador fijo de prueba configurado (MERCADOPAGO_TEST_PAYER_EMAIL). */
+    public boolean testPayerMode() {
+        return config.getTestPayerEmail() != null && !config.getTestPayerEmail().isBlank();
     }
 
     @Override
@@ -77,7 +86,8 @@ public class MercadoPagoProvider implements PaymentProvider {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("reason", request.reason());
         body.put("external_reference", request.reference());
-        body.put("payer_email", request.payerEmail());
+        // Con credenciales de prueba, Mercado Pago exige que pagador y cobrador sean cuentas de prueba.
+        body.put("payer_email", testPayerMode() ? config.getTestPayerEmail().strip() : request.payerEmail());
         body.put("auto_recurring", autoRecurring);
         body.put("back_url", request.backUrl());
         body.put("status", "pending");

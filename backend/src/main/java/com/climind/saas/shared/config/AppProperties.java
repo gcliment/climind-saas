@@ -108,6 +108,12 @@ public class AppProperties {
         private String apiUrl = "https://api.mercadopago.com";
         /** Tolerancia de antigüedad de una notificación firmada. */
         private Duration webhookTolerance = Duration.ofMinutes(15);
+        /**
+         * Solo para probar con credenciales de prueba: Mercado Pago exige que el pagador también sea una cuenta
+         * de prueba. Si se define, todas las suscripciones se crean con este email de pagador (el del comprador de
+         * prueba). Vacío en producción.
+         */
+        private String testPayerEmail = "";
     }
 
     @Getter

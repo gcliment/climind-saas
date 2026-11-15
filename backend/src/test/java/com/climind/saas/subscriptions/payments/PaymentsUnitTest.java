@@ -114,6 +114,26 @@ class PaymentsUnitTest {
         }
 
         @Test
+        void enModoPruebaElPagadorEsLaCuentaDePrueba() {
+            RestClient.Builder builder = RestClient.builder();
+            MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();
+            server.expect(requestTo("https://api.mercadopago.test/preapproval"))
+                    .andExpect(content().json("""
+                            {"payer_email":"test_user_123@testuser.com"}"""))
+                    .andRespond(withSuccess("""
+                            {"id":"2c93808480","status":"pending","init_point":"https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_id=2c93808480"}""",
+                            MediaType.APPLICATION_JSON));
+            AppProperties props = properties("TEST-token");
+            props.getPayments().getMercadopago().setTestPayerEmail(" test_user_123@testuser.com ");
+            MercadoPagoProvider mp = new MercadoPagoProvider(builder, props, Clock.fixed(NOW, ZoneOffset.UTC));
+            assertThat(mp.testPayerMode()).isTrue();
+
+            mp.createSubscription(new PaymentProvider.CheckoutRequest("ref-2", "Climind Cotiza - Plan Pro",
+                    new BigDecimal("9900"), "ARS", "ana@ejemplo.com", "https://cotiza.test/app/plan?retorno=1"));
+            server.verify();
+        }
+
+        @Test
         void leeCuotasConSuPagoYSuscripciones() {
             RestClient.Builder builder = RestClient.builder();
             MockRestServiceServer server = MockRestServiceServer.bindTo(builder).build();

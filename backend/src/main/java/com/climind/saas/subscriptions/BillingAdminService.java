@@ -113,7 +113,7 @@ public class BillingAdminService {
     public record IntegrationHealth(String provider, boolean configured, boolean webhookSecretConfigured,
                                     Instant lastNotificationAt, long failedLast7Days, Instant lastReconciliationAt,
                                     String lastReconciliationResult, List<ProviderEvent> recentCorrections,
-                                    List<ProviderEvent> recentFailures) {
+                                    List<ProviderEvent> recentFailures, boolean testPayerMode) {
     }
 
     /**
@@ -250,7 +250,8 @@ public class BillingAdminService {
                 lastNotification, failed == null ? 0 : failed,
                 lastRun.isEmpty() ? null : lastRun.getFirst().receivedAt(),
                 lastRun.isEmpty() ? null : lastRun.getFirst().detail(),
-                events("result = 'CORRECTED'", 20), events("result = 'FAILED'", 20));
+                events("result = 'CORRECTED'", 20), events("result = 'FAILED'", 20),
+                !properties.getPayments().getMercadopago().getTestPayerEmail().isBlank());
     }
 
     private List<ProviderEvent> events(String where, int limit) {
