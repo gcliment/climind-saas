@@ -76,7 +76,7 @@
 - [x] Pruebas finales: 198 tests backend; 28 recorridos E2E en Chromium (celular y escritorio), también en Safari de iPhone (WebKit) y Firefox
 - [x] Despliegue productivo en EasyPanel (15/11/2026): `cotiza.climind-ia.com` y `saas.climind-ia.com`, emails por Google Workspace con SPF, DKIM y DMARC en PASS. Cloudflare queda opcional
 - [x] Mercado Pago: aplicación "Climind Cotiza", webhook registrado, circuito probado con cuentas de prueba y luego con cuentas reales (contratación, activación y cancelación)
-- [ ] Textos legales revisados por un profesional (borradores actualizados con baja, exportación y emails)
+- [ ] Revisión profesional de los textos legales. Decisión del 15/11/2026: se publican sin el aviso de borrador y se revisan cuando haya clientes (datos personales/AAIP, Defensa del Consumidor, párrafo de comprobantes fiscales)
 
 ### Escenarios de aceptación del MVP
 
