@@ -42,6 +42,7 @@ Internet ─► Cloudflare (DNS/proxy, opcional) ─► EasyPanel (Traefik, HTTP
 - **Build:** Dockerfile, ruta `Dockerfile`, contexto la raíz del repositorio.
 - **Environment:** la lista completa está en [ENVIRONMENT.md](ENVIRONMENT.md). Mínimo para producción:
   ```
+  PORT=8080                                (EasyPanel define PORT=80 por su cuenta; los dominios apuntan al 8080)
   DB_URL=jdbc:postgresql://climind-saas_postgres:5432/climind_saas
   DB_USERNAME=climind
   DB_PASSWORD=…
@@ -57,7 +58,7 @@ Internet ─► Cloudflare (DNS/proxy, opcional) ─► EasyPanel (Traefik, HTTP
   MERCADOPAGO_ACCESS_TOKEN=…  MERCADOPAGO_WEBHOOK_SECRET=…
   APP_CLIENT_IP_HEADER=CF-Connecting-IP    (solo si TODO el tráfico pasa por Cloudflare)
   ```
-- **Domains:** `cotiza.climind-ia.com` y `saas.climind-ia.com`, puerto 8080, HTTPS activado.
+- **Domains:** `cotiza.climind-ia.com` y `saas.climind-ia.com`, puerto 8080 (el mismo de `PORT`), HTTPS activado. Si el puerto no coincide, EasyPanel muestra "Service is not reachable".
 - **Mounts:** volumen `storage` en `/app/storage`. Anotá la ruta del host que muestra EasyPanel, porque la usa el servicio de backups.
 - **Health check:** la imagen ya trae un `HEALTHCHECK` contra `/actuator/health`. La app tarda unos 15 segundos en arrancar.
 
@@ -69,7 +70,7 @@ Es otro servicio **App** del mismo repositorio:
 - **Environment:**
   ```
   PGHOST=climind-saas_postgres
-  PGDATABASE=climind_saas
+  PGDATABASE=climind_saas       (el mismo nombre de base que usa DB_URL)
   PGUSER=climind
   PGPASSWORD=…
   BACKUP_HOUR=3                 (hora de Argentina)

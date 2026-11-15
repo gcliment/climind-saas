@@ -27,6 +27,7 @@ VOLUME ["/app/storage"]
 ENV SPRING_PROFILES_ACTIVE=prod \
     TZ=UTC \
     JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError"
+# El health check usa el mismo puerto que la app (EasyPanel puede definir PORT por su cuenta).
 HEALTHCHECK --interval=30s --timeout=5s --start-period=90s --retries=3 \
-  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+  CMD wget -qO- "http://localhost:${PORT:-8080}/actuator/health" || exit 1
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
