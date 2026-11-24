@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/** Escenario 1 del MVP (parte de Fase 1): registro → verificación → ingreso → espacio de trabajo. */
+/** Escenario 1 del MVP: registro (entra directo) → verificación → ingreso → espacio de trabajo. */
 class AuthFlowIT extends IntegrationTest {
 
     @Test
@@ -15,7 +15,15 @@ class AuthFlowIT extends IntegrationTest {
         Browser browser = new Browser();
 
         MvcResult register = browser.post("/api/v1/auth/register", registerJson("Ana", "Ana@Ejemplo.COM"));
-        assertThat(register.getResponse().getStatus()).isEqualTo(202);
+        assertThat(register.getResponse().getStatus()).isEqualTo(201);
+        // La cuenta nueva entra directo: sesión iniciada sin esperar la confirmación del email.
+        String registerBody = register.getResponse().getContentAsString();
+        assertThat((String) JsonPath.read(registerBody, "$.user.email")).isEqualTo("ana@ejemplo.com");
+        assertThat((Boolean) JsonPath.read(registerBody, "$.user.emailVerified")).isFalse();
+        assertThat((String) JsonPath.read(registerBody, "$.tenant.role")).isEqualTo("OWNER");
+        assertThat(registerBody).doesNotContain("password");
+        assertThat(browser.get("/api/v1/auth/me").getResponse().getStatus()).isEqualTo(200);
+        assertThat(browser.get("/api/v1/business/profile").getResponse().getStatus()).isEqualTo(200);
 
         // Se creó usuario (email normalizado), negocio, membresía OWNER, perfil y configuración.
         assertThat(jdbc.queryForObject("select email from users", String.class)).isEqualTo("ana@ejemplo.com");
@@ -29,10 +37,11 @@ class AuthFlowIT extends IntegrationTest {
         assertThat(jdbc.queryForObject("select count(*) from email_verification_tokens where token_hash = ?",
                 Long.class, token)).isZero();
 
-        // Sin verificar no puede ingresar.
-        MvcResult early = browser.post("/api/v1/auth/login", loginJson("ana@ejemplo.com", PASSWORD));
-        assertThat(early.getResponse().getStatus()).isEqualTo(403);
-        assertThat(early.getResponse().getContentAsString()).contains("EMAIL_NOT_VERIFIED");
+        // Sin verificar también puede volver a ingresar (el panel le recuerda confirmar el email).
+        Browser otherDevice = new Browser();
+        MvcResult early = otherDevice.post("/api/v1/auth/login", loginJson("ana@ejemplo.com", PASSWORD));
+        assertThat(early.getResponse().getStatus()).isEqualTo(200);
+        assertThat((Boolean) JsonPath.read(early.getResponse().getContentAsString(), "$.user.emailVerified")).isFalse();
 
         // Verificación (idempotente si se repite el mismo link).
         assertThat(browser.post("/api/v1/auth/verify-email", "{\"token\":\"" + token + "\"}")
@@ -48,15 +57,17 @@ class AuthFlowIT extends IntegrationTest {
         assertThat((String) JsonPath.read(loginBody, "$.user.firstName")).isEqualTo("Ana");
         assertThat((String) JsonPath.read(loginBody, "$.tenant.role")).isEqualTo("OWNER");
         assertThat((String) JsonPath.read(loginBody, "$.tenant.name")).isEqualTo("Negocio de Ana");
+        assertThat((Boolean) JsonPath.read(loginBody, "$.user.emailVerified")).isTrue();
         assertThat(loginBody).doesNotContain("password");
         var sessionCookie = browser.cookie(SESSION_COOKIE).orElseThrow();
         assertThat(sessionCookie.isHttpOnly()).isTrue();
         assertThat(login.getResponse().getHeaders("Set-Cookie"))
                 .anySatisfy(h -> assertThat(h).startsWith(SESSION_COOKIE + "=").contains("HttpOnly", "SameSite=Lax"));
 
-        // La sesión queda persistida en PostgreSQL e indexada por usuario.
+        // Las sesiones quedan persistidas en PostgreSQL e indexadas por usuario (la del registro, que se
+        // renovó al ingresar, y la del otro dispositivo).
         assertThat(jdbc.queryForObject("select count(*) from spring_session where principal_name is not null",
-                Long.class)).isEqualTo(1);
+                Long.class)).isEqualTo(2);
 
         MvcResult me = browser.get("/api/v1/auth/me");
         assertThat(me.getResponse().getStatus()).isEqualTo(200);
@@ -66,7 +77,7 @@ class AuthFlowIT extends IntegrationTest {
         // Logout: la sesión deja de valer.
         assertThat(browser.post("/api/v1/auth/logout", null).getResponse().getStatus()).isEqualTo(204);
         assertThat(browser.get("/api/v1/auth/me").getResponse().getStatus()).isEqualTo(401);
-        assertThat(jdbc.queryForObject("select count(*) from spring_session", Long.class)).isZero();
+        assertThat(jdbc.queryForObject("select count(*) from spring_session", Long.class)).isEqualTo(1);
 
         // Auditoría de los eventos principales.
         assertThat(jdbc.queryForList("select action from audit_logs order by id", String.class))
@@ -74,7 +85,18 @@ class AuthFlowIT extends IntegrationTest {
     }
 
     @Test
-    void registroConEmailExistenteNoLoRevela() throws Exception {
+    void registroSoloConNombreEmailYContrasena() throws Exception {
+        Browser browser = new Browser();
+        MvcResult result = browser.post("/api/v1/auth/register", """
+                {"firstName":"Ana","email":"ana@ejemplo.com","password":"Mate-2026","acceptTerms":true}""");
+
+        assertThat(result.getResponse().getStatus()).as(result.getResponse().getContentAsString()).isEqualTo(201);
+        assertThat(jdbc.queryForObject("select last_name from users", String.class)).isEmpty();
+        assertThat(emails().lastTo("ana@ejemplo.com").orElseThrow().template()).isEqualTo("VERIFY_EMAIL");
+    }
+
+    @Test
+    void registroConEmailExistenteNoCreaOtraCuentaNiAbreSesion() throws Exception {
         registerVerifiedAndLogin("Ana", "ana@ejemplo.com");
         emails().clear();
 
@@ -82,6 +104,8 @@ class AuthFlowIT extends IntegrationTest {
         MvcResult again = other.post("/api/v1/auth/register", registerJson("Otra", "ana@ejemplo.com"));
 
         assertThat(again.getResponse().getStatus()).isEqualTo(202);
+        assertThat(again.getResponse().getContentAsString()).doesNotContain("\"user\"");
+        assertThat(other.get("/api/v1/auth/me").getResponse().getStatus()).isEqualTo(401);
         assertThat(jdbc.queryForObject("select count(*) from users", Long.class)).isEqualTo(1);
         assertThat(jdbc.queryForObject("select count(*) from tenants", Long.class)).isEqualTo(1);
         assertThat(emails().lastTo("ana@ejemplo.com").orElseThrow().template()).isEqualTo("ACCOUNT_EXISTS");
@@ -100,8 +124,7 @@ class AuthFlowIT extends IntegrationTest {
         assertThat(body).contains("firstName", "email", "acceptTerms");
 
         MvcResult weak = browser.post("/api/v1/auth/register", """
-                {"firstName":"Ana","lastName":"X","email":"ana@ejemplo.com","password":"1234567890",
-                 "passwordConfirmation":"1234567890","acceptTerms":true}""");
+                {"firstName":"Ana","email":"ana@ejemplo.com","password":"12345678","acceptTerms":true}""");
         assertThat(weak.getResponse().getStatus()).isEqualTo(400);
         assertThat(weak.getResponse().getContentAsString()).contains("\"field\":\"password\"");
 

@@ -217,7 +217,7 @@ public abstract class IntegrationTest {
     protected Browser registerVerifiedAndLogin(String firstName, String email) throws Exception {
         Browser browser = new Browser();
         assertThat(browser.post("/api/v1/auth/register", registerJson(firstName, email))
-                .getResponse().getStatus()).isEqualTo(202);
+                .getResponse().getStatus()).isEqualTo(201);
         String token = tokenFromLastEmail(email);
         assertThat(browser.post("/api/v1/auth/verify-email", "{\"token\":\"" + token + "\"}")
                 .getResponse().getStatus()).isEqualTo(200);

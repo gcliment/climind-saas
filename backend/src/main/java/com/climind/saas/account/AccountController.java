@@ -58,7 +58,7 @@ public class AccountController {
             @NotBlank(message = "Ingresá tu nombre.")
             @Size(max = 80, message = "El nombre admite hasta 80 caracteres.")
             String firstName,
-            @NotBlank(message = "Ingresá tu apellido.")
+            /** Opcional, como en el registro. */
             @Size(max = 80, message = "El apellido admite hasta 80 caracteres.")
             String lastName) {
     }

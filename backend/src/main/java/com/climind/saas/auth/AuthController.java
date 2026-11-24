@@ -45,19 +45,26 @@ public class AuthController {
         return Map.of("headerName", token.getHeaderName(), "token", token.getToken());
     }
 
-    @Operation(summary = "Registrar una cuenta nueva (crea también el negocio)")
+    @Operation(summary = "Registrar una cuenta nueva (crea también el negocio)",
+            description = "Cuenta nueva: 201 con el usuario y la sesión ya iniciada (el email se confirma después). "
+                    + "Email ya registrado: 202 con un mensaje y un aviso a esa casilla, sin sesión.")
     @PostMapping("/register")
-    public ResponseEntity<AuthDtos.MessageResponse> register(@Valid @RequestBody AuthDtos.RegisterRequest request) {
-        authService.register(request);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new AuthDtos.MessageResponse(
-                "Te enviamos un email para confirmar tu cuenta. Revisá también la carpeta de spam."));
+    public ResponseEntity<?> register(@Valid @RequestBody AuthDtos.RegisterRequest request,
+                                      HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        return authService.register(request)
+                .<ResponseEntity<?>>map(principal -> {
+                    sessionService.establish(principal, httpRequest, httpResponse);
+                    return ResponseEntity.status(HttpStatus.CREATED).body(authService.me(principal));
+                })
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.ACCEPTED).body(new AuthDtos.MessageResponse(
+                        "Te enviamos un email a esa dirección. Revisá también la carpeta de spam.")));
     }
 
     @Operation(summary = "Confirmar el email con el token recibido")
     @PostMapping("/verify-email")
     public AuthDtos.MessageResponse verifyEmail(@Valid @RequestBody AuthDtos.TokenRequest request) {
         authService.verifyEmail(request.token());
-        return new AuthDtos.MessageResponse("¡Listo! Confirmaste tu email. Ya podés ingresar.");
+        return new AuthDtos.MessageResponse("¡Listo! Confirmaste tu email.");
     }
 
     @Operation(summary = "Reenviar el email de verificación")

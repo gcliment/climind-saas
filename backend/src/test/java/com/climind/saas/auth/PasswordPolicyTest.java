@@ -15,13 +15,13 @@ class PasswordPolicyTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"", "corta", "123456789"})
+    @ValueSource(strings = {"", "corta", "Abc-123"})
     void rechazaContrasenasCortas(String password) {
         assertThat(PasswordPolicy.validate(password, "ana@ejemplo.com")).isPresent();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1234567890", "Contraseña1", "aaaaaaaaaaaa", "abababababab", "ARGENTINA123"})
+    @ValueSource(strings = {"1234567890", "12345678", "Password", "Contraseña1", "aaaaaaaaaaaa", "abababababab", "ARGENTINA123"})
     void rechazaContrasenasComunesORepetitivas(String password) {
         assertThat(PasswordPolicy.validate(password, "ana@ejemplo.com")).isPresent();
     }

@@ -80,13 +80,20 @@ public class AuthService {
     // ------------------------------------------------------------------ registro
 
     /**
-     * Crea usuario + negocio + membresía OWNER + perfil, y envía el email de verificación.
-     * Si el email ya existe no lo revela: envía un aviso a esa casilla y responde igual.
+     * Crea usuario + negocio + membresía OWNER + perfil, envía el email de verificación y devuelve el
+     * principal para abrir la sesión en el acto: la cuenta se usa sin esperar la confirmación (el panel
+     * muestra un aviso hasta que se confirme).
+     * <p>
+     * Si el email ya existe envía un aviso a esa casilla y devuelve vacío (sin sesión). Decisión tomada:
+     * que la cuenta nueva entre directo implica que una respuesta distinta deja inferir si un email está
+     * registrado; lo acepta a cambio de no perder altas por el paso del email (el registro tiene límite
+     * de intentos por IP y email).
      */
     @Transactional
-    public void register(AuthDtos.RegisterRequest request) {
+    public Optional<AppPrincipal> register(AuthDtos.RegisterRequest request) {
         String email = User.normalizeEmail(request.email());
-        if (!request.password().equals(request.passwordConfirmation())) {
+        String confirmation = request.passwordConfirmation();
+        if (confirmation != null && !confirmation.isEmpty() && !request.password().equals(confirmation)) {
             throw ApiException.field("passwordConfirmation", "Las contraseñas no coinciden.");
         }
         PasswordPolicy.validate(request.password(), email)
@@ -104,7 +111,7 @@ public class AuthService {
                         existing.get().getId(), null);
             }
             log.info("Registro con email existente {}", Masking.email(email));
-            return;
+            return Optional.empty();
         }
 
         Instant now = clock.instant();
@@ -118,6 +125,9 @@ public class AuthService {
         if (rateLimiter.tryConsume(RateLimiter.Policy.EMAIL_ACTION, email)) {
             sendVerification(user, now);
         }
+        user.registerSuccessfulLogin(now);
+        audit.record(AuditAction.LOGIN_SUCCEEDED, user.getId(), tenant.getId());
+        return Optional.of(principalFor(user));
     }
 
     @Transactional
@@ -202,13 +212,15 @@ public class AuthService {
             throw ApiException.forbidden("ACCOUNT_DISABLED",
                     "Tu cuenta está deshabilitada. Escribinos para resolverlo.");
         }
-        if (!user.isEmailVerified()) {
-            throw ApiException.forbidden("EMAIL_NOT_VERIFIED",
-                    "Todavía no confirmaste tu email. Revisá tu casilla o pedí un nuevo enlace.");
-        }
+        // Sin confirmar el email también puede ingresar: el panel muestra el aviso para confirmarlo.
         user.registerSuccessfulLogin(now);
+        AppPrincipal principal = principalFor(user);
+        audit.record(AuditAction.LOGIN_SUCCEEDED, user.getId(), principal.tenantId());
+        return principal;
+    }
+
+    private AppPrincipal principalFor(User user) {
         Optional<TenantMembership> membership = tenantService.primaryMembership(user.getId());
-        audit.record(AuditAction.LOGIN_SUCCEEDED, user.getId(), membership.map(TenantMembership::getTenantId).orElse(null));
         return new AppPrincipal(user.getId(), user.getEmail(),
                 membership.map(TenantMembership::getTenantId).orElse(null),
                 membership.map(m -> m.getRole().name()).orElse(null),
@@ -286,7 +298,7 @@ public class AuthService {
                         t.isDeletionScheduled() ? t.getDeletionScheduledFor() : null))
                 .orElse(null);
         return new AuthDtos.MeResponse(new AuthDtos.UserView(user.getId(), user.getEmail(), user.getFirstName(),
-                user.getLastName(), user.getPlatformRole()), tenant);
+                user.getLastName(), user.getPlatformRole(), user.isEmailVerified()), tenant);
     }
 
     // ------------------------------------------------------------------ helpers

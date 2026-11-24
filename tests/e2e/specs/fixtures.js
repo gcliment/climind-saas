@@ -41,25 +41,22 @@ async function lastEmailLink(request, to, pathPart) {
 
 const PASSWORD = 'Cotizar-Facil-2026';
 
-/** Alta completa por la interfaz: registro, verificación con el link del email e ingreso. */
+/**
+ * Alta completa por la interfaz: registro (entra directo al asistente) y confirmación del email con el
+ * link recibido. Deja la sesión iniciada en la guía de configuración, como un primer ingreso.
+ */
 async function registerAndLogin(page, request, firstName) {
   const email = uniqueEmail(firstName.toLowerCase());
   await page.goto('/registro');
-  await page.getByLabel('Nombre', { exact: true }).fill(firstName);
-  await page.getByLabel('Apellido').fill('Prueba');
+  await page.getByLabel('Tu nombre').fill(firstName);
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Contraseña', { exact: true }).fill(PASSWORD);
-  await page.getByLabel('Repetí la contraseña').fill(PASSWORD);
-  await page.getByLabel(/Acepto los/).check();
-  await page.getByRole('button', { name: 'Crear cuenta' }).click();
-  await base.expect(page.getByRole('heading', { name: 'Revisá tu email' })).toBeVisible();
+  await page.getByRole('button', { name: 'Crear mi cuenta gratis' }).click();
+  await base.expect(page).toHaveURL(/\/app\/onboarding$/);
   await page.goto(await lastEmailLink(request, email, '/verificar'));
   await base.expect(page.getByRole('heading', { name: 'Email confirmado' })).toBeVisible();
-  await page.goto('/ingresar');
-  await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Contraseña', { exact: true }).fill(PASSWORD);
-  await page.getByRole('button', { name: 'Ingresar' }).click();
-  await base.expect(page).toHaveURL(/\/app\//);
+  await page.goto('/app/onboarding');
+  await base.expect(page).toHaveURL(/\/app\/onboarding$/);
   return email;
 }
 

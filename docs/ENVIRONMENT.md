@@ -24,6 +24,7 @@ Ejemplo completo: [`infra/.env.example`](../infra/.env.example). **Nunca** commi
 | `APP_PORTAL_HOST` | no | vacío | Host que muestra el portal en `/`. Ej: `saas.climind-ia.com` |
 | `APP_SUPPORT_EMAIL` | recomendada | vacío | Email de soporte que se muestra en la ayuda, la landing y el portal. Vacío = no se muestra (se ofrecen las preguntas frecuentes) |
 | `APP_SUPPORT_WHATSAPP` | recomendada | vacío | WhatsApp comercial con código de país (`5492211234567`) para los botones «Escribinos» de la landing y el portal (cotizador a medida). Vacío = esos botones escriben a `APP_SUPPORT_EMAIL` |
+| `APP_META_PIXEL_ID` | opcional | vacío | ID del píxel (dataset) de Meta. Carga el píxel solo en la landing, `/precios` y `/registro` (PageView y CompleteRegistration al crear la cuenta) y agrega `connect.facebook.net` y `www.facebook.com` a la CSP. Nunca se carga en el panel ni en los cotizadores públicos. Vacío = sin píxel y CSP sin dominios externos |
 | `APP_DEMO_ENABLED` | no | `true` (`false` en tests) | Crea al arrancar, si falta, el negocio ficticio de las demos públicas (`/c/demo/...`) |
 | `ACCOUNT_DELETION_GRACE` | no | `30d` | Plazo para arrepentirse de una baja de cuenta antes de eliminar los datos |
 | `COOKIE_SECURE` | — | `true` en prod | Cookie de sesión solo por HTTPS. Poner `false` únicamente para pruebas locales por http. |

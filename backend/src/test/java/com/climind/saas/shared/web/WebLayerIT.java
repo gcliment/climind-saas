@@ -52,7 +52,7 @@ class WebLayerIT extends IntegrationTest {
         var response = result.getResponse();
         assertThat(response.getHeader("Content-Security-Policy"))
                 .contains("default-src 'self'", "script-src 'self'", "frame-ancestors 'none'")
-                .doesNotContain("unsafe-inline", "unsafe-eval");
+                .doesNotContain("unsafe-inline", "unsafe-eval", "facebook"); // sin APP_META_PIXEL_ID: sin dominios externos
         assertThat(response.getHeader("X-Frame-Options")).isEqualTo("DENY");
         assertThat(response.getHeader("X-Content-Type-Options")).isEqualTo("nosniff");
         assertThat(response.getHeader("Referrer-Policy")).isEqualTo("no-referrer");
@@ -98,7 +98,7 @@ class WebLayerIT extends IntegrationTest {
     void configuracionDelSitioYHealthcheck() throws Exception {
         MvcResult config = mockMvc.perform(anonymousGet("/site-config.js")).andReturn();
         assertThat(config.getResponse().getContentType()).startsWith("application/javascript");
-        assertThat(config.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("window.CLIMIND_CONFIG", "\"appUrl\"", "\"supportWhatsapp\"");
+        assertThat(config.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("window.CLIMIND_CONFIG", "\"appUrl\"", "\"supportWhatsapp\"", "\"metaPixelId\":\"\"");
 
         MvcResult health = mockMvc.perform(anonymousGet("/actuator/health")).andReturn();
         assertThat(health.getResponse().getStatus()).isEqualTo(200);

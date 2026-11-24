@@ -19,7 +19,7 @@ public final class AuthDtos {
             @Size(max = 80, message = "El nombre admite hasta 80 caracteres.")
             String firstName,
 
-            @NotBlank(message = "Ingresá tu apellido.")
+            /** Opcional: el registro solo pide el nombre (el apellido se completa después en «Tu cuenta»). */
             @Size(max = 80, message = "El apellido admite hasta 80 caracteres.")
             String lastName,
 
@@ -32,7 +32,7 @@ public final class AuthDtos {
             @Size(max = 200, message = "La contraseña es demasiado larga.")
             String password,
 
-            @NotBlank(message = "Repetí la contraseña.")
+            /** Opcional: el formulario de registro tiene «Mostrar» en vez de repetir la contraseña. Si viene, debe coincidir. */
             @Size(max = 200, message = "La contraseña es demasiado larga.")
             String passwordConfirmation,
 
@@ -100,7 +100,9 @@ public final class AuthDtos {
     public record MessageResponse(String message) {
     }
 
-    public record UserView(UUID id, String email, String firstName, String lastName, String platformRole) {
+    /** @param emailVerified false mientras no confirme el email: el panel muestra un aviso para reenviarlo */
+    public record UserView(UUID id, String email, String firstName, String lastName, String platformRole,
+                           boolean emailVerified) {
     }
 
     /** @param deletionScheduledFor baja de la cuenta programada (null si no hay una en curso) */

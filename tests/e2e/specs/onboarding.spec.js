@@ -3,45 +3,36 @@ const { test, expect, uniqueEmail, lastEmailLink } = require('./fixtures');
 
 const PASSWORD = 'Cotizar-Facil-2026';
 
-test('registro → verificación → ingreso → datos del negocio → salir', async ({ page, request }) => {
+test('registro (entra directo) → verificación → datos del negocio → salir → ingreso', async ({ page, request }) => {
   const email = uniqueEmail('ana');
 
-  // Registro
+  // Registro: solo nombre, email y contraseña; entra directo a la guía de configuración.
   await page.goto('/registro');
-  await page.getByLabel('Nombre', { exact: true }).fill('Ana');
-  await page.getByLabel('Apellido').fill('Prueba');
+  await expect(page.getByLabel('Apellido')).toHaveCount(0);
+  await expect(page.getByLabel('Repetí la contraseña')).toHaveCount(0);
+  await page.getByLabel('Tu nombre').fill('Ana');
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Contraseña', { exact: true }).fill(PASSWORD);
-  await page.getByLabel('Repetí la contraseña').fill(PASSWORD);
-  await page.getByLabel(/Acepto los/).check();
-  await page.getByRole('button', { name: 'Crear cuenta' }).click();
-  await expect(page.getByRole('heading', { name: 'Revisá tu email' })).toBeVisible();
-  await expect(page.locator('#sent-to')).toHaveText(email);
+  await page.getByRole('button', { name: 'Crear mi cuenta gratis' }).click();
+  await expect(page).toHaveURL(/\/app\/onboarding$/);
 
-  // Ingresar sin confirmar: avisa y ofrece reenviar.
-  await page.goto('/ingresar');
-  await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Contraseña', { exact: true }).fill(PASSWORD);
-  await page.getByRole('button', { name: 'Ingresar' }).click();
-  await expect(page.getByRole('alert')).toContainText('Todavía no confirmaste tu email');
-  await expect(page.getByRole('button', { name: 'Reenviar email de confirmación' })).toBeVisible();
+  // Sin confirmar el email: aviso en el panel con opción de reenviar el enlace.
+  await page.getByRole('link', { name: 'Saltear por ahora' }).click();
+  await expect(page).toHaveURL(/\/app\/$/);
+  await expect(page.getByRole('heading', { name: 'Hola, Ana' })).toBeVisible();
+  const banner = page.locator('#verify-email-banner');
+  await expect(banner).toContainText('Confirmá tu email');
+  await banner.getByRole('button', { name: 'Reenviar el enlace' }).click();
+  await expect(banner).toContainText('te reenviamos el enlace');
 
   // Verificación con el link del email (el token se quita de la barra de direcciones).
   const verifyLink = await lastEmailLink(request, email, '/verificar');
   await page.goto(verifyLink);
   await expect(page.getByRole('heading', { name: 'Email confirmado' })).toBeVisible();
   await expect(page).toHaveURL(/\/verificar$/);
-
-  // Ingreso
-  await page.getByRole('link', { name: 'Ingresar' }).click();
-  await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Contraseña', { exact: true }).fill(PASSWORD);
-  await page.getByRole('button', { name: 'Ingresar' }).click();
-  // Primer ingreso: la guía de configuración; se puede saltear.
-  await expect(page).toHaveURL(/\/app\/onboarding$/);
-  await page.getByRole('link', { name: 'Saltear por ahora' }).click();
-  await expect(page).toHaveURL(/\/app\/$/);
+  await page.goto('/app/');
   await expect(page.getByRole('heading', { name: 'Hola, Ana' })).toBeVisible();
+  await expect(page.locator('#verify-email-banner')).toHaveCount(0);
 
   // Datos del negocio
   await page.getByRole('link', { name: 'Completar datos' }).click();
@@ -66,12 +57,18 @@ test('registro → verificación → ingreso → datos del negocio → salir', a
   await expect(page).toHaveURL(/\/ingresar$/);
   await page.goto('/app/negocio');
   await expect(page).toHaveURL(/\/ingresar\?next=%2Fapp%2Fnegocio$/);
+
+  // Volver a ingresar con email y contraseña.
+  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Contraseña', { exact: true }).fill(PASSWORD);
+  await page.getByRole('button', { name: 'Ingresar' }).click();
+  await expect(page).toHaveURL(/\/app\/negocio$/);
 });
 
 test('validación accesible en el registro y credenciales incorrectas', async ({ page }) => {
   await page.goto('/registro');
-  await page.getByRole('button', { name: 'Crear cuenta' }).click();
-  const firstName = page.getByLabel('Nombre', { exact: true });
+  await page.getByRole('button', { name: 'Crear mi cuenta gratis' }).click();
+  const firstName = page.getByLabel('Tu nombre');
   await expect(firstName).toHaveAttribute('aria-invalid', 'true');
   await expect(firstName).toBeFocused();
   await expect(page.getByText('Ingresá tu nombre.')).toBeVisible();

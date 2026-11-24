@@ -105,6 +105,7 @@ app:
   portal-host: ${APP_PORTAL_HOST:}
   support-email: ${APP_SUPPORT_EMAIL:}
   support-whatsapp: ${APP_SUPPORT_WHATSAPP:}
+  meta-pixel-id: ${APP_META_PIXEL_ID:}
   storage:
     dir: ${STORAGE_DIR:./storage}
   security:

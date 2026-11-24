@@ -27,6 +27,18 @@ public class AppProperties {
      * landing y el portal (cotizador a medida). Vacío = esos botones escriben al email de soporte.
      */
     private String supportWhatsapp = "";
+    /**
+     * ID del píxel (dataset) de Meta para medir visitas y registros que llegan desde los anuncios. Solo se
+     * carga en la landing, precios y registro; nunca en el panel ni en los cotizadores públicos de los
+     * negocios. Vacío = sin píxel y CSP estricta sin dominios externos.
+     */
+    private String metaPixelId = "";
+
+    /** Píxel de Meta configurado (solo dígitos; cualquier otro valor se ignora). */
+    public String metaPixelIdOrEmpty() {
+        String id = metaPixelId == null ? "" : metaPixelId.strip();
+        return id.matches("\\d{5,20}") ? id : "";
+    }
 
     private Security security = new Security();
     private Storage storage = new Storage();

@@ -105,6 +105,40 @@ function renderDeletionBanner(scheduledFor, current) {
   main.prepend(banner);
 }
 
+/**
+ * Aviso mientras el email no esté confirmado: la cuenta se usa igual, pero sin confirmar no hay forma
+ * segura de recuperar la contraseña ni de asegurar que te lleguen los avisos de consultas.
+ */
+function renderVerifyEmailBanner(user, current) {
+  const main = document.querySelector('.panel-main');
+  document.getElementById('verify-email-banner')?.remove();
+  // En la guía inicial no: recién se registró y lo importante es que arme su primer cotizador.
+  if (!main || user.emailVerified !== false || current === '/app/onboarding') return;
+  const banner = document.createElement('div');
+  banner.id = 'verify-email-banner';
+  banner.className = 'notice notice-warn deletion-banner';
+  banner.setAttribute('role', 'status');
+  const text = document.createElement('span');
+  text.textContent = `Confirmá tu email: te mandamos un enlace a ${user.email} (revisá también spam). Así te llegan los avisos de cada consulta.`;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'btn btn-link p-0 border-0 align-baseline';
+  button.textContent = 'Reenviar el enlace';
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    try {
+      await api.post('/api/v1/auth/resend-verification', { email: user.email });
+      text.textContent = `Listo, te reenviamos el enlace a ${user.email}. Puede tardar unos minutos.`;
+      button.remove();
+    } catch {
+      button.disabled = false;
+      text.textContent = 'No pudimos reenviar el enlace. Probá de nuevo en unos minutos.';
+    }
+  });
+  banner.append(text, button);
+  main.prepend(banner);
+}
+
 async function logout() {
   try {
     await api.post('/api/v1/auth/logout');
@@ -134,8 +168,9 @@ export async function initPanel({ current, requireTenant = true }) {
   renderNav(document.getElementById('tabbar'), items.filter((i) => !i.desktopOnly), current);
   renderTopbarMenu(items, current);
   renderDeletionBanner(me.tenant?.deletionScheduledFor, current);
+  renderVerifyEmailBanner(me.user, current);
 
-  const fullName = `${me.user.firstName} ${me.user.lastName}`;
+  const fullName = `${me.user.firstName} ${me.user.lastName || ''}`.trim();
   document.querySelectorAll('[data-user-name]').forEach((el) => { el.textContent = fullName; });
   document.querySelectorAll('[data-business-name]').forEach((el) => {
     el.textContent = me.tenant ? me.tenant.name : 'Climind SaaS';

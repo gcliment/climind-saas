@@ -88,7 +88,7 @@ public class User extends AssignedIdEntity {
         this.email = normalizeEmail(email);
         this.passwordHash = passwordHash;
         this.firstName = firstName.strip();
-        this.lastName = lastName.strip();
+        this.lastName = lastName == null ? "" : lastName.strip();
         this.passwordChangedAt = now;
         this.termsAcceptedAt = now;
     }
@@ -148,7 +148,7 @@ public class User extends AssignedIdEntity {
 
     public void rename(String firstName, String lastName) {
         this.firstName = firstName.strip();
-        this.lastName = lastName.strip();
+        this.lastName = lastName == null ? "" : lastName.strip();
     }
 
     public void setProductEmails(boolean productEmails) {

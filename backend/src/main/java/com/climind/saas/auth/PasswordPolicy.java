@@ -8,17 +8,20 @@ import java.util.Set;
 /**
  * Política de contraseñas (criterio NIST 800-63B: largo por sobre reglas de composición).
  * <ul>
- *   <li>Mínimo 10 caracteres.</li>
+ *   <li>Mínimo 8 caracteres (NIST 800-63B), más la lista de contraseñas comunes.</li>
  *   <li>Máximo 72 bytes UTF-8: límite real de BCrypt (más allá se ignoraría en silencio).</li>
  *   <li>No puede ser una contraseña muy común ni contener la parte local del email.</li>
  * </ul>
  */
 public final class PasswordPolicy {
 
-    public static final int MIN_LENGTH = 10;
+    public static final int MIN_LENGTH = 8;
     public static final int MAX_BYTES = 72;
 
     private static final Set<String> COMMON = Set.of(
+            "12345678", "123456789", "87654321", "11111111", "00000000", "12341234", "abcd1234", "abc12345",
+            "password", "qwertyui", "qwerty12", "asdfghjk", "iloveyou", "argentina", "contra123",
+            "teamo123", "boca1234", "river123", "climind1", "cotiza12", "cotizador",
             "1234567890", "12345678910", "0123456789", "1234512345", "1111111111", "0000000000",
             "qwertyuiop", "contraseña", "contrasena", "contraseña1", "contrasena1", "password1",
             "password12", "password123", "passw0rd123", "abcdefghij", "abc1234567", "iloveyou12",

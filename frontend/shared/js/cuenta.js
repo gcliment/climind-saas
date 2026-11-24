@@ -59,7 +59,7 @@ $('profile-form').addEventListener('submit', (event) => {
   submit(form, () => api.put('/api/v1/account/profile', formData(form)), (updated) => {
     account = updated;
     render();
-    const fullName = `${account.firstName} ${account.lastName}`;
+    const fullName = `${account.firstName} ${account.lastName || ''}`.trim();
     document.querySelectorAll('[data-user-name]').forEach((el) => { el.textContent = fullName; });
     flash('profile-status', 'Guardado');
   });

@@ -1,5 +1,6 @@
 package com.climind.saas.shared.security;
 
+import com.climind.saas.shared.config.AppProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -26,18 +27,27 @@ import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWrite
 @Configuration
 public class SecurityConfig {
 
-    /** CSP estricta: sin scripts ni estilos inline, todo servido desde el mismo origen. */
-    static final String CONTENT_SECURITY_POLICY = String.join("; ",
-            "default-src 'self'",
-            "script-src 'self'",
-            "style-src 'self'",
-            "img-src 'self' data: blob:",
-            "font-src 'self'",
-            "connect-src 'self'",
-            "object-src 'none'",
-            "base-uri 'self'",
-            "form-action 'self'",
-            "frame-ancestors 'none'");
+    /** Dominios que necesita el píxel de Meta (script, y la imagen o pedido con el que envía cada evento). */
+    private static final String META_SCRIPT = "https://connect.facebook.net";
+    private static final String META_EVENTS = "https://www.facebook.com";
+
+    /**
+     * CSP estricta: sin scripts ni estilos inline, todo servido desde el mismo origen. Con el píxel de Meta
+     * configurado se agregan solo sus dominios.
+     */
+    static String contentSecurityPolicy(boolean metaPixel) {
+        return String.join("; ",
+                "default-src 'self'",
+                metaPixel ? "script-src 'self' " + META_SCRIPT : "script-src 'self'",
+                "style-src 'self'",
+                metaPixel ? "img-src 'self' data: blob: " + META_EVENTS : "img-src 'self' data: blob:",
+                "font-src 'self'",
+                metaPixel ? "connect-src 'self' " + META_EVENTS + " " + META_SCRIPT : "connect-src 'self'",
+                "object-src 'none'",
+                "base-uri 'self'",
+                "form-action 'self'",
+                "frame-ancestors 'none'");
+    }
 
     @Bean
     public SecurityContextRepository securityContextRepository() {
@@ -46,8 +56,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityContextRepository contextRepository,
-                                                   Environment environment) throws Exception {
+                                                   Environment environment, AppProperties properties) throws Exception {
         boolean devEndpoints = environment.acceptsProfiles(Profiles.of("dev"));
+        String policy = contentSecurityPolicy(!properties.metaPixelIdOrEmpty().isEmpty());
         http
                 .securityContext(sc -> sc.securityContextRepository(contextRepository))
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
@@ -65,7 +76,7 @@ public class SecurityConfig {
                 .headers(h -> h
                         .frameOptions(f -> f.deny())
                         .referrerPolicy(r -> r.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER))
-                        .contentSecurityPolicy(csp -> csp.policyDirectives(CONTENT_SECURITY_POLICY))
+                        .contentSecurityPolicy(csp -> csp.policyDirectives(policy))
                         .httpStrictTransportSecurity(hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(31_536_000))
                         .permissionsPolicyHeader(p -> p.policy("camera=(), microphone=(), geolocation=(), payment=()")))
                 .authorizeHttpRequests(auth -> {

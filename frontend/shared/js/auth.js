@@ -58,7 +58,6 @@ function showSection(hideId, showId) {
 if (page === 'registro') {
   const form = document.getElementById('register-form');
   const notice = document.getElementById('register-notice');
-  let registeredEmail = '';
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -66,21 +65,22 @@ if (page === 'registro') {
     hideNotice(notice);
     if (requireFields(form, [
       { name: 'firstName', message: 'Ingresá tu nombre.' },
-      { name: 'lastName', message: 'Ingresá tu apellido.' },
       { name: 'email', message: 'Ingresá tu email.' },
       { name: 'password', message: 'Elegí una contraseña.' },
-      { name: 'passwordConfirmation', message: 'Repetí la contraseña.' },
-      { name: 'acceptTerms', message: 'Para crear la cuenta tenés que aceptar los términos y la política de privacidad.' },
     ])) return;
-    const data = formData(form);
-    if (data.password !== data.passwordConfirmation) {
-      showFieldErrors(form, [{ field: 'passwordConfirmation', message: 'Las contraseñas no coinciden.' }]);
-      return;
-    }
+    // Aceptar los términos es crear la cuenta: el texto está junto al botón.
+    const data = { ...formData(form), acceptTerms: true };
     await withBusy(form.querySelector('[type="submit"]'), async () => {
       try {
-        await api.post('/api/v1/auth/register', data);
-        registeredEmail = data.email;
+        const result = await api.post('/api/v1/auth/register', data);
+        if (result?.user) {
+          // Cuenta nueva con la sesión ya iniciada: directo a armar el primer cotizador.
+          const { trackRegistration } = await import('./meta-pixel.js');
+          await trackRegistration();
+          window.location.assign(destinationAfterLogin(result, '/app/'));
+          return;
+        }
+        // Email ya registrado: le llega un aviso con el enlace para ingresar o recuperar la contraseña.
         document.getElementById('sent-to').textContent = data.email;
         showSection('register-step', 'register-done');
       } catch (error) {
@@ -88,24 +88,12 @@ if (page === 'registro') {
       }
     });
   });
-
-  const resendButton = document.getElementById('resend-button');
-  resendButton.addEventListener('click', () => withBusy(resendButton, async () => {
-    const resendNotice = document.getElementById('resend-notice');
-    try {
-      const result = await api.post('/api/v1/auth/resend-verification', { email: registeredEmail });
-      showNotice(resendNotice, result.message, 'ok');
-    } catch (error) {
-      showNotice(resendNotice, error.message);
-    }
-  }));
 }
 
 // ---------------------------------------------------------------- ingreso
 if (page === 'ingresar') {
   const form = document.getElementById('login-form');
   const notice = document.getElementById('login-notice');
-  const resendLink = document.getElementById('resend-link');
   const next = safeNext(new URLSearchParams(window.location.search).get('next'));
 
   currentUser().then((me) => {
@@ -116,7 +104,6 @@ if (page === 'ingresar') {
     event.preventDefault();
     clearFieldErrors(form);
     hideNotice(notice);
-    resendLink.hidden = true;
     if (requireFields(form, [
       { name: 'email', message: 'Ingresá tu email.' },
       { name: 'password', message: 'Ingresá tu contraseña.' },
@@ -126,20 +113,10 @@ if (page === 'ingresar') {
         const me = await api.post('/api/v1/auth/login', formData(form));
         window.location.assign(destinationAfterLogin(me, next));
       } catch (error) {
-        if (error.code === 'EMAIL_NOT_VERIFIED') resendLink.hidden = false;
         handleError(form, notice, error);
       }
     });
   });
-
-  resendLink.addEventListener('click', () => withBusy(resendLink, async () => {
-    try {
-      const result = await api.post('/api/v1/auth/resend-verification', { email: form.email.value.trim() });
-      showNotice(notice, result.message, 'ok');
-    } catch (error) {
-      showNotice(notice, error.message);
-    }
-  }));
 }
 
 // ---------------------------------------------------------------- verificación
