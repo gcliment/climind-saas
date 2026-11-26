@@ -73,3 +73,11 @@
 .stats .stat dd { overflow-wrap: anywhere; }
 .stats-text .stat dd { font-family: var(--f-body); font-size: 1rem; font-weight: 600; line-height: 1.4; }
 .stats-text .stat dt { min-height: 0; }
+/* Ficha de un negocio en administración. */
+.tenant-detail { margin-top: 1.25rem; }
+.tenant-detail-grid { display: grid; gap: 0 2rem; }
+@media (min-width: 992px) { .tenant-detail-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.tenant-detail .stats { margin-top: .5rem; }
+.tenant-detail-grid .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tenant-detail .setup { margin-top: .5rem; }
+.tenant-detail .setup li { padding-bottom: .55rem; }

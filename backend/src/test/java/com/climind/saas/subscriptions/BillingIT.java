@@ -472,6 +472,33 @@ class BillingIT extends IntegrationTest {
         assertThat((String) JsonPath.read(tenants, "$.items[0].ownerEmail")).isEqualTo("ana@ejemplo.com");
         assertThat((Integer) JsonPath.read(body(admin.get("/api/v1/admin/tenants")), "$.totalItems")).isEqualTo(2);
 
+        // Ficha de cada negocio: contacto y hasta dónde llegó.
+        String anaId = JsonPath.read(tenants, "$.items[0].id");
+        String ficha = body(admin.get("/api/v1/admin/tenants/" + anaId));
+        assertThat((String) JsonPath.read(ficha, "$.businessName")).isEqualTo("Limpiezas Ana");
+        assertThat((String) JsonPath.read(ficha, "$.planName")).isEqualTo("Pro");
+        assertThat((String) JsonPath.read(ficha, "$.contact.whatsapp")).isEqualTo("5491155550000");
+        assertThat((String) JsonPath.read(ficha, "$.contact.industryLabel")).isEqualTo("Limpieza");
+        assertThat((String) JsonPath.read(ficha, "$.owner.email")).isEqualTo("ana@ejemplo.com");
+        assertThat((Boolean) JsonPath.read(ficha, "$.owner.emailVerified")).isTrue();
+        assertThat((String) JsonPath.read(ficha, "$.owner.lastLoginAt")).isNotNull();
+        assertThat((Integer) JsonPath.read(ficha, "$.calculators.total")).isEqualTo(1);
+        assertThat((Integer) JsonPath.read(ficha, "$.calculators.published")).isEqualTo(1);
+        assertThat((Integer) JsonPath.read(ficha, "$.activity.quotesTotal")).isEqualTo(1);
+        assertThat((Integer) JsonPath.read(ficha, "$.activity.leadsTotal")).isZero();
+
+        // Recién registrado: sin datos del negocio ni cotizadores.
+        String brunoTenant = jdbc.queryForObject("""
+                select m.tenant_id::text from tenant_memberships m join users u on u.id = m.user_id where u.email = 'bruno@ejemplo.com'
+                """, String.class);
+        String nuevo = body(admin.get("/api/v1/admin/tenants/" + brunoTenant));
+        assertThat((String) JsonPath.read(nuevo, "$.businessName")).isEqualTo("Negocio de Bruno");
+        assertThat((Object) JsonPath.read(nuevo, "$.contact.whatsapp")).isNull();
+        assertThat((Object) JsonPath.read(nuevo, "$.onboardingCompletedAt")).isNull();
+        assertThat((Integer) JsonPath.read(nuevo, "$.calculators.total")).isZero();
+        assertThat(admin.get("/api/v1/admin/tenants/" + java.util.UUID.randomUUID()).getResponse().getStatus()).isEqualTo(404);
+        assertThat(ana.get("/api/v1/admin/tenants/" + anaId).getResponse().getStatus()).isEqualTo(403);
+
         String summary = body(admin.get("/api/v1/admin/summary"));
         assertThat((Integer) JsonPath.read(summary, "$.revenue.paidSubscribers")).isEqualTo(1);
         assertThat((Integer) JsonPath.read(summary, "$.freeTenants")).isEqualTo(1);

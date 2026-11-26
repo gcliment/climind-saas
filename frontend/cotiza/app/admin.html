@@ -72,6 +72,28 @@
           <th scope="col" class="num">Publicados</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Acciones</span></th>
         </tr></thead><tbody id="tenant-rows"></tbody></table></div>
         <p class="form-text" id="tenant-count"></p>
+
+        <section class="panel-block tenant-detail" id="tenant-detail" aria-labelledby="tenant-detail-title" tabindex="-1" hidden>
+          <div class="d-flex flex-wrap align-items-start justify-content-between gap-2">
+            <div>
+              <h2 id="tenant-detail-title" class="m-0"></h2>
+              <p class="form-text m-0" id="tenant-detail-sub"></p>
+            </div>
+            <button class="btn btn-quiet btn-sm" type="button" id="tenant-detail-close">Cerrar ficha</button>
+          </div>
+          <div class="tenant-detail-grid">
+            <div>
+              <h3 class="h6 mt-3">Cómo contactarlo</h3>
+              <dl class="stats stats-text" id="tenant-contact"></dl>
+            </div>
+            <div>
+              <h3 class="h6 mt-3">Hasta dónde llegó</h3>
+              <ol class="setup" id="tenant-progress"></ol>
+            </div>
+          </div>
+          <h3 class="h6 mt-4">Actividad</h3>
+          <dl class="stats stats-text" id="tenant-activity"></dl>
+        </section>
       </section>
 
       <section role="tabpanel" id="panel-suscripciones" aria-labelledby="tab-suscripciones" hidden>

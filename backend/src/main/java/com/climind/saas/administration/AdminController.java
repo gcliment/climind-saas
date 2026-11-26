@@ -52,6 +52,12 @@ public class AdminController {
         return tenants.list(q, status, page, size);
     }
 
+    @Operation(summary = "Ficha de un negocio: contacto, dueño, guía inicial, cotizadores, cotizaciones y consultas")
+    @GetMapping("/tenants/{id}")
+    public AdminTenantService.AdminTenantDetail tenant(@PathVariable UUID id) {
+        return tenants.detail(id);
+    }
+
     @Operation(summary = "Suspender un negocio (motivo obligatorio; queda auditado)")
     @PostMapping("/tenants/{id}/suspend")
     public ResponseEntity<Void> suspend(@PathVariable UUID id, @Valid @RequestBody AdminTenantService.SuspendRequest request) {

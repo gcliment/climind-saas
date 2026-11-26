@@ -106,7 +106,9 @@ loaders.negocios = async () => {
   const q = new URLSearchParams({ q: $('tenant-q').value.trim(), status: $('tenant-status').value, size: '50' });
   const page = await api.get(`/api/v1/admin/tenants?${q}`);
   $('tenant-rows').replaceChildren(...page.items.map((t) => h('tr', {},
-    h('td', {}, t.businessName, h('small', { text: `${t.ownerEmail || ''} · /c/${t.slug}` })),
+    h('td', {},
+      h('button', { type: 'button', class: 'btn btn-link p-0 text-start fw-semibold', text: t.businessName, 'aria-label': `Ver ficha de ${t.businessName}`, on: { click: () => showTenant(t.id) } }),
+      h('small', { text: `${t.ownerEmail || ''} · /c/${t.slug}` })),
     h('td', { text: date(t.createdAt) }),
     h('td', {}, t.planName, t.paid ? null : h('small', { text: 'sin costo' })),
     h('td', { class: 'num', text: `${formatNumber(t.quotesUsed)} / ${formatNumber(t.quotesLimit)}` }),
@@ -122,6 +124,66 @@ loaders.negocios = async () => {
     ? `Mostrando ${page.items.length} de ${page.totalItems}. Refiná la búsqueda para ver otros.` : `${formatNumber(page.totalItems)} negocios.`;
 };
 $('tenant-filters').addEventListener('submit', (e) => { e.preventDefault(); loaders.negocios().catch((err) => showNotice(notice, err.message)); });
+
+// Ficha de un negocio: para hacer seguimiento a cada alta (contacto y hasta dónde llegó).
+const dateTime = (v) => (v ? formatDateTime(v) : '—');
+const link = (href, text) => h('a', { href, target: '_blank', rel: 'noopener', text });
+
+function contactRows(d) {
+  const c = d.contact;
+  const o = d.owner;
+  const name = o ? `${o.firstName} ${o.lastName || ''}`.trim() : '—';
+  const rows = [
+    ['Dueño', name],
+    ['Email de la cuenta', o ? link(`mailto:${o.email}`, o.email) : '—'],
+    ['WhatsApp', c.whatsapp ? link(`https://wa.me/${c.whatsapp}`, `+${c.whatsapp}`) : 'No lo cargó'],
+    ['Rubro', c.industryLabel || 'No lo eligió'],
+  ];
+  if (c.phone) rows.push(['Teléfono', c.phone]);
+  if (c.email && c.email !== o?.email) rows.push(['Email de contacto', link(`mailto:${c.email}`, c.email)]);
+  if (c.website) rows.push(['Sitio web', link(c.website.startsWith('http') ? c.website : `https://${c.website}`, c.website)]);
+  return rows;
+}
+
+function progressSteps(d) {
+  const k = d.calculators;
+  const a = d.activity;
+  return [
+    [d.owner?.emailVerified, 'Confirmó el email', d.owner?.emailVerified ? null : 'Todavía no abrió el enlace del email.'],
+    [Boolean(d.contact.industry || d.contact.whatsapp), 'Cargó los datos del negocio', d.contact.industry || d.contact.whatsapp ? null : 'Sin rubro ni WhatsApp.'],
+    [Boolean(d.onboardingCompletedAt), 'Terminó la guía inicial', d.onboardingCompletedAt ? `El ${date(d.onboardingCompletedAt)}.` : null],
+    [k.total > 0, 'Creó un cotizador', k.total > 0 ? `${formatNumber(k.total)} en total (${formatNumber(k.drafts)} en borrador).` : null],
+    [k.published + k.paused > 0, 'Publicó un cotizador', k.paused ? `${formatNumber(k.paused)} pausado(s).` : null],
+    [a.quotesTotal > 0, 'Recibió cotizaciones', a.quotesTotal > 0 ? `${formatNumber(a.quotesTotal)} en total.` : null],
+    [a.leadsTotal > 0, 'Recibió consultas', a.leadsTotal > 0 ? `${formatNumber(a.leadsTotal)} en total.` : null],
+  ];
+}
+
+async function showTenant(id) {
+  const section = $('tenant-detail');
+  try {
+    const d = await api.get(`/api/v1/admin/tenants/${id}`);
+    $('tenant-detail-title').textContent = d.businessName;
+    $('tenant-detail-sub').textContent = `/c/${d.slug} · Plan ${d.planName}${d.paid ? '' : ' (sin costo)'} · ${TENANT_LABEL[d.status] || d.status}`;
+    $('tenant-contact').replaceChildren(...contactRows(d).map(([label, value]) => h('div', { class: 'stat' }, h('dt', { text: label }), h('dd', {}, value))));
+    $('tenant-progress').replaceChildren(...progressSteps(d).map(([done, label, detail]) =>
+      h('li', { class: done ? 'done' : 'later' }, h('strong', { text: label }), detail ? h('div', { class: 'detail', text: detail }) : null)));
+    stats($('tenant-activity'), [
+      ['Se registró', dateTime(d.owner?.registeredAt || d.createdAt)],
+      ['Último ingreso', dateTime(d.owner?.lastLoginAt)],
+      ['Última edición de un cotizador', dateTime(d.calculators.lastEditedAt)],
+      ['Cotizaciones este mes', formatNumber(d.activity.quotesThisMonth)],
+      ['Última cotización', dateTime(d.activity.lastQuoteAt)],
+      ['Última consulta', dateTime(d.activity.lastLeadAt)],
+    ]);
+    section.hidden = false;
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    section.focus({ preventScroll: true });
+  } catch (error) {
+    showNotice(notice, error.message);
+  }
+}
+$('tenant-detail-close').addEventListener('click', () => { $('tenant-detail').hidden = true; });
 
 // ------------------------------------------------------------------ suscripciones y pagos
 
