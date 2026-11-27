@@ -140,14 +140,28 @@ public class AuthService {
     }
 
     private void sendVerification(User user, Instant now) {
+        emailService.send(MailTemplate.VERIFY_EMAIL, user.getEmail(),
+                Map.of("firstName", user.getFirstName(), "link", issueVerificationLink(user, now)),
+                user.getId(), null);
+    }
+
+    /**
+     * Enlace nuevo para confirmar el email, para incluirlo dentro de otro email (por ejemplo, el recordatorio
+     * de activación). Invalida los enlaces anteriores. Vacío si el usuario ya confirmó o no está activo.
+     */
+    @Transactional
+    public Optional<String> newVerificationLink(UUID userId) {
+        return users.findById(userId)
+                .filter(u -> !u.isEmailVerified() && u.isActive())
+                .map(u -> issueVerificationLink(u, clock.instant()));
+    }
+
+    private String issueVerificationLink(User user, Instant now) {
         verificationTokens.invalidateAll(user.getId(), now);
         String token = Tokens.newToken();
         verificationTokens.save(new EmailVerificationToken(user.getId(), Tokens.sha256Hex(token), now,
                 now.plus(properties.getSecurity().getVerificationTokenTtl())));
-        emailService.send(MailTemplate.VERIFY_EMAIL, user.getEmail(),
-                Map.of("firstName", user.getFirstName(),
-                        "link", properties.publicUrlWithoutTrailingSlash() + "/verificar?token=" + token),
-                user.getId(), null);
+        return properties.publicUrlWithoutTrailingSlash() + "/verificar?token=" + token;
     }
 
     @Transactional

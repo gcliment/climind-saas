@@ -15,6 +15,11 @@
     <a th:href="${link}" href="#"
        style="display:inline-block;background:#0071DB;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 22px;border-radius:8px;">Crear mi cotizador</a>
   </p>
+  <div th:if="${verifyLink}" style="margin:22px 0 0;padding:14px 16px;background:#FDF3E2;border-radius:8px;">
+    <p style="margin:0 0 8px;"><strong>Confirmá también tu email.</strong> Así te llegan los avisos de cada consulta y podés recuperar tu contraseña si la olvidás.</p>
+    <p style="margin:0;"><a th:href="${verifyLink}" href="#" style="color:#0071DB;font-weight:600;">Confirmar mi email</a>
+      <span style="font-size:12px;color:#6B788E;">(el enlace vence en 24 horas)</span></p>
+  </div>
   <p style="margin:18px 0 0;font-size:13px;">¿Dudas? En la <a th:href="${helpLink}" href="#" style="color:#0071DB;">ayuda</a> explicamos cada paso.</p>
 </div>
 </body>

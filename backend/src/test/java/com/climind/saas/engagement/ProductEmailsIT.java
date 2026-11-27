@@ -45,9 +45,51 @@ class ProductEmailsIT extends IntegrationTest {
         assertThat(reminder.html()).contains("No quiero recibir más estos emails", "/app/cotizadores");
         assertThat(reminder.unsubscribeUrl()).contains("/api/v1/public/emails/unsubscribe?t=");
 
+        assertThat(reminder.html()).as("ya confirmó: sin enlace de confirmación").doesNotContain("/verificar?token=");
+
         assertThat(jobs.sendActivationReminders()).as("una sola vez").isZero();
         clock.advance(Duration.ofDays(20));
         assertThat(jobs.sendActivationReminders()).isZero();
+    }
+
+    @Test
+    void quienNoConfirmoElEmailRecibeElRecordatorioConElEnlaceParaConfirmarlo() throws Exception {
+        Browser dani = new Browser();
+        assertThat(dani.post("/api/v1/auth/register", registerJson("Dani", "dani@ejemplo.com"))
+                .getResponse().getStatus()).isEqualTo(201);   // entra sin confirmar
+        String firstLink = tokenFromLastEmail("dani@ejemplo.com");
+
+        emails().clear();
+        clock.advance(Duration.ofDays(1));
+        assertThat(jobs.sendActivationReminders()).as("cuenta desde el registro: todavía es pronto").isZero();
+        clock.advance(Duration.ofDays(2));
+        assertThat(jobs.sendActivationReminders()).isEqualTo(1);
+
+        EmailMessage reminder = sent("ACTIVATION_REMINDER").getFirst();
+        assertThat(reminder.to()).isEqualTo("dani@ejemplo.com");
+        assertThat(reminder.html()).contains("Confirmá también tu email", "/verificar?token=", "/app/cotizadores");
+
+        // El enlace del recordatorio confirma el email (y reemplaza al del registro, que ya venció).
+        String token = tokenFromLastEmail("dani@ejemplo.com");
+        assertThat(token).isNotEqualTo(firstLink);
+        assertThat(dani.post("/api/v1/auth/verify-email", "{\"token\":\"" + token + "\"}")
+                .getResponse().getStatus()).isEqualTo(200);
+        assertThat(jdbc.queryForObject("select email_verified_at is not null from users", Boolean.class)).isTrue();
+        assertThat(jobs.sendActivationReminders()).as("una sola vez").isZero();
+    }
+
+    @Test
+    void elResumenMensualNoLlegaAQuienNoConfirmoElEmail() throws Exception {
+        Browser ana = registerVerifiedAndLogin("Ana", "ana@ejemplo.com");
+        publishTemplate(ana, "Limpiezas Ana", "Limpieza", "limpieza");
+        Browser dani = new Browser();
+        dani.post("/api/v1/auth/register", registerJson("Dani", "dani@ejemplo.com"));   // nunca confirmó
+        publishTemplate(dani, "Limpiezas Dani", "Limpieza", "limpieza");
+
+        emails().clear();
+        clock.set(Instant.parse("2026-11-02T12:00:00Z")); // 2 de noviembre en Buenos Aires
+        assertThat(jobs.sendMonthlySummaries()).isEqualTo(1);
+        assertThat(sent("MONTHLY_SUMMARY")).extracting(EmailMessage::to).containsExactly("ana@ejemplo.com");
     }
 
     @Test
