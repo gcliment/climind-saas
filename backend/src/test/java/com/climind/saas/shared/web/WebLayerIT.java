@@ -37,7 +37,7 @@ class WebLayerIT extends IntegrationTest {
                 "/app/consultas", "/app/estadisticas", "/app/plan", "/app/plan/simulador", "/app/cuenta", "/cotizacion/COT-ABC234", "/legal/terminos", "/legal/privacidad", "/saas/",
                 "/precios", "/ayuda", "/ayuda/primeros-pasos", "/ayuda/crear-cotizador", "/ayuda/precios-y-reglas",
                 "/ayuda/publicar-y-compartir", "/ayuda/consultas", "/ayuda/planes-y-pagos", "/ayuda/cuenta-y-datos",
-                "/emails/baja"}) {
+                "/ayuda/preguntas-frecuentes", "/offline.html", "/emails/baja"}) {
             MvcResult result = page(path);
             assertThat(result.getResponse().getStatus()).as(path).isEqualTo(200);
             assertThat(result.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).as(path).contains("<!doctype html>");
@@ -63,8 +63,8 @@ class WebLayerIT extends IntegrationTest {
     void ningunaPaginaUsaScriptsOEstilosInline() throws Exception {
         for (String path : new String[]{"/", "/ingresar", "/registro", "/app/", "/app/negocio", "/app/cotizadores",
                 "/app/editor", "/app/onboarding", "/app/consultas", "/app/estadisticas", "/app/plan", "/app/plan/simulador",
-                "/app/admin", "/cotizacion/COT-ABC234",
-                "/cotizar.html", "/saas/"}) {
+                "/app/admin", "/app/cuenta", "/cotizacion/COT-ABC234", "/ayuda", "/ayuda/preguntas-frecuentes",
+                "/offline.html", "/cotizar.html", "/saas/"}) {
             String html = page(path).getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8);
             assertThat(html).as(path).contains("<!doctype html>");
             assertThat(html).as(path).doesNotContainPattern("<script(?![^>]*\\ssrc=)[^>]*>")

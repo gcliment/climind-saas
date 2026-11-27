@@ -48,9 +48,31 @@ public class AppProperties {
     private Payments payments = new Payments();
     private Demo demo = new Demo();
     private Account account = new Account();
+    private Assistant assistant = new Assistant();
 
     public String publicUrlWithoutTrailingSlash() {
         return publicUrl.endsWith("/") ? publicUrl.substring(0, publicUrl.length() - 1) : publicUrl;
+    }
+
+    /** Asistente de ayuda del panel (chat). Sin clave de API responde con las preguntas frecuentes. */
+    @Getter
+    @Setter
+    public static class Assistant {
+        /** Clave de la API de OpenAI (OPENAI_API_KEY). Vacía = asistente sin IA. */
+        private String apiKey = "";
+        /** Modelo de OpenAI (el mismo que usa Control de Gastos). */
+        private String model = "gpt-4.1-mini";
+        private String baseUrl = "https://api.openai.com/v1";
+        /** Tiempo máximo de espera de una respuesta. */
+        private java.time.Duration timeout = java.time.Duration.ofSeconds(30);
+        /** Preguntas por usuario y por hora. */
+        private int messagesPerHourPerUser = 30;
+        /** Preguntas por usuario y por día. */
+        private int messagesPerDayPerUser = 100;
+
+        public boolean enabled() {
+            return apiKey != null && !apiKey.isBlank();
+        }
     }
 
     @Getter

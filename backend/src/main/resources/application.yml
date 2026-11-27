@@ -55,6 +55,9 @@ spring:
 server:
   port: ${PORT:8080}
   shutdown: graceful
+  # App instalable: el manifiesto con su tipo propio (los navegadores lo exigen con nosniff).
+  mime-mappings:
+    webmanifest: application/manifest+json
   error:
     include-message: never
     include-stacktrace: never
@@ -137,5 +140,11 @@ app:
     password: ${ADMIN_BOOTSTRAP_PASSWORD:}
   demo:
     enabled: ${APP_DEMO_ENABLED:true}
+  assistant:
+    api-key: ${OPENAI_API_KEY:}
+    model: ${OPENAI_MODEL:gpt-4.1-mini}
+    base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+    messages-per-hour-per-user: ${ASSISTANT_MESSAGES_PER_HOUR:30}
+    messages-per-day-per-user: ${ASSISTANT_MESSAGES_PER_DAY:100}
   account:
     deletion-grace: ${ACCOUNT_DELETION_GRACE:30d}

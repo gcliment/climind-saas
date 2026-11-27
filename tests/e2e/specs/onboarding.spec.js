@@ -51,6 +51,8 @@ test('registro (entra directo) → verificación → datos del negocio → salir
   await expect(page.locator('#step-profile')).toHaveClass(/done/);
 
   // Salir: la sesión deja de valer. En el celular "Cerrar sesión" está en el menú de la barra superior.
+  // El menú lo arma el panel al terminar de cargar: esperar antes de ver si está visible.
+  await page.locator('.panel:not([data-state])').waitFor();
   const menu = page.locator('.topbar-menu summary');
   if (await menu.isVisible()) await menu.click();
   await page.locator('[data-logout]:visible').first().click();

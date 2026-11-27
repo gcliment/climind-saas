@@ -4,7 +4,9 @@ import { formatDateTime } from './format.js';
 import { initPanel } from './panel.js';
 import { clearFieldErrors, hideNotice, showFieldErrors, showNotice, withBusy } from './ui.js';
 
-await initPanel({ current: '/app/cotizadores' });
+const me = await initPanel({ current: '/app/cotizadores' });
+// Con la baja de la cuenta programada, ningún cotizador atiende al público (la página pública da 404).
+const unavailable = Boolean(me.tenant?.deletionScheduledFor);
 
 const list = document.getElementById('calc-list');
 const notice = document.getElementById('list-notice');
@@ -25,12 +27,17 @@ function row(calc) {
   const meta = document.createElement('p');
   meta.className = 'calc-meta m-0';
   meta.textContent = calc.publishedVersionNo
-    ? `Versión ${calc.publishedVersionNo} publicada${calc.hasUnpublishedChanges ? ', con cambios sin publicar' : ''}. Editado el ${formatDateTime(calc.updatedAt)}.`
-    : `Sin publicar. Editado el ${formatDateTime(calc.updatedAt)}.`;
+    ? `Versión ${calc.publishedVersionNo} publicada${calc.hasUnpublishedChanges ? ', con cambios sin publicar' : ''}. Editado el ${formatDateTime(calc.updatedAt)}.`.replace(/\.\.$/, '.')
+    : `Sin publicar. Editado el ${formatDateTime(calc.updatedAt)}.`.replace(/\.\.$/, '.');
   info.append(title, meta);
   const badge = document.createElement('span');
   badge.className = `status-badge status-${calc.status}`;
   badge.textContent = STATUS[calc.status];
+  if (unavailable && calc.status === 'PUBLICADO') {
+    badge.className = 'status-badge status-PAUSADO';
+    badge.textContent = 'No disponible';
+    meta.textContent += ' Tus clientes no lo pueden ver mientras la baja de tu cuenta esté programada.';
+  }
   const edit = document.createElement('a');
   edit.className = 'btn btn-quiet';
   edit.href = link.href;
@@ -38,7 +45,16 @@ function row(calc) {
   edit.setAttribute('aria-label', `Editar ${calc.name}`);
   const actions = document.createElement('div');
   actions.className = 'calc-actions';
-  if (calc.status === 'PUBLICADO') {
+  if (calc.status !== 'ARCHIVADO') {
+    // Ver cómo queda sin salir del panel: abre el editor directo en la vista previa.
+    const preview = document.createElement('a');
+    preview.className = 'btn btn-quiet';
+    preview.href = `/app/editor?id=${calc.id}&vista=previa`;
+    preview.textContent = 'Vista previa';
+    preview.setAttribute('aria-label', `Ver la vista previa de ${calc.name}`);
+    actions.append(preview);
+  }
+  if (calc.status === 'PUBLICADO' && !unavailable) {
     const open = document.createElement('a');
     open.className = 'btn btn-quiet';
     open.href = calc.publicUrl;

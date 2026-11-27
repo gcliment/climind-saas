@@ -25,6 +25,10 @@ Ejemplo completo: [`infra/.env.example`](../infra/.env.example). **Nunca** commi
 | `APP_SUPPORT_EMAIL` | recomendada | vacío | Email de soporte que se muestra en la ayuda, la landing y el portal. Vacío = no se muestra (se ofrecen las preguntas frecuentes) |
 | `APP_SUPPORT_WHATSAPP` | recomendada | vacío | WhatsApp comercial con código de país (`5492211234567`) para los botones «Escribinos» de la landing y el portal (cotizador a medida). Vacío = esos botones escriben a `APP_SUPPORT_EMAIL` |
 | `APP_META_PIXEL_ID` | opcional | vacío | ID del píxel (dataset) de Meta. Carga el píxel solo en la landing, `/precios` y `/registro` (PageView y CompleteRegistration al crear la cuenta) y agrega `connect.facebook.net` y `www.facebook.com` a la CSP. Nunca se carga en el panel ni en los cotizadores públicos. Vacío = sin píxel y CSP sin dominios externos |
+| `OPENAI_API_KEY` | recomendada | vacío | Clave de la API de OpenAI para el asistente de ayuda del panel (botón «¿Dudas?»). Vacío = el asistente responde con las preguntas frecuentes, sin IA. Cada respuesta tiene costo: hay límite por usuario |
+| `OPENAI_MODEL` | opcional | `gpt-4.1-mini` | Modelo del asistente (el mismo que Control de Gastos) |
+| `OPENAI_BASE_URL` | opcional | `https://api.openai.com/v1` | URL de la API (compatible con Chat Completions) |
+| `ASSISTANT_MESSAGES_PER_HOUR` / `ASSISTANT_MESSAGES_PER_DAY` | opcional | 30 / 100 | Preguntas al asistente por usuario |
 | `APP_DEMO_ENABLED` | no | `true` (`false` en tests) | Crea al arrancar, si falta, el negocio ficticio de las demos públicas (`/c/demo/...`) |
 | `ACCOUNT_DELETION_GRACE` | no | `30d` | Plazo para arrepentirse de una baja de cuenta antes de eliminar los datos |
 | `COOKIE_SECURE` | — | `true` en prod | Cookie de sesión solo por HTTPS. Poner `false` únicamente para pruebas locales por http. |

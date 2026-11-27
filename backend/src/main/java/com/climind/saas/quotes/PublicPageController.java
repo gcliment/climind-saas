@@ -48,7 +48,7 @@ public class PublicPageController {
         Optional<String> template = pages.read(PAGE);
         if (found.isEmpty() || template.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(new MediaType("text", "html",
-                    java.nio.charset.StandardCharsets.UTF_8)).body(notFound.html());
+                    java.nio.charset.StandardCharsets.UTF_8)).body(notFound.calculatorHtml());
         }
         PublicCalculators.PublishedCalculator pc = found.get();
         Optional<PublicBusinesses.PublicBusiness> business = businesses.find(pc.tenantId());

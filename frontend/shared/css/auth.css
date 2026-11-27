@@ -44,5 +44,5 @@
 }
 .result-state .mark-ok { background: var(--ok-wash); color: var(--ok-deep); }
 .result-state .mark-wait { background: var(--blue-wash); color: var(--blue-deep); }
-.result-state .mark-error { background: var(--danger-wash); color: #8E1F28; }
+.result-state .mark-error { background: var(--danger-wash); color: var(--danger-text); }
 .result-state[hidden] { display: none; }

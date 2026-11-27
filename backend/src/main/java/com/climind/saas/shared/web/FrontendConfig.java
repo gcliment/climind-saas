@@ -15,7 +15,7 @@ public class FrontendConfig implements WebMvcConfigurer {
     /** Artículos de la ayuda: /ayuda/{articulo} → /ayuda/{articulo}.html. */
     static final String[] HELP_ARTICLES = {
             "primeros-pasos", "crear-cotizador", "precios-y-reglas", "publicar-y-compartir", "consultas",
-            "planes-y-pagos", "cuenta-y-datos",
+            "planes-y-pagos", "cuenta-y-datos", "preguntas-frecuentes",
     };
 
     /** Ruta pública → archivo HTML. */

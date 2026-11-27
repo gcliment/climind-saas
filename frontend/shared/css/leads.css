@@ -121,7 +121,7 @@ dialog.lead-dialog::backdrop { background: rgba(8, 19, 31, .45); }
 .chart-axis { stroke: var(--line); stroke-width: 1; }
 .chart-tooltip {
   position: absolute; z-index: 2; pointer-events: none;
-  background: var(--ink); color: var(--white);
+  background: var(--ink-solid); color: var(--on-dark);
   border-radius: var(--r-sm); padding: .5rem .65rem;
   font-size: .82rem; line-height: 1.35; white-space: nowrap;
   box-shadow: 0 6px 18px rgba(8, 19, 31, .2);

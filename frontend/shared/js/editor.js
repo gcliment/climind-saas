@@ -9,6 +9,8 @@ import { renderQuoteForm, renderTicket, visibleAnswers, visibleQuestions } from 
 import { hideNotice, planLink, showNotice, withBusy } from './ui.js';
 
 const me = await initPanel({ current: '/app/cotizadores' });
+// Con la baja de la cuenta programada, ningún cotizador atiende al público (la página pública da 404).
+const accountClosing = Boolean(me.tenant?.deletionScheduledFor);
 const calculatorId = new URLSearchParams(window.location.search).get('id');
 if (!calculatorId) window.location.replace('/app/cotizadores');
 
@@ -139,6 +141,10 @@ function updateHeader() {
   const status = $('calc-status');
   status.textContent = { BORRADOR: 'Borrador', PUBLICADO: 'Publicado', PAUSADO: 'Pausado', ARCHIVADO: 'Archivado' }[calc.status];
   status.className = `status-badge status-${calc.status}`;
+  if (accountClosing && calc.status === 'PUBLICADO') {
+    status.textContent = 'No disponible';
+    status.className = 'status-badge status-PAUSADO';
+  }
   const saveState = $('save-state');
   if (state.dirty) {
     saveState.textContent = 'Cambios sin guardar';
@@ -669,7 +675,7 @@ function renderPublication() {
   const commercial = state.config.commercial;
   const publishIssues = state.dirty ? [] : (calc.publishIssues || []);
   const url = calc.publicUrl;
-  const live = calc.status === 'PUBLICADO';
+  const live = calc.status === 'PUBLICADO' && !accountClosing;
   const shareWhatsapp = `https://wa.me/?text=${encodeURIComponent(`Calculá tu presupuesto de ${calc.name} en segundos: ${url}`)}`;
   const copy = h('button', { type: 'button', class: 'btn btn-quiet', text: 'Copiar enlace', on: { click: async () => {
     try {
@@ -710,7 +716,10 @@ function renderPublication() {
         ? h('div', { class: 'share-row' },
           h('a', { class: 'btn btn-quiet', href: url, target: '_blank', rel: 'noopener', text: 'Abrir la página' }),
           h('a', { class: 'btn btn-whatsapp', href: shareWhatsapp, target: '_blank', rel: 'noopener', text: 'Compartir por WhatsApp' }))
-        : h('p', { class: 'form-text m-0', text: calc.status === 'PAUSADO'
+        : accountClosing && calc.status === 'PUBLICADO'
+          ? h('p', { class: 'notice notice-warn m-0' }, 'Tu cuenta tiene la baja programada: el enlace no funciona para tus clientes hasta que la canceles. ',
+            h('a', { href: '/app/cuenta', text: 'Cancelar la baja' }))
+          : h('p', { class: 'form-text m-0', text: calc.status === 'PAUSADO'
           ? 'El cotizador está pausado: quien abra el enlace ve un aviso y tus datos de contacto.'
           : 'El enlace empieza a funcionar cuando publiques el cotizador.' })),
     live ? h('div', { class: 'settings-block qr-block' },

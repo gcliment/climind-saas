@@ -1,5 +1,7 @@
 // Estructura común del panel: control de sesión, navegación y cierre de sesión.
 import { api, currentUser } from './api.js';
+import { installButton, registerServiceWorker, themeToggleButton } from './app-extras.js';
+import { mountAssistant } from './assistant.js';
 
 const ICONS = {
   home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
@@ -71,7 +73,7 @@ function renderTopbarMenu(items, current) {
     list.append(a);
   }
   logoutButton.textContent = 'Cerrar sesión';
-  list.append(logoutButton);
+  list.append(themeToggleButton('topbar-menu-button'), installButton('topbar-menu-button'), logoutButton);
   menu.append(summary, list);
   topbar.append(menu);
   document.addEventListener('click', (event) => {
@@ -83,6 +85,17 @@ function renderTopbarMenu(items, current) {
       summary.focus();
     }
   });
+}
+
+/** Escritorio: modo claro/oscuro e instalar la app, al pie de la barra lateral. */
+function renderSidebarExtras() {
+  const foot = document.querySelector('.side-foot');
+  const logout = foot?.querySelector('[data-logout]');
+  if (!foot || !logout) return;
+  const extras = document.createElement('div');
+  extras.className = 'side-extras';
+  extras.append(themeToggleButton('side-link'), installButton('side-link'));
+  foot.insertBefore(extras, logout);
 }
 
 /** Aviso en todas las páginas mientras haya una baja de la cuenta programada. */
@@ -167,6 +180,8 @@ export async function initPanel({ current, requireTenant = true }) {
   renderNav(document.getElementById('side-nav'), items, current);
   renderNav(document.getElementById('tabbar'), items.filter((i) => !i.desktopOnly), current);
   renderTopbarMenu(items, current);
+  renderSidebarExtras();
+  registerServiceWorker();
   renderDeletionBanner(me.tenant?.deletionScheduledFor, current);
   renderVerifyEmailBanner(me.user, current);
 
@@ -178,5 +193,7 @@ export async function initPanel({ current, requireTenant = true }) {
   document.querySelectorAll('[data-logout]').forEach((button) => button.addEventListener('click', logout));
 
   document.querySelector('.panel')?.removeAttribute('data-state');
+  // En la guía inicial no: ahí lo importante es terminar el primer cotizador sin distracciones.
+  if (current !== '/app/onboarding') mountAssistant(me);
   return me;
 }

@@ -7,6 +7,8 @@ test('el dueño administra su cuenta, descarga sus datos y programa y cancela la
   await page.getByRole('link', { name: 'Saltear por ahora' }).click();
 
   // En el celular, "Tu cuenta" está en el menú de la barra superior; en escritorio, en la barra lateral.
+  // El menú lo arma el panel al terminar de cargar: esperar antes de ver si está visible.
+  await page.locator('.panel:not([data-state])').waitFor();
   const menu = page.locator('.topbar-menu summary');
   if (await menu.isVisible()) {
     await menu.click();

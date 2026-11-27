@@ -1,5 +1,6 @@
 package com.climind.saas.administration;
 
+import com.climind.saas.account.AccountDeletionService;
 import com.climind.saas.businesses.Industry;
 import com.climind.saas.shared.audit.AuditAction;
 import com.climind.saas.shared.audit.AuditLogService;
@@ -37,15 +38,18 @@ public class AdminTenantService {
     private final EntitlementService entitlements;
     private final UsageService usage;
     private final AuditLogService audit;
+    private final AccountDeletionService deletions;
     private final Clock clock;
 
     public AdminTenantService(JdbcTemplate jdbc, TenantService tenants, EntitlementService entitlements,
-                              UsageService usage, AuditLogService audit, Clock clock) {
+                              UsageService usage, AuditLogService audit, AccountDeletionService deletions,
+                              Clock clock) {
         this.jdbc = jdbc;
         this.tenants = tenants;
         this.entitlements = entitlements;
         this.usage = usage;
         this.audit = audit;
+        this.deletions = deletions;
         this.clock = clock;
     }
 
@@ -90,6 +94,13 @@ public class AdminTenantService {
             String reason) {
     }
 
+    /** Eliminación definitiva: se confirma escribiendo ELIMINAR; {@code notifyOwner} manda el email de baja. */
+    public record DeleteRequest(
+            @NotBlank(message = "Escribí ELIMINAR para confirmar.")
+            String confirmation,
+            boolean notifyOwner) {
+    }
+
     @Transactional(readOnly = true)
     public PageResponse<AdminTenant> list(String q, String status, int page, int size) {
         int limit = Math.min(Math.max(size, 1), MAX_PAGE);
@@ -104,7 +115,7 @@ public class AdminTenantService {
                                    WHERE m.tenant_id = t.id AND m.role = 'OWNER' ORDER BY m.created_at LIMIT 1) o ON true
                 WHERE NOT t.demo
                   AND (? = '' OR lower(coalesce(p.business_name, t.name)) LIKE ? OR t.slug LIKE ? OR lower(o.email) LIKE ?)
-                  AND (? = '' OR t.status = ?)
+                  AND (CASE WHEN ? = '' THEN t.status <> 'DELETED' ELSE t.status = ? END)
                 """;
         Long total = jdbc.queryForObject("SELECT count(*) " + where, Long.class, text, like, like, like, st, st);
         List<AdminTenant> rows = new ArrayList<>();
@@ -212,6 +223,14 @@ public class AdminTenantService {
         tenants.suspend(tenantId, request.reason().strip(), clock.instant());
         audit.record(AuditAction.TENANT_SUSPENDED, CurrentUser.require().userId(), tenantId, "tenant",
                 tenantId.toString(), Map.of("reason", request.reason().strip()));
+    }
+
+    /** Elimina el negocio y anonimiza a sus usuarios, sin plazo para arrepentirse. No se puede deshacer. */
+    public void deleteDefinitively(UUID tenantId, DeleteRequest request) {
+        if (!"ELIMINAR".equals(request.confirmation().strip().toUpperCase(Locale.ROOT))) {
+            throw ApiException.field("confirmation", "Escribí ELIMINAR para confirmar.");
+        }
+        deletions.deleteNowByAdmin(tenantId, CurrentUser.require().userId(), request.notifyOwner());
     }
 
     @Transactional

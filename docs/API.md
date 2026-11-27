@@ -168,6 +168,7 @@ Errores por límites del plan: `PLAN_LIMIT_CALCULATORS` (409, al publicar o reac
 | GET | `/admin/tenants?q=&status=&page=&size=` | Negocios con plan, uso, dueño y estado |
 | POST | `/admin/tenants/{id}/suspend` | `{reason}` (obligatorio, auditado) |
 | POST | `/admin/tenants/{id}/reactivate` | |
+| DELETE | `/admin/tenants/{id}` | `{confirmation: "ELIMINAR", notifyOwner}` → 204. Eliminación definitiva y sin plazo: cancela el plan en Mercado Pago, borra los datos del negocio y anonimiza a sus usuarios (el email queda libre). No aplica a la demo ni a negocios de un SUPER_ADMIN. Auditado (`ACCOUNT_DELETED_BY_ADMIN`). `/admin/tenants` oculta los eliminados salvo con `status=DELETED` |
 | GET | `/admin/plans` | Planes con la cantidad de suscripciones vigentes |
 | POST | `/admin/plans` | Crear plan pago |
 | PUT | `/admin/plans/{id}` | Editar (solo afecta contrataciones nuevas y al plan gratuito; bloqueo optimista con `lockVersion`) |
@@ -197,6 +198,12 @@ El cotizador público de una demo (`/api/v1/public/c/demo/{demo}`) responde `dem
 | POST | `/api/v1/public/emails/unsubscribe?t=…` | Baja de los emails de producto con el enlace del email, sin sesión. Solo POST; también para la baja en un clic de los clientes de correo. 404 si el enlace no es válido |
 
 `/api/v1/auth/me` incluye `tenant.deletionScheduledFor` para mostrar el aviso en todo el panel.
+
+### Asistente de ayuda (con sesión)
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/v1/assistant/status` | `{ai}`: si responde con IA de OpenAI (hay `OPENAI_API_KEY`) o solo con las preguntas frecuentes |
+| POST | `/api/v1/assistant/chat` | `{messages: [{role: "user" o "assistant", content}]}` (hasta 20, la última del usuario, 2000 caracteres cada una) → `{reply, source: "AI" o "FAQ", links}`. La conversación la guarda el navegador. Usa la documentación de `/ayuda` y el contexto de la cuenta (plan, cotizadores, baja). 30 por hora y 100 por día por usuario (429 `ASSISTANT_LIMIT`) |
 
 ### Sitio
 | Ruta | Descripción |

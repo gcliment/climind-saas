@@ -22,7 +22,8 @@
 }
 
 /* ---------------------------------------------------------------- TOKENS */
-:root {
+/* [data-theme="light"] permite una isla clara dentro del modo oscuro (la vista previa del cotizador). */
+:root, [data-theme="light"] {
   --ink: #08131F;
   --ink-2: #0F1D2D;
   --ink-3: #17293E;
@@ -51,6 +52,15 @@
   --warn-wash: #FDF3E2;
   --danger: #C8333F;
   --danger-wash: #FCEBEC;
+  --danger-text: #8E1F28;
+  --danger-line: #F3C3C7;
+  --ok-line: #BDE8DA;
+  --warn-line: #F2D7A8;
+  --selected-bg: #FAFCFF;
+
+  /* Fijos en los dos modos: la barra lateral y el texto sobre fondos oscuros o de marca. */
+  --ink-solid: #08131F;
+  --on-dark: #FFFFFF;
 
   --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --f-body: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
@@ -74,6 +84,51 @@
   --bs-border-radius: var(--r-sm);
   --bs-focus-ring-color: rgba(0, 126, 232, .35);
 }
+
+/* Modo oscuro del panel (lo activa theme.js según la preferencia guardada o la del sistema). Los textos
+   respetan contraste AA sobre --paper y --white (que acá es la superficie de las tarjetas). */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #F1F5FB;
+  --paper: #0B1520;
+  --white: #122030;
+  --surface-2: #1A2B3F;
+  --text: #E3EAF4;
+  --text-mid: #AEBBCD;
+  --text-soft: #8D9CB2;
+  --line: #27394F;
+  --line-soft: #1D2E42;
+
+  --blue-deep: #7DBBFF;
+  --blue-wash: #0F2A47;
+  --selected-bg: #11263D;
+
+  --ok: #2FC59A;
+  --ok-deep: #5BD6AE;
+  --ok-wash: #0E2C24;
+  --ok-line: #1E5444;
+  --warn: #E5A23A;
+  --warn-deep: #F2B860;
+  --warn-wash: #2E220E;
+  --warn-line: #5C4317;
+  --danger: #F2737C;
+  --danger-text: #FF9AA1;
+  --danger-wash: #34151A;
+  --danger-line: #6B2A31;
+
+  --shadow-ticket: 0 1px 2px rgba(0, 0, 0, .4), 0 24px 48px -24px rgba(0, 0, 0, .7);
+
+  --bs-link-color-rgb: 125, 187, 255;
+  --bs-secondary-color: var(--text-soft);
+  --bs-tertiary-bg: var(--surface-2);
+  --bs-secondary-bg: var(--surface-2);
+  --bs-emphasis-color: var(--ink);
+  --bs-heading-color: var(--ink);
+}
+[data-theme="dark"] .btn-ink { --bs-btn-hover-color: var(--ink-solid); --bs-btn-active-color: var(--ink-solid); --bs-btn-hover-bg: #D7E1EE; --bs-btn-active-bg: #C3D0E1; }
+[data-theme="dark"] .btn-primary { --bs-btn-hover-bg: #0063C7; --bs-btn-hover-border-color: #0063C7; }
+/* La isla clara hereda color y fondo propios (no los del modo oscuro). */
+[data-theme="light"] { color: var(--text); }
 
 /* ------------------------------------------------------------------ BASE */
 html { -webkit-text-size-adjust: 100%; }
@@ -109,8 +164,8 @@ a { text-underline-offset: 3px; }
   top: -60px;
   z-index: 1000;
   padding: 10px 14px;
-  background: var(--ink);
-  color: var(--white);
+  background: var(--ink-solid);
+  color: var(--on-dark);
   border-radius: var(--r-sm);
 }
 .skip-link:focus { top: 12px; }
@@ -220,9 +275,9 @@ a { text-underline-offset: 3px; }
   font-size: .95rem;
 }
 .notice[hidden] { display: none; }
-.notice-error { border-color: #F3C3C7; background: var(--danger-wash); color: #8E1F28; }
-.notice-ok { border-color: #BDE8DA; background: var(--ok-wash); color: var(--ok-deep); }
-.notice-warn { border-color: #F2D7A8; background: var(--warn-wash); color: var(--warn-deep); }
+.notice-error { border-color: var(--danger-line); background: var(--danger-wash); color: var(--danger-text); }
+.notice-ok { border-color: var(--ok-line); background: var(--ok-wash); color: var(--ok-deep); }
+.notice-warn { border-color: var(--warn-line); background: var(--warn-wash); color: var(--warn-deep); }
 
 /* ---------------------------------------------------------------- MARCA */
 .brand {
@@ -238,14 +293,14 @@ a { text-underline-offset: 3px; }
 }
 .brand img { width: 34px; height: 34px; }
 .brand small { font-family: var(--f-body); font-weight: 500; color: var(--text-soft); font-size: .8rem; }
-.brand-on-dark { color: var(--white); }
+.brand-on-dark { color: var(--on-dark); }
 
 /* ---------------------------------------------------------------- ENCABEZADO PÚBLICO */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(246, 248, 252, .92);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line-soft);
 }

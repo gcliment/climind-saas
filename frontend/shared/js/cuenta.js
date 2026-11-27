@@ -1,5 +1,6 @@
 // Tu cuenta: datos personales, contraseña, emails de producto, descarga de datos y baja de la cuenta.
 import { api, ApiError } from './api.js';
+import { renderInstallGuide } from './app-extras.js';
 import { initPanel } from './panel.js';
 import {
   clearFieldErrors, formData, hideNotice, setupPasswordToggles, showFieldErrors, showNotice, withBusy,
@@ -10,6 +11,22 @@ setupPasswordToggles();
 const $ = (id) => document.getElementById(id);
 const notice = $('account-notice');
 const longDate = new Intl.DateTimeFormat('es-AR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Argentina/Buenos_Aires' });
+
+// Instalar la app: botón del navegador, pasos para iPhone según el navegador o cómo hacerlo desde el menú.
+renderInstallGuide(document.getElementById('install-guide'));
+
+// Apariencia: preferencia de este dispositivo (la aplica theme.js).
+const themeChoices = document.querySelectorAll('#theme-choices input[name="theme"]');
+const syncThemeChoices = () => {
+  const mode = window.climindTheme?.get() || 'auto';
+  themeChoices.forEach((input) => { input.checked = input.value === mode; });
+};
+syncThemeChoices();
+themeChoices.forEach((input) => input.addEventListener('change', () => {
+  window.climindTheme?.set(input.value);
+  document.dispatchEvent(new CustomEvent('climind:themechange'));
+}));
+document.addEventListener('climind:themechange', syncThemeChoices);
 
 let account = await api.get('/api/v1/account');
 
@@ -172,3 +189,13 @@ $('deletion-cancel').addEventListener('click', (event) => {
     }
   });
 });
+
+// Desde «Menú → Instalar la app»: ir directo a la guía, ya con la página completa (si no, el contenido que
+// carga después la corre de lugar).
+if (window.location.hash === '#instalar') {
+  const block = document.getElementById('instalar');
+  setTimeout(() => {
+    block.scrollIntoView({ block: 'start', behavior: 'instant' });
+    block.focus({ preventScroll: true });
+  }, 0);
+}

@@ -6,6 +6,13 @@
   <title>Administración — Climind SaaS</title>
   <meta name="robots" content="noindex">
   <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#08131F">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/shared/img/app-icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Cotiza">
+  <script src="/shared/js/theme.js"></script>
   <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
   <link rel="stylesheet" href="/shared/css/climind.css">
   <link rel="stylesheet" href="/shared/css/panel.css">
@@ -64,7 +71,7 @@
           <label class="visually-hidden" for="tenant-q">Buscar negocios</label>
           <input class="form-control" type="search" id="tenant-q" placeholder="Nombre, dirección o email del dueño">
           <label class="visually-hidden" for="tenant-status">Estado</label>
-          <select class="form-select" id="tenant-status"><option value="">Todos</option><option value="ACTIVE">Activos</option><option value="SUSPENDED">Suspendidos</option><option value="DELETED">Eliminados</option></select>
+          <select class="form-select" id="tenant-status"><option value="">Todos (sin eliminados)</option><option value="ACTIVE">Activos</option><option value="SUSPENDED">Suspendidos</option><option value="DELETED">Eliminados</option></select>
           <button class="btn btn-quiet" type="submit">Buscar</button>
         </form>
         <div class="table-responsive"><table class="table admin-table"><thead><tr>
@@ -153,6 +160,26 @@
   </div>
 </div>
 <nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
+<dialog class="app-dialog" id="tenant-delete-dialog" aria-labelledby="tenant-delete-title">
+  <form id="tenant-delete-form" novalidate>
+    <h2 id="tenant-delete-title">¿Eliminar definitivamente?</h2>
+    <p>Se borran ahora mismo los cotizadores, cotizaciones, consultas, datos y logo de <strong id="tenant-delete-name"></strong>, y se anonimiza a su usuario: el email queda libre para registrarse de nuevo. Si tiene un plan pago, se cancela en Mercado Pago. <strong>No se puede deshacer.</strong></p>
+    <div class="notice" id="tenant-delete-notice" hidden></div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="tenant-delete-notify">
+      <label class="form-check-label" for="tenant-delete-notify">Avisarle por email que su cuenta fue eliminada</label>
+    </div>
+    <div>
+      <label class="form-label" for="tenant-delete-confirmation">Escribí ELIMINAR para confirmar</label>
+      <input class="form-control" id="tenant-delete-confirmation" name="confirmation" autocomplete="off" autocapitalize="characters" required>
+    </div>
+    <div class="dialog-actions">
+      <button class="btn btn-quiet" type="button" id="tenant-delete-close">Volver</button>
+      <button class="btn btn-danger" type="submit">Eliminar definitivamente</button>
+    </div>
+  </form>
+</dialog>
+
 <script type="module" src="/shared/js/admin.js"></script>
 </body>
 </html>

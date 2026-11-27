@@ -1,5 +1,17 @@
 // Centro de ayuda: búsqueda en el índice (sin servidor: los artículos son pocos) y email de soporte.
 import './site.js';
+import { currentUser } from './api.js';
+import { mountAssistant } from './assistant.js';
+import { registerServiceWorker } from './app-extras.js';
+
+// Con sesión iniciada, el asistente también está disponible en la ayuda.
+currentUser().then((me) => {
+  if (!me) return;
+  document.querySelectorAll('[data-assistant-only]').forEach((el) => { el.hidden = false; });
+  document.querySelectorAll('[data-assistant-guest]').forEach((el) => { el.hidden = true; });
+  mountAssistant(me);
+  registerServiceWorker();
+}).catch(() => { /* la ayuda funciona sin sesión */ });
 
 const supportEmail = window.CLIMIND_CONFIG?.supportEmail;
 document.querySelectorAll('[data-support-fallback]').forEach((el) => { el.hidden = Boolean(supportEmail); });

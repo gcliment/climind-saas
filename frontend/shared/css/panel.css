@@ -8,7 +8,7 @@
 
 .panel-sidebar {
   display: none;
-  background: var(--ink);
+  background: var(--ink-solid);
   color: #C9D5E6;
 }
 @media (min-width: 992px) {
@@ -34,11 +34,11 @@
   text-decoration: none;
   font-weight: 500;
 }
-.side-nav a:hover { background: var(--ink-3); color: var(--white); }
-.side-nav a[aria-current="page"] { background: var(--ink-3); color: var(--white); box-shadow: inset 3px 0 0 var(--blue); }
+.side-nav a:hover { background: var(--ink-3); color: var(--on-dark); }
+.side-nav a[aria-current="page"] { background: var(--ink-3); color: var(--on-dark); box-shadow: inset 3px 0 0 var(--blue); }
 .side-nav svg { width: 20px; height: 20px; flex: none; }
 .side-foot { margin-top: auto; border-top: 1px solid var(--ink-line); padding: 1rem .5rem 0; font-size: .9rem; }
-.side-foot .who { color: var(--white); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-foot .who { color: var(--on-dark); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .side-foot .biz { color: #8FA3BD; margin-bottom: .75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .side-foot button {
   background: transparent;
@@ -48,7 +48,12 @@
   padding: .45rem .8rem;
   min-height: 40px;
 }
-.side-foot button:hover { color: var(--white); border-color: #3A5373; }
+.side-foot button:hover { color: var(--on-dark); border-color: #3A5373; }
+.side-extras { display: grid; gap: .1rem; margin: 0 0 .75rem -.5rem; }
+.side-foot .side-link { border: 0; text-align: left; min-height: 36px; padding: .35rem .5rem; color: #C9D5E6; }
+.side-foot .side-link:hover { background: var(--ink-3); }
+.side-foot .side-link[hidden] { display: none; }
+.install-steps { padding-left: 1.2rem; display: grid; gap: .5rem; }
 
 /* Barra superior móvil */
 .panel-topbar {
@@ -155,7 +160,7 @@
   color: var(--text-mid);
 }
 .setup li.done::before { content: "✓"; background: var(--ok-wash); color: var(--ok-deep); }
-.setup li.current::before { background: var(--blue-btn); color: var(--white); }
+.setup li.current::before { background: var(--blue-btn); color: var(--on-dark); }
 .setup strong { color: var(--ink); }
 .setup .detail { color: var(--text-mid); font-size: .95rem; }
 .setup .detail .btn { margin-top: .6rem; }
@@ -218,6 +223,7 @@
 }
 .topbar-menu-list a:hover, .topbar-menu-list button:hover { background: var(--surface-2); }
 .topbar-menu-list a[aria-current="page"] { color: var(--blue-deep); font-weight: 650; }
-.topbar-menu-list button { color: var(--danger); border-top: 1px solid var(--line-soft); border-radius: 0 0 var(--r-sm) var(--r-sm); }
+.topbar-menu-list [data-logout] { color: var(--danger); border-top: 1px solid var(--line-soft); border-radius: 0 0 var(--r-sm) var(--r-sm); }
+.topbar-menu-list .topbar-menu-button[hidden] { display: none; }
 .deletion-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; margin-bottom: 1.25rem; }
 .deletion-banner a { font-weight: 600; }

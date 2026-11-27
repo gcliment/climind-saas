@@ -247,4 +247,54 @@ class AccountIT extends IntegrationTest {
                 .hasMessageContaining("inmutable");
         assertThat(deletions.runDue()).as("idempotente").isZero();
     }
+
+    // ------------------------------------------------------------------ eliminación desde el panel de Climind
+
+    @Test
+    void elAdminEliminaDefinitivamenteUnNegocioYElEmailQuedaLibre() throws Exception {
+        Browser ana = registerVerifiedAndLogin("Ana", "ana@ejemplo.com");
+        Published calc = publishTemplate(ana, "Limpiezas Ana", "Limpieza de hogares", "limpieza");
+        assertThat(status(new Browser().post(calc.api() + "/quotes", QUOTE))).isEqualTo(201);
+        String tenantId = jdbc.queryForObject("select tenant_id::text from calculators limit 1", String.class);
+        Browser admin = loginAsSuperAdmin();
+
+        MvcResult noConfirm = admin.send(delete("/api/v1/admin/tenants/" + tenantId),
+                "{\"confirmation\":\"borrar\",\"notifyOwner\":false}");
+        assertThat(status(noConfirm)).isEqualTo(400);
+        assertThat(status(ana.send(delete("/api/v1/admin/tenants/" + tenantId),
+                "{\"confirmation\":\"ELIMINAR\",\"notifyOwner\":false}"))).as("solo SUPER_ADMIN").isEqualTo(403);
+
+        emails().clear();
+        MvcResult deleted = admin.send(delete("/api/v1/admin/tenants/" + tenantId),
+                "{\"confirmation\":\"eliminar\",\"notifyOwner\":false}");
+        assertThat(status(deleted)).as(body(deleted)).isEqualTo(204);
+
+        assertThat(count("select count(*) from calculators where tenant_id = ?::uuid", tenantId)).isZero();
+        assertThat(count("select count(*) from quote_requests where tenant_id = ?::uuid", tenantId)).isZero();
+        assertThat((String) jdbc.queryForObject("select status from tenants where id = ?::uuid", String.class, tenantId))
+                .isEqualTo("DELETED");
+        assertThat(count("select count(*) from users where email = 'ana@ejemplo.com'")).isZero();
+        assertThat(emails().lastTo("ana@ejemplo.com")).as("sin aviso si no se pidió").isEmpty();
+        assertThat(count("select count(*) from audit_logs where action = 'ACCOUNT_DELETED_BY_ADMIN'")).isEqualTo(1);
+        assertThat(status(ana.get("/api/v1/auth/me"))).isEqualTo(401);
+        assertThat(status(new Browser().get(calc.api()))).isEqualTo(404);
+
+        // Desaparece del listado salvo que se filtre por eliminados.
+        assertThat(body(admin.get("/api/v1/admin/tenants"))).doesNotContain(tenantId);
+        assertThat(body(admin.get("/api/v1/admin/tenants?status=DELETED"))).contains(tenantId);
+
+        // El email queda libre: se puede registrar de nuevo.
+        assertThat(status(new Browser().post("/api/v1/auth/register", registerJson("Ana", "ana@ejemplo.com"))))
+                .isEqualTo(201);
+    }
+
+    @Test
+    void laPaginaDeUnCotizadorNoDisponibleLoDiceSinRevelarPorQue() throws Exception {
+        Browser ana = registerVerifiedAndLogin("Ana", "ana@ejemplo.com");
+        Published calc = publishTemplate(ana, "Limpiezas Ana", "Limpieza de hogares", "limpieza");
+        assertThat(status(requestDeletion(ana, PASSWORD, "ELIMINAR"))).isEqualTo(200);
+        MvcResult result = new Browser().get(calc.page());
+        assertThat(status(result)).isEqualTo(404);
+        assertThat(body(result)).contains("Este cotizador no está disponible").doesNotContain("baja");
+    }
 }

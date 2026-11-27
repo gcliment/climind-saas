@@ -119,6 +119,38 @@ public class AccountDeletionService {
         audit.record(AuditAction.ACCOUNT_DELETION_CANCELED, userId, tenantId);
     }
 
+    /**
+     * Eliminación definitiva desde el panel de Climind (SUPER_ADMIN): sin plazo para arrepentirse. Cancela el plan
+     * pago en el proveedor, borra los datos del negocio y anonimiza a sus usuarios (el email queda libre para
+     * registrarse de nuevo). No aplica a la demo ni a negocios con un SUPER_ADMIN.
+     */
+    @Transactional
+    public void deleteNowByAdmin(UUID tenantId, UUID adminUserId, boolean notifyOwner) {
+        Tenant tenant = tenants.find(tenantId).orElseThrow(() -> ApiException.notFound("No existe ese negocio."));
+        if (tenant.isDemo()) {
+            throw ApiException.conflict("DEMO_TENANT", "La demo pública no se puede eliminar.");
+        }
+        if (tenant.getStatus() == Tenant.Status.DELETED) {
+            return;
+        }
+        Integer admins = jdbc.queryForObject("""
+                SELECT count(*) FROM tenant_memberships m JOIN users u ON u.id = m.user_id
+                WHERE m.tenant_id = ? AND u.platform_role = 'SUPER_ADMIN'
+                """, Integer.class, tenantId);
+        if (admins != null && admins > 0) {
+            throw ApiException.conflict("ADMIN_TENANT", "No se puede eliminar un negocio de un administrador de Climind.");
+        }
+        billing.stopBillingForAccountDeletion(tenantId, adminUserId);
+        Instant now = clock.instant();
+        if (tenant.isDeletionScheduled()) {
+            tenants.cancelDeletion(tenantId);
+        }
+        tenants.scheduleDeletion(tenantId, adminUserId, now, now);
+        audit.record(AuditAction.ACCOUNT_DELETED_BY_ADMIN, adminUserId, tenantId, "tenant", tenantId.toString(),
+                Map.of("notifyOwner", notifyOwner));
+        execute(tenantId, notifyOwner);
+    }
+
     /** Ejecuta las bajas cuyo plazo venció. Cada negocio en su propia transacción. */
     @Scheduled(cron = "${app.account.deletion-cron:0 10 4 * * *}", zone = "America/Argentina/Buenos_Aires")
     public int runDue() {
@@ -140,6 +172,10 @@ public class AccountDeletionService {
 
     /** Elimina los datos del negocio. Debe correr dentro de una transacción (todo o nada). */
     void execute(UUID tenantId) {
+        execute(tenantId, true);
+    }
+
+    private void execute(UUID tenantId, boolean notifyMembers) {
         Tenant tenant = tenants.find(tenantId).orElseThrow();
         if (!tenant.isDeletionScheduled() || tenant.getDeletionScheduledFor().isAfter(clock.instant())) {
             return; // se canceló o todavía no venció
@@ -173,8 +209,10 @@ public class AccountDeletionService {
         // Personas: se avisa antes de anonimizar (el email sale después del commit, con la dirección guardada).
         for (UUID userId : members) {
             AccountSettingsService.UserAccount user = settings.get(userId);
-            emails.send(MailTemplate.ACCOUNT_DELETED, user.email(),
-                    Map.of("firstName", user.firstName(), "businessName", businessName), null, null);
+            if (notifyMembers) {
+                emails.send(MailTemplate.ACCOUNT_DELETED, user.email(),
+                        Map.of("firstName", user.firstName(), "businessName", businessName), null, null);
+            }
             jdbc.update("UPDATE email_delivery_logs SET recipient = 'eliminado' WHERE user_id = ?", userId);
             jdbc.update("UPDATE audit_logs SET ip = NULL WHERE actor_user_id = ?", userId);
             jdbc.update("DELETE FROM email_verification_tokens WHERE user_id = ?", userId);

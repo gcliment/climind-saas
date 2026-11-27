@@ -1,0 +1,119 @@
+/* Asistente de ayuda: botón flotante y conversación. En el celular ocupa toda la pantalla. */
+
+.assistant-launcher {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 1040;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 48px;
+  padding: .6rem 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--blue-btn);
+  color: var(--on-dark);
+  font-weight: 650;
+  box-shadow: 0 10px 28px -10px rgba(0, 60, 130, .55);
+}
+.assistant-launcher:hover { background: #0063C7; }
+.assistant-launcher-dot { width: 9px; height: 9px; border-radius: 50%; background: #7CF0C5; box-shadow: 0 0 0 3px rgba(124, 240, 197, .3); }
+/* Panel en el celular: arriba de la barra de pestañas inferior. */
+@media (max-width: 991.98px) {
+  body:has(.tabbar) .assistant-launcher { bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+.assistant-open .assistant-launcher { display: none; }
+
+.assistant-panel {
+  position: fixed;
+  z-index: 1045;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  inset: 0;
+}
+.assistant-panel[hidden] { display: none; }
+@media (min-width: 768px) {
+  .assistant-panel {
+    inset: auto 20px 20px auto;
+    width: 400px;
+    height: min(620px, calc(100vh - 40px));
+    border-radius: var(--r-lg);
+    box-shadow: 0 24px 60px -20px rgba(8, 19, 31, .45);
+  }
+}
+
+.assistant-head {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .75rem .75rem .75rem 1rem;
+  padding-top: calc(.75rem + env(safe-area-inset-top));
+  background: var(--ink-solid);
+  color: var(--on-dark);
+}
+@media (min-width: 768px) { .assistant-head { padding-top: .75rem; } }
+.assistant-avatar { width: 38px; height: 38px; border-radius: 12px; background: #0F1D2D; display: grid; place-items: center; flex: none; }
+.assistant-titles { flex: 1; min-width: 0; }
+.assistant-titles h2 { font-size: 1rem; margin: 0; color: var(--on-dark); }
+.assistant-sub { margin: 0; font-size: .8rem; color: #AFC0D6; }
+.assistant-icon-btn {
+  border: 1px solid #2A4260;
+  background: transparent;
+  color: #DCE6F2;
+  border-radius: var(--r-sm);
+  min-height: 38px;
+  min-width: 38px;
+  padding: 0 .65rem;
+  font-weight: 600;
+  font-size: .85rem;
+}
+.assistant-icon-btn:hover { background: #17293E; color: var(--on-dark); }
+
+.assistant-log { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: .6rem; overscroll-behavior: contain; }
+.assistant-welcome { display: flex; flex-direction: column; gap: .6rem; }
+.assistant-bubble { max-width: 88%; padding: .65rem .85rem; border-radius: 16px; font-size: .95rem; line-height: 1.45; overflow-wrap: anywhere; }
+.assistant-bubble p { margin: 0 0 .45rem; max-width: none; }
+.assistant-bubble p:last-child { margin-bottom: 0; }
+.assistant-bubble ol, .assistant-bubble ul { margin: .2rem 0 .45rem; padding-left: 1.25rem; }
+.assistant-bubble li { margin-bottom: .2rem; }
+.assistant-bubble.from-assistant { align-self: flex-start; background: var(--white); border: 1px solid var(--line); border-bottom-left-radius: 6px; color: var(--text); }
+.assistant-bubble.from-user { align-self: flex-end; background: var(--blue-btn); color: var(--on-dark); border-bottom-right-radius: 6px; white-space: pre-wrap; }
+.assistant-bubble.is-error { border-color: var(--danger-line); background: var(--danger-wash); color: var(--danger-text); }
+.assistant-bubble.is-typing { display: inline-flex; gap: 4px; padding: .8rem .9rem; }
+.assistant-bubble.is-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-soft); animation: assistant-dot 1s infinite ease-in-out; }
+.assistant-bubble.is-typing span:nth-child(2) { animation-delay: .15s; }
+.assistant-bubble.is-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes assistant-dot { 0%, 80%, 100% { opacity: .3; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .assistant-bubble.is-typing span { animation: none; } }
+
+.assistant-suggestions, .assistant-links { display: flex; flex-wrap: wrap; gap: .4rem; }
+.assistant-links { margin-top: .5rem; }
+.assistant-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: .35rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--blue-deep);
+  font-size: .88rem;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+}
+.assistant-chip:hover { border-color: var(--blue); }
+
+.assistant-form { display: flex; gap: .5rem; align-items: flex-end; padding: .75rem; border-top: 1px solid var(--line); background: var(--white); }
+.assistant-input { resize: none; min-height: 46px; max-height: 140px; }
+.assistant-send { min-width: 48px; padding-inline: .9rem; }
+.assistant-foot { margin: 0; padding: 0 .9rem calc(.6rem + env(safe-area-inset-bottom)); font-size: .75rem; color: var(--text-soft); background: var(--white); max-width: none; }
+@media (min-width: 768px) { .assistant-foot { padding-bottom: .6rem; } }
+
+/* Que el botón flotante no tape el final del contenido. */
+@media (min-width: 992px) { body.has-assistant .panel-main { padding-bottom: 5.5rem; } }
+@media (max-width: 991.98px) { body.has-assistant .panel-main { padding-bottom: calc(150px + env(safe-area-inset-bottom)); } }

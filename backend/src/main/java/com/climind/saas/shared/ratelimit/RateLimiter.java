@@ -35,7 +35,9 @@ public class RateLimiter {
         /** Exportación completa de los datos de un negocio, por negocio. */
         ACCOUNT_EXPORT,
         /** Acciones de la cuenta que verifican la contraseña (cambio de clave, baja), por usuario. */
-        ACCOUNT_PASSWORD
+        ACCOUNT_PASSWORD,
+        /** Preguntas al asistente de ayuda, por usuario (por hora y por día: cada respuesta tiene costo). */
+        ASSISTANT_USER
     }
 
     private record Entry(Bucket bucket, long lastAccessNanos) {
@@ -43,9 +45,11 @@ public class RateLimiter {
 
     private final Map<String, Entry> buckets = new ConcurrentHashMap<>();
     private final AppProperties.RateLimit limits;
+    private final AppProperties.Assistant assistant;
 
     public RateLimiter(AppProperties properties) {
         this.limits = properties.getRateLimit();
+        this.assistant = properties.getAssistant();
     }
 
     public boolean tryConsume(Policy policy, String key) {
@@ -67,6 +71,8 @@ public class RateLimiter {
             case PUBLIC_DEMO_IP -> builder.addLimit(limit(120, Duration.ofMinutes(1)));
             case ACCOUNT_EXPORT -> builder.addLimit(limit(5, Duration.ofHours(1)));
             case ACCOUNT_PASSWORD -> builder.addLimit(limit(10, Duration.ofMinutes(15)));
+            case ASSISTANT_USER -> builder.addLimit(limit(assistant.getMessagesPerHourPerUser(), Duration.ofHours(1)))
+                    .addLimit(limit(assistant.getMessagesPerDayPerUser(), Duration.ofDays(1)));
         }
         return builder.build();
     }

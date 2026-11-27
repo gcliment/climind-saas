@@ -6,6 +6,13 @@
   <title>Tu cuenta — Climind Cotiza</title>
   <meta name="robots" content="noindex">
   <link rel="icon" href="/shared/img/favicon-cotiza.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#08131F">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/shared/img/app-icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Cotiza">
+  <script src="/shared/js/theme.js"></script>
   <link rel="stylesheet" href="/vendor/bootstrap-5.3.8/bootstrap.min.css">
   <link rel="stylesheet" href="/shared/css/climind.css">
   <link rel="stylesheet" href="/shared/css/panel.css">
@@ -113,6 +120,23 @@
           <label class="form-check-label" for="productEmails">Consejos para sacarle provecho y un resumen de la actividad de cada mes</label>
         </div>
         <span class="save-status d-block mt-2" id="emails-status" role="status"></span>
+      </section>
+
+      <section class="panel-block install-block" aria-labelledby="install-title" id="instalar" tabindex="-1">
+        <h2 id="install-title">Instalar la app en tu celular</h2>
+        <p>Queda el ícono de Cotiza en la pantalla de inicio y se abre a pantalla completa, como cualquier app. Necesita internet: siempre muestra tus datos al día.</p>
+        <div id="install-guide"></div>
+      </section>
+
+      <section class="panel-block" aria-labelledby="look-title">
+        <h2 id="look-title">Apariencia</h2>
+        <p>Elegí cómo se ve el panel en este dispositivo. La página que ven tus clientes no cambia.</p>
+        <fieldset class="theme-choices" id="theme-choices">
+          <legend class="visually-hidden">Modo de color</legend>
+          <label class="theme-choice"><input type="radio" name="theme" value="auto"> <span><strong>Automático</strong><small>Igual que tu celular o computadora</small></span></label>
+          <label class="theme-choice"><input type="radio" name="theme" value="light"> <span><strong>Claro</strong><small>Fondo blanco</small></span></label>
+          <label class="theme-choice"><input type="radio" name="theme" value="dark"> <span><strong>Oscuro</strong><small>Descansa la vista de noche</small></span></label>
+        </fieldset>
       </section>
 
       <section class="panel-block" aria-labelledby="data-title" id="owner-data" hidden>

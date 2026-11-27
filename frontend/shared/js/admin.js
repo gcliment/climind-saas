@@ -101,6 +101,37 @@ async function reactivate(tenant) {
   } catch (error) { showNotice(notice, error.message); }
 }
 
+// Eliminación definitiva (sin plazo): borra los datos del negocio y anonimiza a su usuario.
+const deleteDialog = $('tenant-delete-dialog');
+const deleteForm = $('tenant-delete-form');
+let deleting = null;
+function askDelete(tenant) {
+  deleting = tenant;
+  $('tenant-delete-name').textContent = tenant.businessName;
+  $('tenant-delete-confirmation').value = '';
+  $('tenant-delete-notify').checked = false;
+  hideNotice($('tenant-delete-notice'));
+  deleteDialog.showModal();
+}
+$('tenant-delete-close').addEventListener('click', () => deleteDialog.close());
+deleteForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  withBusy(e.submitter, async () => {
+    try {
+      await api.del(`/api/v1/admin/tenants/${deleting.id}`, {
+        confirmation: $('tenant-delete-confirmation').value,
+        notifyOwner: $('tenant-delete-notify').checked,
+      });
+      deleteDialog.close();
+      $('tenant-detail').hidden = true;
+      showNotice(notice, `Eliminaste ${deleting.businessName} y su usuario.`, 'ok');
+      await loaders.negocios();
+    } catch (error) {
+      showNotice($('tenant-delete-notice'), error.fieldErrors?.[0]?.message || error.message);
+    }
+  });
+});
+
 const TENANT_LABEL = { ACTIVE: 'Activo', SUSPENDED: 'Suspendido', DELETED: 'Eliminado' };
 loaders.negocios = async () => {
   const q = new URLSearchParams({ q: $('tenant-q').value.trim(), status: $('tenant-status').value, size: '50' });
@@ -115,11 +146,14 @@ loaders.negocios = async () => {
     h('td', { class: 'num', text: `${formatNumber(t.publishedCalculators)} / ${formatNumber(t.publishedLimit)}` }),
     h('td', {}, pill(t.status, TENANT_LABEL[t.status] || t.status), t.suspendedReason ? h('small', { text: t.suspendedReason }) : null,
       t.deletionScheduledFor ? h('small', { text: `Baja pedida: se elimina el ${date(t.deletionScheduledFor)}` }) : null),
-    h('td', {}, t.status === 'ACTIVE'
+    h('td', { class: 'row-actions' }, t.status === 'ACTIVE'
       ? h('button', { type: 'button', class: 'btn btn-link text-danger p-0', text: 'Suspender', on: { click: () => suspend(t) } })
       : t.status === 'SUSPENDED'
         ? h('button', { type: 'button', class: 'btn btn-link p-0', text: 'Reactivar', on: { click: () => reactivate(t) } })
-        : null))));
+        : null,
+    t.status !== 'DELETED'
+      ? h('button', { type: 'button', class: 'btn btn-link text-danger p-0', text: 'Eliminar', 'aria-label': `Eliminar definitivamente ${t.businessName}`, on: { click: () => askDelete(t) } })
+      : null))));
   $('tenant-count').textContent = page.totalItems > page.items.length
     ? `Mostrando ${page.items.length} de ${page.totalItems}. Refiná la búsqueda para ver otros.` : `${formatNumber(page.totalItems)} negocios.`;
 };
